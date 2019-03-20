@@ -6,6 +6,7 @@ Date: 2016-06-22
 Author: Sebastian Steinhauser, Daniel Huebschmann
 Maintainer: Sebastian Steinhauser <s.steinhauser@gmx.net>, Daniel Huebschmann
     <huebschmann.daniel@googlemail.com>
+biocViews:
 Import: rtracklayer,
     data.table,
     reshape2,
