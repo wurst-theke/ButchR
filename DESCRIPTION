@@ -18,7 +18,8 @@ Imports:
     RcppCNPy,
     nnls,
     riverplot,
-    NMF
+    NMF,
+    caret
 Depends:
     SummarizedExperiment
 Description: More about what it does (maybe more than one line)
