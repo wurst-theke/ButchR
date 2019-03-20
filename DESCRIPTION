@@ -7,7 +7,8 @@ Author: Sebastian Steinhauser, Daniel Huebschmann
 Maintainer: Sebastian Steinhauser <s.steinhauser@gmx.net>, Daniel Huebschmann
     <huebschmann.daniel@googlemail.com>
 biocViews:
-Import: rtracklayer,
+Imports: 
+    rtracklayer,
     data.table,
     reshape2,
     ggplot2,
