@@ -432,7 +432,8 @@ generateRiverplot <- function(nmf.exp, edges.cutoff = 0, useH=FALSE,
                each = i + 1),
       N2 = rep(sapply(1:(i + 1), function(n) paste(i + 1, "_S", n, sep = "")),
                time = i),
-      Value = as.vector(t(nnls_sol(W.list[[i - 1]], W.list[[i]]))))
+      Value = as.vector(t(nnls_sol(W.list[[as.character(i)]], W.list[[as.character(i + 1)]])))
+      )
     df$ID <- paste(df$N1, df$N2)
     return(df)
   }))
@@ -463,8 +464,7 @@ generateRiverplot <- function(nmf.exp, edges.cutoff = 0, useH=FALSE,
   ret <- makeRiver(nodes = nodes, edges = edges)
   return(ret)
 }
-
-
+  
 #' Preparation for relabelling and recolouring of a riverplot
 #'
 #' @param in_nmf.exp
