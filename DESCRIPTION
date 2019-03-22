@@ -1,9 +1,9 @@
 Package: Bratwurst
 Type: Package
 Title: Non-Negative Matrix Factorization Suite
-Version: 1.0
-Date: 2016-06-22
-Author: Sebastian Steinhauser, Daniel Huebschmann
+Version: 1.1
+Date: 2019-03-22
+Author: Sebastian Steinhauser, Daniel Huebschmann, HDSU dev Branch
 Maintainer: Sebastian Steinhauser <s.steinhauser@gmx.net>, Daniel Huebschmann
     <huebschmann.daniel@googlemail.com>
 biocViews:
@@ -21,7 +21,7 @@ Imports:
     NMF,
     caret
 Depends:
-    SummarizedExperiment
+    SummarizedExperiment,
     reticulate
 Description: NMF implementation using tensorflow and helper functions to select optimal factorization rank and graphic representation of the matrix decomposition
 License: GPLv3
