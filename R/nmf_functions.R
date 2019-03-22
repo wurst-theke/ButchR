@@ -1246,3 +1246,54 @@ computeSignatureSpecificFeatures <- function(nmf.exp, rowDataId = 3){
     return(nmf.exp)
   }
 }
+
+
+#==============================================================================#
+#                      NMF tensorflow Wrapper - FUNCTION                       #
+#==============================================================================#
+runNMFtensor <- function (nmf.exp, k.min = 2, k.max = 2, outer.iter = 10, inner.iter = 10^4, 
+                          conver.test.niter = 10, conver.test.stop.threshold = 40){
+  # Convert params to integer
+  nmf.params <- lapply(list(k.min=k.min, 
+                            k.max=k.max, 
+                            outer.iter=outer.iter, 
+                            inner.iter=inner.iter, 
+                            conver.test.niter=conver.test.niter, 
+                            conver.test.stop.threshold=conver.test.stop.threshold), 
+                       as.integer)
+  
+  # Source NMF tensorflow python script
+  source_python(file.path(system.file(package = "Bratwurst"), "python/nmf_tensor.py"))
+  
+  # Run NMF
+  X <- assay(nmf.exp, "raw")
+  dec.matrix <- lapply(k.min:k.max, function(k) {
+    k <- as.integer(k)
+    
+    print(Sys.time())
+    cat("Factorization rank: ", k, "\n")
+    k.matrix <- lapply(1:outer.iter, function(i) {
+      if (i%%10 == 0) cat("\tIteration: ", i, "\n")
+      
+      nmf.eval <- NMF(X, k, nmf.params$inner.iter, nmf.params$conver.test.niter, nmf.params$conver.test.stop.threshold)
+      names(nmf.eval) <- c("W", "H", "iterations", "Frob.error")
+      return(nmf.eval)
+    })
+    names(k.matrix) <- 1:outer.iter
+    
+    iters <- paste(sapply(k.matrix, function(x) {x$iterations}), collapse = ",")
+    print(paste("NMF converged after ", iters, "iterations"))
+    
+    return(k.matrix)
+  })
+  
+  # Build NMF object
+  names(dec.matrix) <- k.min:k.max
+  frob.errors <- DataFrame(getFrobError(dec.matrix))
+  colnames(frob.errors) <- as.character(k.min:k.max)
+  nmf.exp <- setFrobError(nmf.exp, frob.errors)
+  nmf.exp <- setHMatrixList(nmf.exp, getHMatrixList(dec.matrix))
+  nmf.exp <- setWMatrixList(nmf.exp, getWMatrixList(dec.matrix))
+  return(nmf.exp)
+}
+
