@@ -338,10 +338,10 @@ getFrobError <- function(dec.matrix) {
   frob.errorMatrix <- melt(frob.errorList)
   frob.errorMatrix <- dcast(frob.errorMatrix, L2 ~ L1, value.var = "value")
   frob.errorMatrix <-
-    frob.errorMatrix[order(as.numeric(frob.errorMatrix$L2)), ]
-  frob.errorMatrix <- frob.errorMatrix[, -1]
+    frob.errorMatrix[order(as.numeric(frob.errorMatrix$L2)), ,drop=FALSE]
+  frob.errorMatrix <- frob.errorMatrix[, -1, drop=FALSE]
   frob.errorMatrix <-
-    frob.errorMatrix[, order(as.numeric(colnames(frob.errorMatrix)))]
+    frob.errorMatrix[, order(as.numeric(colnames(frob.errorMatrix))), drop=FALSE]
   frob.errorMatrix[frob.errorMatrix == 1] <- NA
   return(frob.errorMatrix)
 }
