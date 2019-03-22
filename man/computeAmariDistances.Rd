@@ -18,4 +18,3 @@ Compute Amari Distances from [Wu et. al, PNAS 2016]
 \references{
 \url{http://www.pnas.org/content/113/16/4290.long}
 }
-

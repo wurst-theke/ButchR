@@ -13,4 +13,3 @@
 \description{
 H-Matrix getter
 }
-

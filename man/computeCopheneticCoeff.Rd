@@ -12,4 +12,3 @@ computeCopheneticCoeff(nmf.exp)
 \description{
 Compute Cophenetic correlation coefficient, TO BE IMPROVED
 }
-

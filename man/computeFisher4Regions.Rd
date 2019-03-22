@@ -15,4 +15,3 @@ computeFisher4Regions(peaks, subregions, universe)
 \description{
 Title
 }
-

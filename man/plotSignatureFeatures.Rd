@@ -15,4 +15,3 @@ plotSignatureFeatures(nmf.exp, sig.combs = T, col = "blue")
 \description{
 Title
 }
-

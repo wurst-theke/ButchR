@@ -15,4 +15,3 @@ signatures will get the suffix "-like"}
 \description{
 Preparation for relabelling and recolouring of a riverplot
 }
-

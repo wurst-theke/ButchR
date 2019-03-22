@@ -4,8 +4,8 @@
 \alias{calculate_for_classifier_range}
 \title{Title}
 \usage{
-calculate_for_classifier_range(signature_matrix, matrix_V, test_odds, test_dist,
-  oddsVar_min = 0, k.dist_max = 1e+05)
+calculate_for_classifier_range(signature_matrix, matrix_V, test_odds,
+  test_dist, oddsVar_min = 0, k.dist_max = 1e+05)
 }
 \arguments{
 \item{k.dist_max}{}
@@ -13,4 +13,3 @@ calculate_for_classifier_range(signature_matrix, matrix_V, test_odds, test_dist,
 \description{
 Title
 }
-

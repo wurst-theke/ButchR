@@ -15,4 +15,3 @@ calculate_FI(LCD_result_df)
 \description{
 Calculate F1 score
 }
-

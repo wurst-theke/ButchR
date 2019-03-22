@@ -12,4 +12,3 @@ science_theme()
 \description{
 Science like figures - ggplot2 theme
 }
-

@@ -22,4 +22,3 @@ Compute signature specific features
 \examples{
 
 }
-

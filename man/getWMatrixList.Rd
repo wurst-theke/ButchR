@@ -15,4 +15,3 @@ getWMatrixList(dec.matrix)
 \description{
 Getter function for W-Matrix list from NMF-GPU list
 }
-

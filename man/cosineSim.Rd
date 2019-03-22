@@ -12,4 +12,3 @@ cosineSim(a, b)
 \description{
 Cosine similarity
 }
-

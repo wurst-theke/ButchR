@@ -12,4 +12,3 @@ getSignatureCombCounts(i.regions, w.diffs)
 \description{
 Title
 }
-

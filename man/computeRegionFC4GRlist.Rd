@@ -15,4 +15,3 @@ computeRegionFC4GRlist(peak, subregion, universe)
 \description{
 Title
 }
-

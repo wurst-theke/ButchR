@@ -12,4 +12,3 @@ filter_specific_features(k.row, specific = TRUE)
 \description{
 Filter features which are specific for a single signature
 }
-

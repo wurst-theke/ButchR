@@ -13,4 +13,3 @@
 \description{
 Optimal K Statistics getter
 }
-

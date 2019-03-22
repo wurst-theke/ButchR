@@ -15,4 +15,3 @@ k.row, a list of lists (one list per row of the input matrix)
 \description{
 Details
 }
-

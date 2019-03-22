@@ -15,4 +15,3 @@ getHMatrixList(dec.matrix)
 \description{
 Getter function for H-Matrix list from NMF-GPU list
 }
-

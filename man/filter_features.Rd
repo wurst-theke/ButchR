@@ -13,4 +13,3 @@ filter_features(k.row, out_int, specific_signatures, genes_df)
 Filter features which are specific for a single signature if min(size) == 1
 is already set
 }
-

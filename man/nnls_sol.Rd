@@ -17,4 +17,3 @@ X of A * X = B
 \description{
 Find non-negative exposures of one matrix in another matrix
 }
-

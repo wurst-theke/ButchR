@@ -12,4 +12,3 @@ build_granges_object(specific_signatures_list)
 \description{
 Build GRanges object from signature list
 }
-

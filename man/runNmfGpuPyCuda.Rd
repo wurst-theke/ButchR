@@ -20,4 +20,3 @@ runNmfGpuPyCuda(nmf.exp, k.min = 2, k.max = 2, outer.iter = 10,
 \description{
 Title
 }
-

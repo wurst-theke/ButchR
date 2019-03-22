@@ -2,8 +2,8 @@
 % Please edit documentation in R/nmfExperiment-class.R
 \docType{class}
 \name{nmfExperiment-class}
-\alias{nmfExperiment}
 \alias{nmfExperiment-class}
+\alias{nmfExperiment}
 \title{NMF Experiment Class}
 \value{
 

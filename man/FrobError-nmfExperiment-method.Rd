@@ -13,4 +13,3 @@
 \description{
 Frobenius Error getter
 }
-

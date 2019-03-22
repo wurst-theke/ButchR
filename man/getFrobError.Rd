@@ -15,4 +15,3 @@ getFrobError(dec.matrix)
 \description{
 Getter function for FrobError from NMF-GPU list
 }
-

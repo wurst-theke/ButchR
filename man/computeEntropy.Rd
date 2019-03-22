@@ -17,4 +17,3 @@ computeEntropy(matrix)
 Compute 'shannon' entropy per region.
 High Entropy means highly specific for one signature.
 }
-

@@ -26,4 +26,3 @@ Merge two objects of type nmfExperiment
  NULL
 
 }
-

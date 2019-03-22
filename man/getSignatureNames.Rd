@@ -12,4 +12,3 @@ getSignatureNames(nmf.exp, k.opt)
 \description{
 Compute unsupervised signature names from colData and H-Matrix for given K
 }
-

@@ -12,4 +12,3 @@ cosineDist(a, b)
 \description{
 Cosine distance
 }
-

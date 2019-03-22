@@ -15,4 +15,3 @@ computeAbsDelta(matrix)
 \description{
 Compute delta between each column (signature) per row
 }
-

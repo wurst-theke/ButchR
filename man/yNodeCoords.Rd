@@ -17,4 +17,3 @@ node_ypos
 \description{
 Order the riverplot nodes to minimize crossings
 }
-

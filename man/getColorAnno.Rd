@@ -15,4 +15,3 @@ getColorAnno(col.data)
 \description{
 Computes color annotation for colData from NMF-experiment class
 }
-

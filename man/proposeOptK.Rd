@@ -12,4 +12,3 @@ proposeOptK(nmf.exp, verbose = FALSE)
 \description{
 Title
 }
-

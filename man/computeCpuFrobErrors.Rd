@@ -15,4 +15,3 @@ computeCpuFrobErrors(nmf.exp, cpu.nmf.list, k.min, k.max)
 \description{
 Title
 }
-

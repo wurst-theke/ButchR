@@ -12,4 +12,3 @@ normalizeUpperQuartile(matrix)
 \description{
 Title
 }
-

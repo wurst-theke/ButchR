@@ -12,4 +12,3 @@ match_and_count(LCD_result_df)
 \description{
 Match and count
 }
-

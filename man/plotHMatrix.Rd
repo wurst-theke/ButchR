@@ -15,4 +15,3 @@ plotHMatrix(nmf.exp, k = 2)
 \description{
 Plot H-Matrix as heatmap for a given factorization rank K
 }
-

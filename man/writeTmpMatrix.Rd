@@ -16,4 +16,3 @@ writeTmpMatrix(matrix, tmp.path = "/tmp/nmf_tmp", sep = " ",
 \description{
 Title
 }
-

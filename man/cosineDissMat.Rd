@@ -12,4 +12,3 @@ cosineDissMat(in.matrix, in.dimension = 2)
 \description{
 Create distance matrix with cosine similarity with matrix operations
 }
-

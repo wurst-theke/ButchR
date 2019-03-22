@@ -18,4 +18,3 @@ Convert Matrix to SummarizedExperiment Object
 \examples{
 
 }
-

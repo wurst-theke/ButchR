@@ -15,4 +15,3 @@ igvCoord2Grange(coords)
 \description{
 Title
 }
-

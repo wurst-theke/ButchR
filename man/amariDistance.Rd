@@ -19,4 +19,3 @@ Compute amari type distance between two matrices
 \references{
 \url{http://www.pnas.org/content/113/16/4290.long}
 }
-

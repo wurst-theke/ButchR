@@ -13,4 +13,3 @@
 \description{
 W-Matrix list getter
 }
-

@@ -15,4 +15,3 @@ computeRegionFC(peaks, subregions, universe)
 \description{
 Title
 }
-

@@ -15,4 +15,3 @@ computePeakStats4Regions(peaks, subregions, universe)
 \description{
 Title
 }
-

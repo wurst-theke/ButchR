@@ -12,4 +12,3 @@ getIndex4SignatureCombs(k.ids)
 \description{
 Title
 }
-

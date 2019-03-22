@@ -1251,6 +1251,25 @@ computeSignatureSpecificFeatures <- function(nmf.exp, rowDataId = 3){
 #==============================================================================#
 #                      NMF tensorflow Wrapper - FUNCTION                       #
 #==============================================================================#
+
+#' Computes NMF on tensorflow using the reticulate framework
+#'
+#' @param nmf.exp
+#' @param k.min
+#' @param k.max
+#' @param outer.iter
+#' @param inner.iter
+#' @param conver.test.niter
+#' @param conver.test.stop.threshold
+#'
+#' @return
+#'
+#' @import SummarizedExperiment
+#' @importFrom data.table fread
+#' @importFrom S4Vectors DataFrame
+#' @export
+#'
+#' @examples
 runNMFtensor <- function (nmf.exp, k.min = 2, k.max = 2, outer.iter = 10, inner.iter = 10^4, 
                           conver.test.niter = 10, conver.test.stop.threshold = 40){
   # Convert params to integer

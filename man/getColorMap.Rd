@@ -15,4 +15,3 @@ getColorMap(matrix.list)
 \description{
 Generate ColorMap for ComplexHeatmaps
 }
-

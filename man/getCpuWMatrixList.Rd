@@ -15,4 +15,3 @@ getCpuWMatrixList(cpu.nmf.list, k.min, k.max)
 \description{
 Getter function for W-Matrix list from NMF-CPU list
 }
-

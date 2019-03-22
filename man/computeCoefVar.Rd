@@ -15,4 +15,3 @@ computeCoefVar(matrix)
 \description{
 Compute the coeficient of variation per row in a matrix.
 }
-

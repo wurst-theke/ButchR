@@ -15,4 +15,3 @@ performRowKmeans(matrix)
 \description{
 Perform Kmeans on rows of a matrix to classify them into column (singature) combinations
 }
-

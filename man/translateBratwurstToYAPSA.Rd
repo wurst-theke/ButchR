@@ -30,4 +30,3 @@ to the YAPSA world.
 \seealso{
 \code{\link{normalizeW}}
 }
-

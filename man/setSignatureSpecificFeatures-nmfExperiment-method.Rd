@@ -14,4 +14,3 @@
 \description{
 Feature Statistics setter
 }
-

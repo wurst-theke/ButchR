@@ -12,4 +12,3 @@ computeAbsDelta4OptK(nmf.exp)
 \description{
 Computes absolut delta per feature for each signature given optimal K
 }
-

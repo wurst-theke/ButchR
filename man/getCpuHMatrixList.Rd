@@ -15,4 +15,3 @@ getCpuHMatrixList(cpu.nmf.list, k.min, k.max)
 \description{
 Getter function for H-Matrix list from NMF-CPU list
 }
-

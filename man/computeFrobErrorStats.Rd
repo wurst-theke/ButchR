@@ -12,4 +12,3 @@ computeFrobErrorStats(nmf.exp)
 \description{
 Compute basic statistics for Frobenius Errors
 }
-

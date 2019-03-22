@@ -12,4 +12,3 @@ computeRmdAUCs(ranks, n, iter = 10^3, threads = 3)
 \description{
 Title
 }
-

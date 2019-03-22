@@ -15,4 +15,3 @@ plotRankedFrobErrors(nmf.exp)
 \description{
 Ploting function for Rank vs. Frobenius Error
 }
-

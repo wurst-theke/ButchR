@@ -4,7 +4,8 @@
 \alias{nmfExperimentFromFile}
 \title{Reads Matrix & Annotation Files to SummarizedExperiment Object}
 \usage{
-nmfExperimentFromFile(matrix.file, rowAnno.file = NULL, colData.file = NULL)
+nmfExperimentFromFile(matrix.file, rowAnno.file = NULL,
+  colData.file = NULL)
 }
 \arguments{
 \item{colData.file}{}
@@ -12,4 +13,3 @@ nmfExperimentFromFile(matrix.file, rowAnno.file = NULL, colData.file = NULL)
 \description{
 Reads Matrix & Annotation Files to SummarizedExperiment Object
 }
-

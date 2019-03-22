@@ -15,4 +15,3 @@ computeSilhoutteWidth(nmf.exp)
 \description{
 Compute Alexandrov Criterion --> Silhoutte Width
 }
-

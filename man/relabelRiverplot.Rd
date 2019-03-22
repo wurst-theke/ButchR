@@ -12,4 +12,3 @@ relabelRiverplot(in_riverplot, in_list)
 \description{
 Relabel and recolour a riverplot
 }
-

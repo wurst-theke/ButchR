@@ -12,4 +12,3 @@ computePValue4FrobError(frobError.matrix)
 \description{
 Compute p-value with t-test for running K
 }
-

@@ -15,4 +15,3 @@ runNmfCpu(nmf.exp, k.min = 2, k.max = 2, seed = FALSE, ...)
 \description{
 Title
 }
-

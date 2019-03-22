@@ -12,4 +12,3 @@ computeEntropy4OptK(nmf.exp)
 \description{
 Computes entropy for each feature in optimal K W-matrix
 }
-

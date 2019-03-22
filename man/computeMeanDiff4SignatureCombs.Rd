@@ -12,4 +12,3 @@ computeMeanDiff4SignatureCombs(W, i.regions)
 \description{
 Title
 }
-

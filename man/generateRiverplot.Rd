@@ -5,7 +5,8 @@
 \title{Generate a riverplot object that displays the similarities between
 signatures at different factorization ranks}
 \usage{
-generateRiverplot(nmf.exp, edges.cutoff = 0, useH = FALSE, color = TRUE)
+generateRiverplot(nmf.exp, edges.cutoff = 0, useH = FALSE,
+  color = TRUE)
 }
 \arguments{
 \item{edges.cutoff}{cutoff until which similarities are displayed}
@@ -25,4 +26,3 @@ signatures at different factorization ranks
 plt <- generateRiverplot(nmf.exp, edges.cutoff = 0.2)
 plot(plt, plot_area = 1, yscale = 0.6, nodewidth = 0.5)
 }
-

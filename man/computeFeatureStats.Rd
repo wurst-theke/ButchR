@@ -12,4 +12,3 @@ computeFeatureStats(nmf.exp, var.thres = 0.25)
 \description{
 Compute Signature Combinations for W-matrix given optimal K
 }
-
