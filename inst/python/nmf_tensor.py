@@ -62,7 +62,7 @@ def NMF(matrix,r,iterations, niter_test_conv=10, stop_threshold=40):
         # Evaluate convergence
         if i % niter_test_conv == 0:
             newExpo = tf.math.argmax(H, axis=0)
-            if tf.reduce_all(tf.math.equal(oldExposures, newExpo)):
+            if tf.reduce_all(tf.math.equal(oldExposures, newExpo)).__invert__():
                 oldExposures = newExpo
                 const = 0
             else:
