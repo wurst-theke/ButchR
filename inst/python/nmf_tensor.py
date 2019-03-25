@@ -20,7 +20,7 @@ Created on Thu Mar 21 2019
 ##                Define Function to run NMF in tensorflow 2                 ##
 ##–––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––##
 
-def NMF(matrix,r,iterations, niter_test_conv=10, stop_threshold=40):
+def NMF(matrix,r,iterations, stop_threshold=40):
     
     # NMF in tensorflow
     n = matrix.shape[0]
@@ -60,17 +60,17 @@ def NMF(matrix,r,iterations, niter_test_conv=10, stop_threshold=40):
         update_W = W.assign(newW)
         
         # Evaluate convergence
-        if i % niter_test_conv == 0:
-            newExpo = tf.math.argmax(H, axis=0)
-            if tf.reduce_all(tf.math.equal(oldExposures, newExpo)).__invert__():
-                oldExposures = newExpo
-                const = 0
-            else:
-                const += 1
-                #print(f'new eval diff, {const}')
-                if const == stop_threshold:
-                    #print(f"NMF converged after {i} iterations")
-                    break
+        
+        newExpo = tf.math.argmax(H, axis=0)
+        if tf.reduce_all(tf.math.equal(oldExposures, newExpo)).__invert__():
+            oldExposures = newExpo
+            const = 0
+        else:
+            const += 1
+            #print(f'new eval diff, {const}')
+            if const == stop_threshold:
+                #print(f"NMF converged after {i} iterations")
+                break
     
     frobNorm = tf.linalg.norm(X - tf.matmul(W, H)) / tf.linalg.norm(X)
     return W.numpy(),H.numpy(), i, frobNorm.numpy()
