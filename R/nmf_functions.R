@@ -1259,7 +1259,6 @@ computeSignatureSpecificFeatures <- function(nmf.exp, rowDataId = 3){
 #' @param k.max
 #' @param outer.iter
 #' @param inner.iter
-#' @param conver.test.niter
 #' @param conver.test.stop.threshold
 #'
 #' @return
@@ -1271,13 +1270,12 @@ computeSignatureSpecificFeatures <- function(nmf.exp, rowDataId = 3){
 #'
 #' @examples
 runNMFtensor <- function (nmf.exp, k.min = 2, k.max = 2, outer.iter = 10, inner.iter = 10^4, 
-                          conver.test.niter = 10, conver.test.stop.threshold = 40){
+                          conver.test.stop.threshold = 40){
   # Convert params to integer
   nmf.params <- lapply(list(k.min=k.min, 
                             k.max=k.max, 
                             outer.iter=outer.iter, 
                             inner.iter=inner.iter, 
-                            conver.test.niter=conver.test.niter, 
                             conver.test.stop.threshold=conver.test.stop.threshold), 
                        as.integer)
   
@@ -1294,7 +1292,7 @@ runNMFtensor <- function (nmf.exp, k.min = 2, k.max = 2, outer.iter = 10, inner.
     k.matrix <- lapply(1:outer.iter, function(i) {
       if (i%%10 == 0) cat("\tIteration: ", i, "\n")
       
-      nmf.eval <- NMF(X, k, nmf.params$inner.iter, nmf.params$conver.test.niter, nmf.params$conver.test.stop.threshold)
+      nmf.eval <- NMF(X, k, nmf.params$inner.iter, nmf.params$conver.test.stop.threshold)
       names(nmf.eval) <- c("W", "H", "iterations", "Frob.error")
       return(nmf.eval)
     })
