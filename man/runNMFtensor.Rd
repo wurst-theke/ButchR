@@ -5,8 +5,7 @@
 \title{Computes NMF on tensorflow using the reticulate framework}
 \usage{
 runNMFtensor(nmf.exp, k.min = 2, k.max = 2, outer.iter = 10,
-  inner.iter = 10^4, conver.test.niter = 10,
-  conver.test.stop.threshold = 40)
+  inner.iter = 10^4, conver.test.stop.threshold = 40)
 }
 \arguments{
 \item{conver.test.stop.threshold}{}
