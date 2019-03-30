@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import division
-#import numpy as np
+import numpy as np
 import os
 import tensorflow as tf
 #import argparse
@@ -15,110 +15,101 @@ Created on Thu Mar 21 2019
 @author: Andres Quintero
 """
 
-def iNMF(matrices, rank, iterations, lamb, sparcity=0, nrep=200, steps=100, stop_threshold=40):
-    
-    nviews = len(matrices)
-    
-    Xs_tensor = []
-    Xs_shapes = []
-    for i in range(nviews):
-        Xs_shapes.append(matrices[i].shape)
-        Xs_tensor.append(tf.constant(matrices[i], name = ("X" + str(i)), dtype=tf.float32))
 
+def iNMF(matrix_list, rank, iterations, L, Sp=0, stop_threshold=40):
+    matrix_list = [np.transpose(Xv) for Xv in matrix_list]
     
+    K = len(matrix_list)
+    N = matrix_list[0].shape[0]
+    Ms = [Xv.shape[1] for Xv in matrix_list]
     
-    ##–––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––##
-    ##                             Initialize W matrices                         ##
-    ##–––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––##
+    # X matrices to tensor constant
+    Xs = [tf.constant(matrix_list[i], name = ("X" + str(i)), dtype=tf.float32) for i in range(K)]
+    
+    ##–––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––##
+    ##                         Initialize W matrices                         ##
+    ##–––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––##
     initializer = tf.random_uniform_initializer(minval=0, maxval=2)
     
-    Ws_tensor = [tf.Variable(initializer(shape=[Xs_shapes[i][0], rank]), 
-                             name=("W" + str(i))) for i in range(nviews)]
+    Ws = [tf.Variable(initializer(shape=[rank, Ms[i]]),
+                      name=("W" + str(i))) for i in range(K)]
         
     
-    ##–––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––##
-    ##                             Initialize H matrix                           ##
-    ##–––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––##
+    ##–––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––##
+    ##                             Initialize H matrix                       ##
+    ##–––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––##
     
-    H = tf.Variable(initializer(shape=[rank, Xs_shapes[0][1]]), name="H")
+    H = tf.Variable(initializer(shape=[N, rank]), name="H")
     
-    ##–––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––##
-    ##                  Initialize view specific H matrices                      ##
-    ##–––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––##
-    Hviews_tensor = [tf.Variable(initializer(shape=[rank, Xs_shapes[i][1]]), 
-                                 name= ("Hview" + str(i))) for i in range(nviews)]
-    
-    ##–––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––##
-    ##                Save initial max exposures in H matrices                   ##
-    ##–––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––##
-    Hs_summed = [tf.math.add(H, Hv) for Hv in Hviews_tensor]
-    oldExposures = tf.concat([tf.math.argmax(Hsummed, axis=0) for Hsummed in Hs_summed ], 0)
+    ##–––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––##
+    ##                  Initialize view specific H matrices                  ##
+    ##–––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––##
+    Hvs = [tf.Variable(initializer(shape=[N, rank]),
+                       name= ("Hview" + str(i))) for i in range(K)]
+
+    ##–––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––##
+    ##            Save initial max exposures in H matrices                   ##
+    ##–––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––##
+    Hts = [tf.add(H, Hv) for Hv in Hvs]
+    oldExposures = tf.concat([tf.math.argmax(Ht, axis=1) for Ht in Hts], 0)
     const = 0
     
+    ##–––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––##
+    ##                       Start matrix factorization                      ##
+    ##–––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––##
     for inner in range(iterations):
-        ##–––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––##
-        ##                              Update H                                     ##
-        ##–––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––##
-        with tf.name_scope('update_H') as scope:
-            num = tf.reduce_sum([tf.matmul(Xs_tensor[j], Ws_tensor[j], transpose_a=True) for j in range(nviews)], 0)
-            den = tf.reduce_sum([(tf.matmul(tf.reduce_sum([H, Hviews_tensor[j]], 0), tf.matmul(Ws_tensor[j], Ws_tensor[j], transpose_a=True), transpose_a=True)) for j in range(nviews)], 0)
-            H_new = tf.math.multiply(H,  tf.transpose(tf.math.divide(num, den)))
-            
-            H_new  = tf.where(tf.math.is_nan(H_new ), tf.zeros_like(H_new ), H_new )
-            update_H = H.assign(H_new)
-            
-        ##–––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––##
-        ##                                 Update W                                  ##
-        ##–––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––##                        
-        for i in range(nviews):
-            X, W, Hv = Xs_tensor[i], Ws_tensor[i], Hviews_tensor[i]
-            
-            #save W for calculating delta with the updated W
-            W_old = tf.Variable(W, name = ("W_old" + str(i)))
-            save_W = W_old.assign(W)
-            
-            with tf.name_scope(('update_W' + str(i))) as scope:
-                #update operation for W (after updating H)
-                HHv     = tf.reduce_sum([H, Hv], 0)
-                HHvHHvW = tf.matmul(tf.matmul(HHv, HHv, transpose_b=True), W, transpose_b=True)
-                HvHvW   = tf.matmul(tf.matmul(Hv, Hv, transpose_b=True), W, transpose_b=True) + lamb
-                denH = tf.reduce_sum([HHvHHvW, HvHvW], 0) + sparcity
-                HHvX_denH =tf.math.divide(tf.matmul(HHv,  X, transpose_b=True), denH)
-                HHvX_denH = tf.where(tf.math.is_nan(HHvX_denH), tf.zeros_like(HHvX_denH), HHvX_denH)
-    
-                W_new = W * tf.transpose(HHvX_denH)             
-                W_new  = tf.where(tf.math.is_nan(W_new ), tf.zeros_like(W_new ), W_new )
-                update_W = W.assign(W_new)
-    
-        ##–––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––##
-        ##                    Update view Specific Hs                                ##
-        ##–––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––##
-                
-        count_Hvs_updated = []
-        for i in range(nviews):
-            count_Hv_updated_tmp = tf.Variable(0, name = ("updateoldHview" + str(i)), dtype=tf.int32)
-            count_Hvs_updated.append(count_Hv_updated_tmp )
+        ##–––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––##
+        ##                          Update H                                 ##
+        ##–––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––##
+        num   = tf.reduce_sum([tf.matmul(Xs[i], Ws[i], transpose_b=True) for i in range(K)], 0)
+        den_K = []
+        for i in range(K):
+            Ht = tf.reduce_sum([H, Hvs[i]], 0)
+            WW = tf.matmul(Ws[i], Ws[i], transpose_b=True)
+            den_K.append(tf.matmul(Ht, WW))
+        den    = tf.reduce_sum(den_K, 0)
+        H_new  = tf.multiply(H,  tf.divide(num, den))
+        H_new  = tf.where(tf.math.is_nan(H_new), tf.zeros_like(H_new), H_new)
+        H.assign(H_new)
         
-                
-        for i in range(nviews):
-            X, W, Hv = Xs_tensor[i], Ws_tensor[i], Hviews_tensor[i]
+        ##–––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––##
+        ##                            Update Ws                              ##
+        ##–––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––##                        
+
+        for i in range(K):
+            Ht     = tf.reduce_sum([H, Hvs[i]], 0)
+            HtHt   = tf.matmul(Ht, Ht, transpose_a=True)
             
-            with tf.name_scope(('update_View_H' + str(i))) as scope:
-                #update operation for view specific H (after updating H and Ws)
-                
-                WW = tf.matmul(W, W, transpose_a=True)
-                HHvWW = tf.matmul(tf.reduce_sum([H, Hv], 0), WW, transpose_a=True)
-                lambHvWW = tf.matmul((Hv * lamb), WW, transpose_a=True)
-                denHv = tf.reduce_sum([HHvWW, lambHvWW], 0) 
-                XH_denHv = tf.math.divide(tf.matmul(X, W, transpose_a=True), denHv)
-                XH_denHv = tf.where(tf.math.is_nan(XH_denHv), tf.zeros_like(XH_denHv), XH_denHv)
+            HvHv   = tf.matmul(Hvs[i], Hvs[i], transpose_a=True)
+            HsHs   = tf.reduce_sum([HtHt, tf.multiply(L,  HvHv)], 0)            
+            den    = tf.matmul(HsHs, Ws[i]) + Sp
+            HX_den = tf.divide(tf.matmul(Ht, Xs[i], transpose_a=True), den)
+            W_new  = tf.multiply(Ws[i], HX_den)
+            W_new  = tf.where(tf.math.is_nan(W_new), tf.zeros_like(W_new), W_new)
+            Ws[i].assign(W_new)
+            
+        #    WV = W+Vs[i]
+        #    den = (WV.T.dot(WV) + L*Vs[i].T.dot(Vs[i])).dot(Hs[i]) + Sp
+        #    Hs[i] *= (WV.T.dot(Xs[i]))/den
     
-                Hv_new = Hv * tf.transpose(XH_denHv)
-                Hv_new  = tf.where(tf.math.is_nan(Hv_new ), tf.zeros_like(Hv_new ), Hv_new )
-                update_Hv = Hv.assign(Hv_new)
+        ##–––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––##
+        ##                    Update view Specific Hs                        ##
+        ##–––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––##
+        for i in range(K):
+            Ht     = tf.reduce_sum([H, tf.multiply((1+L), Hvs[i])], 0)
+            WW     = tf.matmul(Ws[i], Ws[i], transpose_b=True)
+            den    = tf.matmul(Ht, WW)
+            XW     = tf.matmul(Xs[i], Ws[i], transpose_b=True)
+            XW_den = tf.divide(XW, den)
+            Hv_new = tf.multiply(Hvs[i], XW_den)
+            Hv_new = tf.where(tf.math.is_nan(Hv_new), tf.zeros_like(Hv_new), Hv_new)
+            Hvs[i].assign(Hv_new)
     
-        Hs_summed = [tf.math.add(H, Hv) for Hv in Hviews_tensor]
-        newExposures = tf.concat([tf.math.argmax(Hsummed, axis=0) for Hsummed in Hs_summed ], 0)
+        ##–––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––##
+        ##                    Evaluate Convergence                           ##
+        ##–––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––##
+        Hts = [tf.add(H, Hv) for Hv in Hvs]
+        newExposures = tf.concat([tf.math.argmax(Ht, axis=1) for Ht in Hts], 0)
         
         if tf.reduce_all(tf.math.equal(oldExposures, newExposures)).__invert__():
             oldExposures = newExposures
@@ -127,15 +118,18 @@ def iNMF(matrices, rank, iterations, lamb, sparcity=0, nrep=200, steps=100, stop
             const += 1
             if const == stop_threshold:
                 break
-        
+            
     frobNorm = []
-    for i in range(nviews):
-        HHv = tf.math.add(H, Hviews_tensor[i])
-        fb = tf.linalg.norm(Xs_tensor[i] - tf.matmul(Ws_tensor[i], HHv)) / tf.linalg.norm(Xs_tensor[i])
+    for i in range(K):
+        Ht = tf.add(H, Hvs[i])
+        fb = tf.linalg.norm(Xs[i] - tf.matmul(Ht, Ws[i])) / tf.linalg.norm(Xs[i])
         frobNorm.append(fb.numpy())
+    ##–––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––##
+    ##             Convert to numpy, transpose and return                    ##
+    ##–––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––##
     
-    Ws_num = [Wi.numpy() for Wi in Ws_tensor]
-    H_num  = H.numpy()
-    Hv_num = [Hv.numpy() for Hv in Hviews_tensor] 
+    Ws_num = [Wi.numpy().T for Wi in Ws]
+    H_num  = H.numpy().T
+    Hvs_num = [Hv.numpy().T for Hv in Hvs] 
         
-    return Ws_num, H_num, Hv_num, inner+1, frobNorm 
+    return Ws_num, H_num, Hvs_num, inner+1, frobNorm 

@@ -1361,15 +1361,21 @@ integrative_NMF <- setClass(
 #' @export
 #'
 #' @examples
-run_integrative_NMF_tensor <- function (matrix_list, k_min = 2, k_max = 2, outer_iter = 10, inner_iter = 10^4, 
-                                        conver_stop_threshold = 40, lambda=1){
+run_integrative_NMF_tensor <- function (matrix_list, 
+                                        k_min = 2, 
+                                        k_max = 2, 
+                                        outer_iter = 10, 
+                                        inner_iter = 10^4, 
+                                        conver_stop_threshold = 40, 
+                                        lambda = 1, 
+                                        Sp = 0){
   # Convert params to integer
-  nmf_params <- lapply(list(k_min=k_min, 
-                            k_max=k_max, 
-                            outer_iter=outer_iter, 
-                            inner_iter=inner_iter, 
-                            conver_stop_threshold=conver_stop_threshold,
-                            lambda=lambda), 
+  nmf_params <- lapply(list(k_min = k_min, 
+                            k_max = k_max, 
+                            outer_iter = outer_iter, 
+                            inner_iter = inner_iter, 
+                            conver_stop_threshold = conver_stop_threshold,
+                            lambda = lambda), 
                        as.integer)
   viewsIDs <- setNames(names(matrix_list), names(matrix_list))
   # Source NMF tensorflow python script
@@ -1387,10 +1393,13 @@ run_integrative_NMF_tensor <- function (matrix_list, k_min = 2, k_max = 2, outer
     k_eval <- lapply(1:outer_iter, function(i) {
       if (i%%10 == 0) cat("\tIteration: ", i, "\n")
       
-      inmf_eval <- iNMF(unname(matrix_list), rank=k, iterations=nmf_params$inner_iter, 
-                        lamb=nmf_params$lambda, stop_threshold=nmf_params$conver_stop_threshold)
+      inmf_eval <- iNMF(unname(matrix_list), 
+                        rank           = k, 
+                        iterations     = nmf_params$inner_iter, 
+                        L              = nmf_params$lambda, 
+                        Sp             = Sp, 
+                        stop_threshold = nmf_params$conver_stop_threshold)
       
-      #nmf.eval <- NMF(X, k, nmf_params$inner_iter, nmf_params$conver_stop_threshold)
       names(inmf_eval) <- c("Ws", "sharedH", "viewHs", "iterations", "Frob_error")
       names(inmf_eval$Ws)         <- names(matrix_list)
       names(inmf_eval$viewHs)     <- names(matrix_list)
