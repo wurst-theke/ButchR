@@ -23,5 +23,10 @@ A nmfExperiment_lite object, containg the initial matrix X and the faactorized m
 Computes NMF on tensorflow using the reticulate framework, uses a non-negative matrix as input
 }
 \examples{
-
+nmf_exp <- runNMFtensor_lite(matrix(1:1000, ncol = 10),
+                             ranks = 2:5,
+                             n_initializations     = 10,
+                             iterations            = 10^4,
+                             convergence_threshold = 40)
+nmf_exp
 }

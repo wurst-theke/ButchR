@@ -34,8 +34,14 @@ setMethod("show",
             cat("class: NMF object lite \n")
             #cat("Best factorization index: ", object@best_factorization_idx, "\n")
             cat("Original matrix dimension: ", object@input_matrix$dim, "\n")
-            cat("Factorization performed for ranks: ", object@Factorization_ranks$rank, "\n")
-            cat("Optimal K based on factorization metrics: ", object@OptK, "\n")
+            cat("Factorization performed for ranks: ", object@OptKStats$k, "\n")
+            if (length(object@OptK) == 0) {
+              OptK <- "Please select manualy\n"
+            } else {
+              OptK <- object@OptK
+            }
+
+            cat("Optimal K based on factorization metrics: ", OptK, "\n")
           }
 )
 
@@ -70,10 +76,10 @@ setMethod("HMatrix",
                 })
               }
             } else {
-              idx <- x@Factorization_ranks$rank_id[x@Factorization_ranks$rank == k]
+              idx <- x@OptKStats$rank_id[x@OptKStats$k == k]
               if (length(idx) == 0 ) {
                 stop("No H matrix present for k = ", k,
-                     "\nPlease select from ranks = ", paste0(x@Factorization_ranks$rank, collapse = ","))
+                     "\nPlease select from ranks = ", paste0(x@OptKStats$k, collapse = ","))
               }
 
               H <- x@HMatrix[[idx]]
@@ -113,10 +119,10 @@ setMethod("WMatrix",
                 })
               }
             } else {
-              idx <- x@Factorization_ranks$rank_id[x@Factorization_ranks$rank == k]
+              idx <- x@OptKStats$rank_id[x@OptKStats$k == k]
               if (length(idx) == 0 ) {
                 stop("No W matrix present for k = ", k,
-                     "\nPlease select from ranks = ", paste0(x@Factorization_ranks$rank, collapse = ","))
+                     "\nPlease select from ranks = ", paste0(x@OptKStats$k, collapse = ","))
               }
 
               W <- x@WMatrix[[idx]]
