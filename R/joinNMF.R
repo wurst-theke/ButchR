@@ -14,8 +14,8 @@
 #' @export
 #'
 #' @examples
-joint_NMF <- setClass(
-  Class = "joint_NMF",
+join_NMF <- setClass(
+  Class = "join_NMF",
   slots = list(shared_HMatrix_list        = "list",
                view_specific_WMatrix_list = "list",
                #frobenius_error            = "data.frame",
@@ -23,6 +23,15 @@ joint_NMF <- setClass(
                best_factorization_idx     = "numeric",
                view_specific_NMFexp_list  = "list" )
 )
+
+setMethod("show",
+          "join_NMF",
+          function(object) {
+            cat("class: join NMF object \n")
+            cat("Best factorization index: ", object@best_factorization_idx, "\n")
+          }
+)
+
 
 #' Computes integrative NMF on tensorflow using the reticulate framework
 #'
@@ -154,10 +163,10 @@ run_join_NMF_tensor <- function (matrix_list,
   #                       Return integrative_NMF class4 object                 #
   #----------------------------------------------------------------------------#
 
-  integrative_NMF(shared_HMatrix_list        = shared_HMatrix_list,
-                  view_specific_WMatrix_list = view_specific_WMatrix_list,
-                  best_factorization_idx     = best_factorization_idx,
-                  view_specific_NMFexp_list  = nmfExp_list)
+  join_NMF(shared_HMatrix_list        = shared_HMatrix_list,
+           view_specific_WMatrix_list = view_specific_WMatrix_list,
+           best_factorization_idx     = best_factorization_idx,
+           view_specific_NMFexp_list  = nmfExp_list)
 }
 
 

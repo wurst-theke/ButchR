@@ -20,7 +20,8 @@ Imports:
     nnls,
     riverplot,
     NMF,
-    caret
+    caret,
+    digest
 Depends:
     SummarizedExperiment,
     reticulate
