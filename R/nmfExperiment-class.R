@@ -371,77 +371,71 @@ setMethod("setSignatureSpecificFeatures", "nmfExperiment",
 #==============================================================================#
 #' Normalize the signatures matrix (W)
 #'
-#' Return a list of W-Matrices or a W-Matrix for the indicaded rank
-#'
-#' @param x an nmfExperiment or a nmfExperiment_lite object
-#' @param k numeric  - factorization rank
-#'
-#' @return list of W-Matrices or a W-Matrix for the indicaded rank
-#' @export
-#' @docType methods
-#' @rdname WMatrix-methods
-#'
-#' @examples
-#' WMatrix(nmf_exp)
-#' WMatrix(nmf_exp, k = 2)
-setGeneric("WMatrix", function(x, k = NULL, ...) standardGeneric("WMatrix"))
-
-
-#'
-#'
 #' After column normalization of the matrix W, the inverse factors are
 #' mutiplied with the rows of H in order to keep the matrix product W*H
 #' constant.
 #'
-#' @param nmf.exp
+#' @param nmf_exp an nmfExperiment or a nmfExperiment_lite object
 #'
-#' @return A data structure of type nmfExperiment
+#' @return an nmfExperiment or a nmfExperiment_lite object normalized by W
+#' @export
+#' @docType methods
+#' @rdname normalizeW-methods
+#'
+#' @examples
+#' normalizeW(nmf_exp)
+setGeneric("normalizeW", function(nmf_exp, ...) standardGeneric("normalizeW"))
+
+#' @rdname normalizeW-methods
+#' @aliases normalizeW,ANY,ANY-method
 #'
 #' @importFrom YAPSA normalize_df_per_dim
 #' @export
 #'
-#' @examples
-#'  NULL
-#'
-normalizeW <- function(nmf.exp){
-  # account for WMatrixList and HMatrixList
-  all_list <- lapply(seq_along(WMatrixList(nmf.exp)), function(k_ind){
-    k_list <-
-      lapply(seq_along(WMatrixList(nmf.exp)[[k_ind]]), function(init_ind){
-        tempW <- WMatrixList(nmf.exp)[[k_ind]][[init_ind]]
-        tempH <- HMatrixList(nmf.exp)[[k_ind]][[init_ind]]
-        normFactor <- colSums(tempW)
-        # catch errors associated with NaNs in W or H
-        if (any(is.nan(normFactor))){
-          return(list(W = tempW,
-                      H = tempH))
-        }else{
-          newSigs <- as.matrix(normalize_df_per_dim(tempW, 2))
-          newExpo <- tempH * normFactor
-          #newV <- newSigs %*% newExpo
-          #oldV <- tempW %*% tempH
-          return(list(W = newSigs,
-                      H = newExpo))
-        }
-      })
-    names(k_list) <- names(WMatrixList(nmf.exp)[[k_ind]])
-    return(k_list)
-  })
-  names(all_list) <- names(WMatrixList(nmf.exp))
-  thisWMatrixList <- lapply(all_list, function(current_k_list){
-    kWMatrixList <- lapply(current_k_list, function(current_entry){
-      return(current_entry$W)
-    })
-  })
-  nmf.exp <- setWMatrixList(nmf.exp, thisWMatrixList)
-  thisHMatrixList <- lapply(all_list, function(current_k_list){
-    kHMatrixList <- lapply(current_k_list, function(current_entry){
-      return(current_entry$H)
-    })
-  })
-  nmf.exp <- setHMatrixList(nmf.exp, thisHMatrixList)
-  return(nmf.exp)
-}
+setMethod("normalizeW", "nmfExperiment",
+          function(nmf_exp){
+            # account for WMatrixList and HMatrixList
+            all_list <- lapply(seq_along(WMatrixList(nmf_exp)), function(k_ind){
+              k_list <-
+                lapply(seq_along(WMatrixList(nmf_exp)[[k_ind]]), function(init_ind){
+                  tempW <- WMatrixList(nmf_exp)[[k_ind]][[init_ind]]
+                  tempH <- HMatrixList(nmf_exp)[[k_ind]][[init_ind]]
+                  normFactor <- colSums(tempW)
+                  # catch errors associated with NaNs in W or H
+                  if (any(is.nan(normFactor))){
+                    return(list(W = tempW,
+                                H = tempH))
+                  }else{
+                    newSigs <- as.matrix(normalize_df_per_dim(tempW, 2))
+                    newExpo <- tempH * normFactor
+                    #newV <- newSigs %*% newExpo
+                    #oldV <- tempW %*% tempH
+                    return(list(W = newSigs,
+                                H = newExpo))
+                  }
+                })
+              names(k_list) <- names(WMatrixList(nmf_exp)[[k_ind]])
+              return(k_list)
+            })
+            names(all_list) <- names(WMatrixList(nmf_exp))
+            thisWMatrixList <- lapply(all_list, function(current_k_list){
+              kWMatrixList <- lapply(current_k_list, function(current_entry){
+                return(current_entry$W)
+              })
+            })
+            nmf_exp <- setWMatrixList(nmf_exp, thisWMatrixList)
+            thisHMatrixList <- lapply(all_list, function(current_k_list){
+              kHMatrixList <- lapply(current_k_list, function(current_entry){
+                return(current_entry$H)
+              })
+            })
+            nmf_exp <- setHMatrixList(nmf_exp, thisHMatrixList)
+            return(nmf_exp)
+          }
+)
+
+
+
 
 #' Normalize the signatures matrix (H)
 #'
@@ -449,47 +443,57 @@ normalizeW <- function(nmf.exp){
 #' mutiplied with the columns of W in order to keep the matrix product W*H
 #' constant.
 #'
-#' @param nmf.exp
+#' @param nmf_exp an nmfExperiment or a nmfExperiment_lite object
 #'
-#' @return A data structure of type nmfExperiment
+#' @return an nmfExperiment or a nmfExperiment_lite object normalized by W
+#' @export
+#' @docType methods
+#' @rdname normalizeH-methods
+#'
+#' @examples
+#' normalizeH(nmf_exp)
+setGeneric("normalizeH", function(nmf_exp, ...) standardGeneric("normalizeH"))
+
+#' @rdname normalizeH-methods
+#' @aliases normalizeH,ANY,ANY-method
 #'
 #' @importFrom YAPSA normalize_df_per_dim
 #' @export
 #'
-#' @examples
-#'  NULL
-#'
-normalizeH <- function(nmf.exp){
-  # account for WMatrixList and HMatrixList
-  all_list <- lapply(seq_along(WMatrixList(nmf.exp)), function(k_ind){
-    k_list <-
-      lapply(seq_along(WMatrixList(nmf.exp)[[k_ind]]), function(init_ind){
-        tempW <- WMatrixList(nmf.exp)[[k_ind]][[init_ind]]
-        tempH <- HMatrixList(nmf.exp)[[k_ind]][[init_ind]]
-        normFactor <- rowSums(tempH)
-        newExpo <- as.matrix(normalize_df_per_dim(tempH, 1))
-        newSigs <- tempW * normFactor
-        return(list(W = newSigs,
-                    H = newExpo))
-      })
-    names(k_list) <- names(WMatrixList(nmf.exp)[[k_ind]])
-    return(k_list)
-  })
-  names(all_list) <- names(WMatrixList(nmf.exp))
-  thisWMatrixList <- lapply(all_list, function(current_k_list){
-    kWMatrixList <- lapply(current_k_list, function(current_entry){
-      return(current_entry$W)
-    })
-  })
-  nmf.exp <- setWMatrixList(nmf.exp, thisWMatrixList)
-  thisHMatrixList <- lapply(all_list, function(current_k_list){
-    kHMatrixList <- lapply(current_k_list, function(current_entry){
-      return(current_entry$H)
-    })
-  })
-  nmf.exp <- setHMatrixList(nmf.exp, thisHMatrixList)
-  return(nmf.exp)
-}
+setMethod("normalizeH", "nmfExperiment",
+          function(nmf_exp){
+            # account for WMatrixList and HMatrixList
+            all_list <- lapply(seq_along(WMatrixList(nmf_exp)), function(k_ind){
+              k_list <-
+                lapply(seq_along(WMatrixList(nmf_exp)[[k_ind]]), function(init_ind){
+                  tempW <- WMatrixList(nmf_exp)[[k_ind]][[init_ind]]
+                  tempH <- HMatrixList(nmf_exp)[[k_ind]][[init_ind]]
+                  normFactor <- rowSums(tempH)
+                  newExpo <- as.matrix(normalize_df_per_dim(tempH, 1))
+                  newSigs <- tempW * normFactor
+                  return(list(W = newSigs,
+                              H = newExpo))
+                })
+              names(k_list) <- names(WMatrixList(nmf_exp)[[k_ind]])
+              return(k_list)
+            })
+            names(all_list) <- names(WMatrixList(nmf_exp))
+            thisWMatrixList <- lapply(all_list, function(current_k_list){
+              kWMatrixList <- lapply(current_k_list, function(current_entry){
+                return(current_entry$W)
+              })
+            })
+            nmf_exp <- setWMatrixList(nmf_exp, thisWMatrixList)
+            thisHMatrixList <- lapply(all_list, function(current_k_list){
+              kHMatrixList <- lapply(current_k_list, function(current_entry){
+                return(current_entry$H)
+              })
+            })
+            nmf_exp <- setHMatrixList(nmf_exp, thisHMatrixList)
+            return(nmf_exp)
+          }
+)
+
 
 #' Regularize the signatures matrix (H)
 #'
@@ -497,7 +501,7 @@ normalizeH <- function(nmf.exp){
 #' mutiplied with the columns of W in order to keep the matrix product W*H
 #' constant.
 #'
-#' @param nmf.exp
+#' @param nmf_exp
 #'
 #' @return A data structure of type nmfExperiment
 #'
@@ -506,34 +510,34 @@ normalizeH <- function(nmf.exp){
 #' @examples
 #'  NULL
 #'
-regularizeH <- function(nmf.exp){
+regularizeH <- function(nmf_exp){
   # account for WMatrixList and HMatrixList
-  all_list <- lapply(seq_along(WMatrixList(nmf.exp)), function(k_ind){
+  all_list <- lapply(seq_along(WMatrixList(nmf_exp)), function(k_ind){
     k_list <-
-      lapply(seq_along(WMatrixList(nmf.exp)[[k_ind]]), function(init_ind){
-        tempW <- WMatrixList(nmf.exp)[[k_ind]][[init_ind]]
-        tempH <- HMatrixList(nmf.exp)[[k_ind]][[init_ind]]
+      lapply(seq_along(WMatrixList(nmf_exp)[[k_ind]]), function(init_ind){
+        tempW <- WMatrixList(nmf_exp)[[k_ind]][[init_ind]]
+        tempH <- HMatrixList(nmf_exp)[[k_ind]][[init_ind]]
         normFactor <- rowMax(tempH)
         newExpo <- tempH / normFactor
         newSigs <- tempW * normFactor
         return(list(W = newSigs,
                     H = newExpo))
       })
-    names(k_list) <- names(WMatrixList(nmf.exp)[[k_ind]])
+    names(k_list) <- names(WMatrixList(nmf_exp)[[k_ind]])
     return(k_list)
   })
-  names(all_list) <- names(WMatrixList(nmf.exp))
+  names(all_list) <- names(WMatrixList(nmf_exp))
   thisWMatrixList <- lapply(all_list, function(current_k_list){
     kWMatrixList <- lapply(current_k_list, function(current_entry){
       return(current_entry$W)
     })
   })
-  nmf.exp <- setWMatrixList(nmf.exp, thisWMatrixList)
+  nmf_exp <- setWMatrixList(nmf_exp, thisWMatrixList)
   thisHMatrixList <- lapply(all_list, function(current_k_list){
     kHMatrixList <- lapply(current_k_list, function(current_entry){
       return(current_entry$H)
     })
   })
-  nmf.exp <- setHMatrixList(nmf.exp, thisHMatrixList)
-  return(nmf.exp)
+  nmf_exp <- setHMatrixList(nmf_exp, thisHMatrixList)
+  return(nmf_exp)
 }

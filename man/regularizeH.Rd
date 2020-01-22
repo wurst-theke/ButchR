@@ -4,10 +4,10 @@
 \alias{regularizeH}
 \title{Regularize the signatures matrix (H)}
 \usage{
-regularizeH(nmf.exp)
+regularizeH(nmf_exp)
 }
 \arguments{
-\item{nmf.exp}{}
+\item{nmf_exp}{}
 }
 \value{
 A data structure of type nmfExperiment

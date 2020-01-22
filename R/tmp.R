@@ -135,6 +135,32 @@
 
 
 
+setMethod("WMatrix",
+          "nmfExperiment_lite",
+          function(x, k = NULL, ...) {
+            if(is.null(k)) {
+              W <- x@WMatrix
+              if (!is.null(x@input_matrix$rownames)) {
+                W <- lapply(W, function(wi) {
+                  rownames(wi) <- x@input_matrix$rownames
+                  wi
+                })
+              }
+            } else {
+              idx <- x@OptKStats$rank_id[x@OptKStats$k == k]
+              if (length(idx) == 0 ) {
+                stop("No W matrix present for k = ", k,
+                     "\nPlease select from ranks = ", paste0(x@OptKStats$k, collapse = ","))
+              }
+
+              W <- x@WMatrix[[idx]]
+              if (!is.null(x@input_matrix$rownames)) {
+                rownames(W) <- x@input_matrix$rownames
+              }
+            }
+            return(W)
+          }
+)
 
 
 
@@ -142,3 +168,7 @@
 
 
 
+
+# x <- normalizeW(nmf_exp)
+#
+# colSums(WMatrix(x, k = 2))
