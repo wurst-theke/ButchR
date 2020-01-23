@@ -4,7 +4,7 @@
 #from __future__ import division
 ##import numpy as np
 #import os
-#import tensorflow as tf
+import tensorflow as tf
 ##import argparse
 #os.environ['TF_CPP_MIN_LOG_LEVEL'] = "1"  # or any {'0', '1', '2'}
 
@@ -20,7 +20,9 @@ Created on Thu Jan  9 11:36:20 2020
 ##                Define Function to run NMF in tensorflow 2                 ##
 ##---------------------------------------------------------------------------##
 def NMF_tensor_py(matrix, rank, n_initializations, iterations, stop_threshold=40, 
-                  p = 4, alpha = 0.1, lamb = 10):
+                  n_neighbors = 4, alpha = 0.1, lamb = 10, **kwargs):
+    
+    
     # NMF in tensorflow
     n = matrix.shape[0]
     m = matrix.shape[1]     
@@ -39,8 +41,8 @@ def NMF_tensor_py(matrix, rank, n_initializations, iterations, stop_threshold=40
     r = tf.reshape(r, [-1, 1])
     D = r - 2*tf.matmul(X, X, transpose_a=True) + tf.transpose(r)
     
-    # Find top p neighbors
-    b = tf.nn.top_k(D, (m-p-1))
+    # Find top n_neighbors neighbors
+    b = tf.nn.top_k(D, (m-n_neighbors-1))
     kth = tf.reduce_min(b.values, axis=1)
     #kth = tf.broadcast_to(kth , D.shape)
     
@@ -56,6 +58,7 @@ def NMF_tensor_py(matrix, rank, n_initializations, iterations, stop_threshold=40
     D = tf.linalg.tensor_diag(D)
     
     L = D - G 
+    print('nearest neighbors graph G completed')
 
     ##-----------------------------------------------------------------------##
     ##                   define objective function                           ##
@@ -199,16 +202,21 @@ def NMF_tensor_py(matrix, rank, n_initializations, iterations, stop_threshold=40
 
 #%%
 
-#
+
 #NMF_tensor_py(matrix = Xs_list[0],
 #            rank              = 10,
-#            n_initializations = 10,
-#            iterations        = 1000,   
+#            n_initializations = 1,
+#            iterations        = 10,   
 #            stop_threshold    = 40,
-#            p = 4)    
-#
-#
-##%%
+#            n_neighbors = 4,
+#            more =1)    
+
+
+#%%
+
+#Xs_list[0].T
+
+#%%
 #import numpy as np
 #filenames = ["/Users/andresq/phd/main_project/test_cases/buenrostro_AML/data/multiview/norm_matrices/rna_norm_mat.csv", "/Users/andresq/phd/main_project/test_cases/buenrostro_AML/data/multiview/norm_matrices/atac_norm_mat.csv"]
 #Xs_list = [np.loadtxt(path) for path in filenames]

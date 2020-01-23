@@ -73,6 +73,10 @@ source_NMFtensor_function <- function(method) {
 #' "NMF", "GRNMF_SC"
 #' @param iterations Maximum number of iterations to run for every initialization
 #' @param convergence_threshold The factorization stops, if the convergence test is constant for this number of iterations
+#' @param n_neighbors for method "GRNMF_SC", the number of neighbors to take into account when building the graph G
+#' @param alpha for method "GRNMF_SC", regularization parameter alpha
+#' @param lamb for method "GRNMF_SC", regularization parameter alpha
+#'
 #'
 #' @return A nmfExperiment_lite object, containg the initial matrix X and the faactorized matrices W and H, along with factorization metrics
 #'
@@ -90,7 +94,10 @@ runNMFtensor_lite <- function (X,
                                method = "NMF",
                                n_initializations     = 10,
                                iterations            = 10^4,
-                               convergence_threshold = 40){
+                               convergence_threshold = 40,
+                               n_neighbors = 4,
+                               alpha = 0.1,
+                               lamb  = 10 ){
 
   #----------------------------------------------------------------------------#
   #                                    Setup                                   #
@@ -104,7 +111,8 @@ runNMFtensor_lite <- function (X,
   nmf_params <- lapply(list(ranks                 = ranks,
                             n_initializations     = n_initializations,
                             iterations            = iterations,
-                            convergence_threshold = convergence_threshold),
+                            convergence_threshold = convergence_threshold,
+                            n_neighbors           = n_neighbors),
                        as.integer)
 
   #----------------------------------------------------------------------------#
@@ -127,7 +135,10 @@ runNMFtensor_lite <- function (X,
                             rank              = k,
                             n_initializations = nmf_params$n_initializations,
                             iterations        = nmf_params$iterations,
-                            stop_threshold    = nmf_params$convergence_threshold)
+                            stop_threshold    = nmf_params$convergence_threshold,
+                            n_neighbors       = nmf_params$n_neighbors,
+                            alpha             = alpha,
+                            lamb              = lamb)
     names(k_eval) <- c("W", "H", "iterations", "Frob_error", "W_eval")
     k_eval$iterations <- unlist(k_eval$iterations)
     k_eval$Frob_error <- unlist(k_eval$Frob_error)
@@ -322,110 +333,6 @@ gg_plotKStats <- function(nmf_exp,
 #' #==============================================================================#
 #' #                         H-MATRIX ANALYSIS FUNCTIONS                          #
 #' #==============================================================================#
-#' #
-#' #' Normalize the signatures matrix (W)
-#' #'
-#' #' After column normalization of the matrix W, the inverse factors are
-#' #' mutiplied with the rows of H in order to keep the matrix product W*H
-#' #' constant.
-#' #'
-#' #' @param nmf.exp
-#' #'
-#' #' @return A data structure of type nmfExperiment
-#' #'
-#' #' @importFrom YAPSA normalize_df_per_dim
-#' #' @export
-#' #'
-#' #' @examples
-#' #'  NULL
-#' #'
-#' normalizeW <- function(nmf.exp){
-#'   # account for WMatrixList and HMatrixList
-#'   all_list <- lapply(seq_along(WMatrixList(nmf.exp)), function(k_ind){
-#'     k_list <-
-#'       lapply(seq_along(WMatrixList(nmf.exp)[[k_ind]]), function(init_ind){
-#'         tempW <- WMatrixList(nmf.exp)[[k_ind]][[init_ind]]
-#'         tempH <- HMatrixList(nmf.exp)[[k_ind]][[init_ind]]
-#'         normFactor <- colSums(tempW)
-#'         # catch errors associated with NaNs in W or H
-#'         if (any(is.nan(normFactor))){
-#'           return(list(W = tempW,
-#'                       H = tempH))
-#'         }else{
-#'           newSigs <- as.matrix(normalize_df_per_dim(tempW, 2))
-#'           newExpo <- tempH * normFactor
-#'           #newV <- newSigs %*% newExpo
-#'           #oldV <- tempW %*% tempH
-#'           return(list(W = newSigs,
-#'                       H = newExpo))
-#'         }
-#'       })
-#'     names(k_list) <- names(WMatrixList(nmf.exp)[[k_ind]])
-#'     return(k_list)
-#'   })
-#'   names(all_list) <- names(WMatrixList(nmf.exp))
-#'   thisWMatrixList <- lapply(all_list, function(current_k_list){
-#'     kWMatrixList <- lapply(current_k_list, function(current_entry){
-#'       return(current_entry$W)
-#'     })
-#'   })
-#'   nmf.exp <- setWMatrixList(nmf.exp, thisWMatrixList)
-#'   thisHMatrixList <- lapply(all_list, function(current_k_list){
-#'     kHMatrixList <- lapply(current_k_list, function(current_entry){
-#'       return(current_entry$H)
-#'     })
-#'   })
-#'   nmf.exp <- setHMatrixList(nmf.exp, thisHMatrixList)
-#'   return(nmf.exp)
-#' }
-#'
-#' #' Normalize the signatures matrix (H)
-#' #'
-#' #' After row normalization of the matrix H, the inverse factors are
-#' #' mutiplied with the columns of W in order to keep the matrix product W*H
-#' #' constant.
-#' #'
-#' #' @param nmf.exp
-#' #'
-#' #' @return A data structure of type nmfExperiment
-#' #'
-#' #' @importFrom YAPSA normalize_df_per_dim
-#' #' @export
-#' #'
-#' #' @examples
-#' #'  NULL
-#' #'
-#' normalizeH <- function(nmf.exp){
-#'   # account for WMatrixList and HMatrixList
-#'   all_list <- lapply(seq_along(WMatrixList(nmf.exp)), function(k_ind){
-#'     k_list <-
-#'       lapply(seq_along(WMatrixList(nmf.exp)[[k_ind]]), function(init_ind){
-#'         tempW <- WMatrixList(nmf.exp)[[k_ind]][[init_ind]]
-#'         tempH <- HMatrixList(nmf.exp)[[k_ind]][[init_ind]]
-#'         normFactor <- rowSums(tempH)
-#'         newExpo <- as.matrix(normalize_df_per_dim(tempH, 1))
-#'         newSigs <- tempW * normFactor
-#'         return(list(W = newSigs,
-#'                     H = newExpo))
-#'       })
-#'     names(k_list) <- names(WMatrixList(nmf.exp)[[k_ind]])
-#'     return(k_list)
-#'   })
-#'   names(all_list) <- names(WMatrixList(nmf.exp))
-#'   thisWMatrixList <- lapply(all_list, function(current_k_list){
-#'     kWMatrixList <- lapply(current_k_list, function(current_entry){
-#'       return(current_entry$W)
-#'     })
-#'   })
-#'   nmf.exp <- setWMatrixList(nmf.exp, thisWMatrixList)
-#'   thisHMatrixList <- lapply(all_list, function(current_k_list){
-#'     kHMatrixList <- lapply(current_k_list, function(current_entry){
-#'       return(current_entry$H)
-#'     })
-#'   })
-#'   nmf.exp <- setHMatrixList(nmf.exp, thisHMatrixList)
-#'   return(nmf.exp)
-#' }
 #'
 #' #' Regularize the signatures matrix (H)
 #' #'

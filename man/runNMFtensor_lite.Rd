@@ -5,16 +5,28 @@
 \title{Single view NMF}
 \usage{
 runNMFtensor_lite(X, ranks, method = "NMF", n_initializations = 10,
-  iterations = 10^4, convergence_threshold = 40)
+  iterations = 10^4, convergence_threshold = 40, n_neighbors = 4,
+  alpha = 0.1, lamb = 10)
 }
 \arguments{
 \item{X}{Input matrix, should be a non-negative matrix}
+
+\item{ranks}{numeric vector with ranks to factorize}
+
+\item{method}{method to use in the factorization, available:
+"NMF", "GRNMF_SC"}
 
 \item{n_initializations}{Number of initializations to evaluate}
 
 \item{iterations}{Maximum number of iterations to run for every initialization}
 
 \item{convergence_threshold}{The factorization stops, if the convergence test is constant for this number of iterations}
+
+\item{n_neighbors}{for method "GRNMF_SC", the number of neighbors to take into account when building the graph G}
+
+\item{alpha}{for method "GRNMF_SC", regularization parameter alpha}
+
+\item{lamb}{for method "GRNMF_SC", regularization parameter alpha}
 }
 \value{
 A nmfExperiment_lite object, containg the initial matrix X and the faactorized matrices W and H, along with factorization metrics
