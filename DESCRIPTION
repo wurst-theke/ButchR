@@ -24,6 +24,7 @@ Imports:
     digest
 Depends:
     SummarizedExperiment,
+    dplyr,
     reticulate
 Description: NMF implementation using tensorflow and helper functions to select optimal factorization rank and graphic representation of the matrix decomposition
 License: GPLv3

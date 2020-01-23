@@ -1,3 +1,15 @@
+# global reference to tensorflow (will be initialized in .onLoad)
+tf <- NULL
+np <- NULL
+
+.onLoad <- function(libname, pkgname) {
+  # use superassignment to update global reference to tensorflow
+  np <<- reticulate::import("numpy", delay_load = TRUE)
+  tf <<- reticulate::import("tensorflow", delay_load = TRUE)
+
+
+}
+
 # Copyright © 2015-2020  The Bratwurst package contributors
 # This file is part of the Bratwurst package. The Bratwurst package is licenced
 # under GPL-3
@@ -5,6 +17,46 @@
 #==============================================================================#
 #                         NMF GPU Wrapper - FUNCTIONS                          #
 #==============================================================================#
+#' Single view NMF implementations
+#'
+#' Python functions to run several NMF implementations on tensorflow
+#' using the reticulate framework, uses a non-negative matrix as input
+#'
+#' @param X Input matrix, should be a non-negative matrix
+#' @param n_initializations Number of initializations to evaluate
+#' @param iterations Maximum number of iterations to run for every initialization
+#' @param convergence_threshold The factorization stops, if the convergence test is constant for this number of iterations
+#'
+#' @return A nmfExperiment_lite object, containg the initial matrix X and the faactorized matrices W and H, along with factorization metrics
+#'
+#'
+#' @examples
+#' nmf_exp <- runNMFtensor_lite(matrix(1:1000, ncol = 10),
+#'                              ranks = 2:5,
+#'                              n_initializations     = 10,
+#'                              iterations            = 10^4,
+#'                              convergence_threshold = 40)
+#' nmf_exp
+source_NMFtensor_function <- function(method) {
+  NMF_methods_list <- list(NMF      = c("nmf_tensor_lite", "NMF_tensor_py"),
+                           GRNMF_SC = c("nmf_tensor_regularized_lite", "NMF_tensor_py"))
+  module = NMF_methods_list[[method]]
+
+  # Source NMF tensorflow python script
+  # nmf_function <- source_python(file.path(system.file(package = "Bratwurst"),
+  #                                         NMF_methods_list[[method]]))
+  #path <- file.path(system.file(package = "Bratwurst"), "python/tensorBratwurst")
+  path <- file.path(system.file(package = "Bratwurst"), "python/")
+  tensorBratwurst <- import_from_path("tensorBratwurst", path = path)
+  return(tensorBratwurst[module[1]][module[2]])
+}
+# x <- source_NMFtensor_function("GRNMF_SC")
+# x
+# x$nmf_tensor_regularized_lite$NMF_tensor_py(matrix(10))
+# x
+# x["nmf_tensor_regularized_lite"]
+# Bratwurst:::source_NMFtensor_function("GRNMF_SC")
+
 
 #==============================================================================#
 #                      NMF tensorflow Wrapper - FUNCTION                       #
@@ -16,6 +68,9 @@
 #'
 #' @param X Input matrix, should be a non-negative matrix
 #' @param n_initializations Number of initializations to evaluate
+#' @param ranks numeric vector with ranks to factorize
+#' @param method method to use in the factorization, available:
+#' "NMF", "GRNMF_SC"
 #' @param iterations Maximum number of iterations to run for every initialization
 #' @param convergence_threshold The factorization stops, if the convergence test is constant for this number of iterations
 #'
@@ -32,6 +87,7 @@
 #' nmf_exp
 runNMFtensor_lite <- function (X,
                                ranks,
+                               method = "NMF",
                                n_initializations     = 10,
                                iterations            = 10^4,
                                convergence_threshold = 40){
@@ -55,7 +111,8 @@ runNMFtensor_lite <- function (X,
   #                Run single view NMF on tensorflow                           #
   #----------------------------------------------------------------------------#
   # Source NMF tensorflow python script
-  source_python(file.path(system.file(package = "Bratwurst"), "python/nmf_tensor_lite.py"))
+  NMF_tensor_py <- source_NMFtensor_function(method)
+  #source_python(file.path(system.file(package = "Bratwurst"), "python/nmf_tensor_lite.py"))
 
   # Run NMF
   #X <- input_matrix
