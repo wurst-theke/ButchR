@@ -203,7 +203,7 @@ setMethod("normalizeW",
           "nmfExperiment_lite",
           function(nmf_exp){
             # account for WMatrixList and HMatrixList
-            nmf_exp@WMatrix
+            #nmf_exp@WMatrix
             all_list <- lapply(seq_along(nmf_exp@WMatrix), function(k_ind){
               tempW <- nmf_exp@WMatrix[[k_ind]]
               tempH <- nmf_exp@HMatrix[[k_ind]]
@@ -232,7 +232,7 @@ setMethod("normalizeH",
           "nmfExperiment_lite",
           function(nmf_exp){
             # account for WMatrixList and HMatrixList
-            nmf_exp@WMatrix
+            #nmf_exp@WMatrix
             all_list <- lapply(seq_along(nmf_exp@WMatrix), function(k_ind){
               tempW <- nmf_exp@WMatrix[[k_ind]]
               tempH <- nmf_exp@HMatrix[[k_ind]]
@@ -250,6 +250,36 @@ setMethod("normalizeH",
             return(nmf_exp)
           }
 )
+
+#' @rdname regularizeH-methods
+#' @aliases regularizeH,ANY,ANY-method
+#'
+#' @importFrom YAPSA normalize_df_per_dim
+#' @export
+#'
+setMethod("regularizeH",
+          "nmfExperiment_lite",
+          function(nmf_exp){
+            # account for WMatrixList and HMatrixList
+            nmf_exp@WMatrix
+            all_list <- lapply(seq_along(nmf_exp@WMatrix), function(k_ind){
+              tempW <- nmf_exp@WMatrix[[k_ind]]
+              tempH <- nmf_exp@HMatrix[[k_ind]]
+              normFactor <- rowMax(tempH)
+              newExpo    <- tempH / normFactor
+              newSigs    <- tempW * normFactor
+              return(list(W = newSigs,
+                          H = newExpo))
+            })
+            names(all_list) <- names(nmf_exp@WMatrix)
+
+            # Set new matrices
+            nmf_exp@WMatrix <- lapply(all_list, "[[" , "W")
+            nmf_exp@HMatrix <- lapply(all_list, "[[" , "H")
+            return(nmf_exp)
+          }
+)
+
 
 
 
