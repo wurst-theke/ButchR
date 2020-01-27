@@ -22,40 +22,28 @@ np <- NULL
 #' Python functions to run several NMF implementations on tensorflow
 #' using the reticulate framework, uses a non-negative matrix as input
 #'
-#' @param X Input matrix, should be a non-negative matrix
-#' @param n_initializations Number of initializations to evaluate
-#' @param iterations Maximum number of iterations to run for every initialization
-#' @param convergence_threshold The factorization stops, if the convergence test is constant for this number of iterations
+#' @param method string with method to use, "NMF", "GRNMF_SC"
 #'
-#' @return A nmfExperiment_lite object, containg the initial matrix X and the faactorized matrices W and H, along with factorization metrics
+#' @return python function to carry out the factorization on tensorflow
 #'
 #'
 #' @examples
-#' nmf_exp <- runNMFtensor_lite(matrix(1:1000, ncol = 10),
-#'                              ranks = 2:5,
-#'                              n_initializations     = 10,
-#'                              iterations            = 10^4,
-#'                              convergence_threshold = 40)
-#' nmf_exp
+#' x <- source_NMFtensor_function("NMF")
+#' x
+#' # Bratwurst:::source_NMFtensor_function("NMF")
 source_NMFtensor_function <- function(method) {
   NMF_methods_list <- list(NMF      = c("nmf_tensor_lite", "NMF_tensor_py"),
-                           GRNMF_SC = c("nmf_tensor_regularized_lite", "NMF_tensor_py"))
+                           GRNMF_SC = c("nmf_tensor_regularized_lite", "NMF_tensor_py"),
+                           jNMF     = c("tensor_jNMF_lite", "jNMF_tensor_py"))
   module = NMF_methods_list[[method]]
 
   # Source NMF tensorflow python script
-  # nmf_function <- source_python(file.path(system.file(package = "Bratwurst"),
-  #                                         NMF_methods_list[[method]]))
   #path <- file.path(system.file(package = "Bratwurst"), "python/tensorBratwurst")
   path <- file.path(system.file(package = "Bratwurst"), "python/")
   tensorBratwurst <- import_from_path("tensorBratwurst", path = path)
-  return(tensorBratwurst[module[1]][module[2]])
+  #return(tensorBratwurst[module[1]][module[2]])
+  return(tensorBratwurst[[module[1]]][[module[2]]])
 }
-# x <- source_NMFtensor_function("GRNMF_SC")
-# x
-# x$nmf_tensor_regularized_lite$NMF_tensor_py(matrix(10))
-# x
-# x["nmf_tensor_regularized_lite"]
-# Bratwurst:::source_NMFtensor_function("GRNMF_SC")
 
 
 #==============================================================================#
@@ -289,44 +277,6 @@ compute_OptKStats_NMF <- function(complete_eval) {
              meanSilWidth    = sil_vec$meanSilWidth,
              copheneticCoeff = sil_vec$copheneticCoeff,
              meanAmariDist   = sil_vec$meanAmariDist)
-}
-
-
-#' Plots optimal K metrics
-#'
-#' For every factorization rank the Frobinius error,
-#' coefficient variation of Frobinius error,
-#' sum Silhouette Width, mean Silhouette width,
-#' cophenetic coefficient and mean Amari distance is shown
-#'
-#' @param nmf_exp A nmfExperiment_lite object
-#' @param plot_vars character - ids of the metrics to display
-#'
-#' @return a ggplot figure with the values for the six factorization metrics
-#'
-#' @export
-#'
-#' @examples
-#' gg_plotKStats(nmf_exp)
-gg_plotKStats <- function(nmf_exp,
-                          plot_vars = c("FrobError", "cv", "sumSilWidth",
-                                        "meanSilWidth", "copheneticCoeff",
-                                        "meanAmariDist")) {
-  frob_df <- nmf_exp@FrobError %>%
-    tidyr::pivot_longer(everything(), names_to = "k", values_to = "Stat") %>%
-    dplyr::mutate(Metric = "FrobError") %>%
-    dplyr::mutate(k = as.numeric(sub("^k", "", k)))
-
-  metrics_df <- nmf_exp@OptKStats[,-1] %>%
-    tidyr::pivot_longer(names_to = "Metric", values_to = "Stat", -k)
-
-  bind_rows(frob_df, metrics_df) %>%
-    mutate(Metric = factor(Metric, levels = unique(Metric))) %>%
-    ggplot(aes(x = k, y = Stat)) +
-    geom_vline(xintercept = nmf_exp@OptK, color = "firebrick") +
-    geom_point() +
-    facet_wrap(.~Metric, scales = "free") +
-    theme_bw()
 }
 
 

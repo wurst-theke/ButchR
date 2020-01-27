@@ -7,26 +7,17 @@
 source_NMFtensor_function(method)
 }
 \arguments{
-\item{X}{Input matrix, should be a non-negative matrix}
-
-\item{n_initializations}{Number of initializations to evaluate}
-
-\item{iterations}{Maximum number of iterations to run for every initialization}
-
-\item{convergence_threshold}{The factorization stops, if the convergence test is constant for this number of iterations}
+\item{method}{string with method to use, "NMF", "GRNMF_SC"}
 }
 \value{
-A nmfExperiment_lite object, containg the initial matrix X and the faactorized matrices W and H, along with factorization metrics
+python function to carry out the factorization on tensorflow
 }
 \description{
 Python functions to run several NMF implementations on tensorflow
 using the reticulate framework, uses a non-negative matrix as input
 }
 \examples{
-nmf_exp <- runNMFtensor_lite(matrix(1:1000, ncol = 10),
-                             ranks = 2:5,
-                             n_initializations     = 10,
-                             iterations            = 10^4,
-                             convergence_threshold = 40)
-nmf_exp
+x <- source_NMFtensor_function("NMF")
+x
+# Bratwurst:::source_NMFtensor_function("NMF")
 }

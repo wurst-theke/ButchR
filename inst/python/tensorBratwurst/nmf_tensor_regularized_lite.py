@@ -58,7 +58,7 @@ def NMF_tensor_py(matrix, rank, n_initializations, iterations, stop_threshold=40
     D = tf.linalg.tensor_diag(D)
     
     L = D - G 
-    print('nearest neighbors graph G completed')
+    #print('nearest neighbors graph G completed')
 
     ##-----------------------------------------------------------------------##
     ##                   define objective function                           ##

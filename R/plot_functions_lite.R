@@ -2,6 +2,51 @@
 #                      NMF-GPU plot generation - FUNCTIONS                     #
 #==============================================================================#
 
+#------------------------------------------------------------------------------#
+#                           Optimal K metrics                                  #
+#------------------------------------------------------------------------------#
+#' Plots optimal K metrics
+#'
+#' For every factorization rank the Frobinius error,
+#' coefficient variation of Frobinius error,
+#' sum Silhouette Width, mean Silhouette width,
+#' cophenetic coefficient and mean Amari distance is shown
+#'
+#' @param nmf_exp A nmfExperiment_lite object
+#' @param plot_vars character - ids of the metrics to display
+#'
+#' @return a ggplot figure with the values for the six factorization metrics
+#'
+#' @export
+#'
+#' @examples
+#' gg_plotKStats(nmf_exp)
+gg_plotKStats <- function(nmf_exp,
+                          plot_vars = c("FrobError", "cv", "sumSilWidth",
+                                        "meanSilWidth", "copheneticCoeff",
+                                        "meanAmariDist")) {
+  frob_df <- nmf_exp@FrobError %>%
+    tidyr::pivot_longer(everything(), names_to = "k", values_to = "Stat") %>%
+    dplyr::mutate(Metric = "FrobError") %>%
+    dplyr::mutate(k = as.numeric(sub("^k", "", k)))
+
+  metrics_df <- nmf_exp@OptKStats[,-1] %>%
+    tidyr::pivot_longer(names_to = "Metric", values_to = "Stat", -k)
+
+  bind_rows(frob_df, metrics_df) %>%
+    mutate(Metric = factor(Metric, levels = unique(Metric))) %>%
+    ggplot(aes(x = k, y = Stat)) +
+    geom_vline(xintercept = nmf_exp@OptK, color = "firebrick") +
+    geom_point() +
+    facet_wrap(.~Metric, scales = "free") +
+    theme_bw()
+}
+
+
+
+#------------------------------------------------------------------------------#
+#                                  Riverplot                                   #
+#------------------------------------------------------------------------------#
 #' @rdname generateRiverplot-methods
 #' @aliases generateRiverplot,ANY,ANY-method
 #'
@@ -16,17 +61,17 @@ setMethod("generateRiverplot",
           function(nmf_exp, edges.cutoff = 0,
                    useH=FALSE, color=TRUE,
                    ranks=NULL) {
-            #----------------------------------------------------------------------------#
-            #                      Retrieve list of matrices                             #
-            #----------------------------------------------------------------------------#
+            #------------------------------------------------------------------#
+            #                      Retrieve list of matrices                   #
+            #------------------------------------------------------------------#
             if(useH)
               W_list <- lapply(HMatrix(nmf_exp), t)
             else
               W_list <- WMatrix(nmf_exp)
 
-            #----------------------------------------------------------------------------#
-            #                  Build data frame with node names                          #
-            #----------------------------------------------------------------------------#
+            #------------------------------------------------------------------#
+            #                  Build data frame with node names                #
+            #------------------------------------------------------------------#
             if (is.null(ranks)) {
               ranks <- nmf_exp@OptKStats$k
             } else {
@@ -37,9 +82,9 @@ setMethod("generateRiverplot",
               data.frame(ID = sapply(1:i, function(n) paste(i, "_S", n, sep = "")),
                          x = i)
             }))
-            #----------------------------------------------------------------------------#
-            #          Build data frame with edges values - NNLS                         #
-            #----------------------------------------------------------------------------#
+            #------------------------------------------------------------------#
+            #          Build data frame with edges values - NNLS               #
+            #------------------------------------------------------------------#
             edges <- do.call(rbind, lapply(1:(length(ranks)-1), function(i){
               k     <- ranks[i]
               kplus <- ranks[i+1]
