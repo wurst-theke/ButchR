@@ -29,7 +29,7 @@ runNMFtensor_lite(X, ranks, method = "NMF", n_initializations = 10,
 \item{lamb}{for method "GRNMF_SC", regularization parameter alpha}
 }
 \value{
-A nmfExperiment_lite object, containg the initial matrix X and the faactorized matrices W and H, along with factorization metrics
+A nmfExperiment_lite object, containg the factorized matrices W and H, along with factorization metrics
 }
 \description{
 Computes NMF on tensorflow using the reticulate framework, uses a non-negative matrix as input

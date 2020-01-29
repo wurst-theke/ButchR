@@ -66,7 +66,7 @@ source_NMFtensor_function <- function(method) {
 #' @param lamb for method "GRNMF_SC", regularization parameter alpha
 #'
 #'
-#' @return A nmfExperiment_lite object, containg the initial matrix X and the faactorized matrices W and H, along with factorization metrics
+#' @return A nmfExperiment_lite object, containg the factorized matrices W and H, along with factorization metrics
 #'
 #' @export
 #'
@@ -102,20 +102,17 @@ runNMFtensor_lite <- function (X,
                             convergence_threshold = convergence_threshold,
                             n_neighbors           = n_neighbors),
                        as.integer)
+  names(nmf_params$ranks) <- paste0("k", nmf_params$ranks)
 
   #----------------------------------------------------------------------------#
   #                Run single view NMF on tensorflow                           #
   #----------------------------------------------------------------------------#
-  # Source NMF tensorflow python script
+  # Source NMF tensorflow python function
   NMF_tensor_py <- source_NMFtensor_function(method)
   #source_python(file.path(system.file(package = "Bratwurst"), "python/nmf_tensor_lite.py"))
 
   # Run NMF
-  #X <- input_matrix
-  names(nmf_params$ranks) <- paste0("k", nmf_params$ranks)
   complete_eval <- lapply(nmf_params$ranks, function(k) {
-    #k <- as.integer(k)
-
     print(Sys.time())
     cat("Factorization rank: ", k, "\n")
 
@@ -131,6 +128,9 @@ runNMFtensor_lite <- function (X,
     k_eval$iterations <- unlist(k_eval$iterations)
     k_eval$Frob_error <- unlist(k_eval$Frob_error)
 
+    # Optimal K stats
+    k_eval$OptKStats <- try(compute_OptKStats_NMF(k_eval, k), silent = FALSE)
+    k_eval$W_eval <- NULL
 
     print(paste("NMF converged after ", paste(k_eval$iterations, collapse = ","), "iterations"))
     return(k_eval)
@@ -148,29 +148,26 @@ runNMFtensor_lite <- function (X,
   # Frob. error data frame
   frob_errors <- as.data.frame(do.call(cbind, lapply(complete_eval, "[[" , "Frob_error")))
 
+
   # Optimal K stats
-  OptKStats <- compute_OptKStats_NMF(complete_eval)
+  OptKStats <- lapply(complete_eval, "[[" , "OptKStats")
+  if (!any(sapply(OptKStats, inherits, "try-error"))) {
+    OptKStats <- as.data.frame(dplyr::bind_rows(OptKStats))
 
-  # Optimal K
-  indCopheneticCoeff <- which(local.maxima(OptKStats$copheneticCoeff)) # Max Cophenetic Coeff
-  indMeanAmariDist   <- which(local.minima(OptKStats$meanAmariDist))   # Min Amari Dist
-  OptK <- OptKStats$k[intersect(indCopheneticCoeff, indMeanAmariDist)]
-  if (length(OptK) == 0) {
-    warning("No optimal K could be determined from the Optimal K stat\n")
+    # Optimal K
+    indCopheneticCoeff <- which(local.maxima(OptKStats$copheneticCoeff)) # Max Cophenetic Coeff
+    indMeanAmariDist   <- which(local.minima(OptKStats$meanAmariDist))   # Min Amari Dist
+    OptK <- OptKStats$k[intersect(indCopheneticCoeff, indMeanAmariDist)]
+    if (length(OptK) == 0) {
+      #warning("No optimal K could be determined from the Optimal K stat\n")
+      cat("No optimal K could be determined from the Optimal K stat\n")
+    }
+
+  } else {
+    OptKStats <- data.frame()
+    OptK <- integer()
+    cat("Error found while computing factorization stats\nSkipping Optimal K\n")
   }
-
-  #print(frob_errors)
-  #sapply(complete_eval, function(x) print(x$Frob_error))
-  #print(sapply(complete_eval, function(x) x$Frob_error))
-  # Factorization_ranks <- data.frame(rank_id = names(nmf_params$ranks),
-  #                                   rank = nmf_params$ranks,
-  #                                   Best_Frob_error = sapply(complete_eval, function(x) min(x$Frob_error)),
-  #                                   Best_n_iter     = sapply(complete_eval, function(x) x$iterations[which.min(x$Frob_error)]),
-  #                                   stringsAsFactors = FALSE)
-
-
-  #frob_errors <- DataFrame(getFrobError(dec.matrix))
-  #colnames(frob.errors) <- as.character(k.min:k.max)
 
   #----------------------------------------------------------------------------#
   #                       Return nmfExperiment_lite object                     #
@@ -195,88 +192,76 @@ runNMFtensor_lite <- function (X,
 #' @param complete_eval internal object return after computing NMF with tensorflow
 #'
 #' @examples
-compute_OptKStats_NMF <- function(complete_eval) {
+compute_OptKStats_NMF <- function(k_eval, k) {
   #----------------------------------------------------------------------------#
   #                            Frobenius error stats                           #
   #----------------------------------------------------------------------------#
-  frob_errors_df <- as.data.frame(do.call(cbind, lapply(complete_eval, "[[" , "Frob_error")))
-  min_frobError  <- apply(frob_errors_df, 2, function(x) min(x, na.rm = TRUE))
-  sd_frobError   <- apply(frob_errors_df, 2, function(x) sd(x, na.rm = TRUE))
-  mean_frobError <- colMeans(frob_errors_df, na.rm = TRUE)
+  frob_errors <- k_eval[["Frob_error"]]
+  min_frobError  <- min(frob_errors, na.rm = TRUE)
+  sd_frobError   <- sd(frob_errors, na.rm = TRUE)
+  mean_frobError <- mean(frob_errors, na.rm = TRUE)
   cv_frobError   <- sd_frobError / mean_frobError
 
   #----------------------------------------------------------------------------#
   #     compute Silhouette Width, Cophenetic Coeff and Amari Distances         #
   #----------------------------------------------------------------------------#
-  sil_vec <- lapply(lapply(complete_eval, "[[", "W_eval"), function(WMatrix_list) {
-    B <- length(WMatrix_list)
+  WMatrix_list <- k_eval[["W_eval"]]
+  B <- length(WMatrix_list)
+  concat_matrix <- do.call(cbind, WMatrix_list)
+  dist_matrix   <- cosineDissMat(as.matrix(concat_matrix))
 
-    # nan.bool <- sapply(WMatrix_list, function(m) !any(is.nan(m)))
-    # concat_matrix <- do.call(cbind, WMatrix_list[which(nan.bool)])
-    concat_matrix <- do.call(cbind, WMatrix_list)
-    dist_matrix   <- cosineDissMat(as.matrix(concat_matrix))
+  # compute Silhouette Width
+  if (length(WMatrix_list) > 1) {
+    #------------------------------------------------------------------------#
+    #                         compute Silhouette Width                       #
+    #------------------------------------------------------------------------#
+    my_pam   <- cluster::pam(dist_matrix, k = ncol(WMatrix_list[[1]]),  diss = TRUE)
+    sumSilWidth  <- sum(my_pam$silinfo$widths[, "sil_width"])
+    meanSilWidth <- mean(my_pam$silinfo$widths[, "sil_width"])
+    #------------------------------------------------------------------------#
+    #                         compute Cophenetic Coeff                       #
+    #------------------------------------------------------------------------#
+    # compute Cophenetic Coeff
+    my_hclust <- hclust(as.dist(dist_matrix))
+    dist_cophenetic <- as.matrix(cophenetic(my_hclust))
+    # take distance matrices without diagonal elements
+    diag(dist_matrix) <- NA
+    dist_matrix <- dist_matrix[which(!is.na(dist_matrix))]
+    diag(dist_cophenetic) <- NA
+    dist_cophenetic <- dist_cophenetic[which(!is.na(dist_cophenetic))]
+    copheneticCoeff = unlist(cor(cbind(dist_cophenetic, dist_matrix))[1, 2])
 
-    # compute Silhouette Width
-    if (length(WMatrix_list) > 1) {
-      #------------------------------------------------------------------------#
-      #                         compute Silhouette Width                       #
-      #------------------------------------------------------------------------#
-      my_pam   <- cluster::pam(dist_matrix, k = ncol(WMatrix_list[[1]]),  diss = TRUE)
-      sumSilWidth  <- sum(my_pam$silinfo$widths[, "sil_width"])
-      meanSilWidth <- mean(my_pam$silinfo$widths[, "sil_width"])
-      #------------------------------------------------------------------------#
-      #                         compute Cophenetic Coeff                       #
-      #------------------------------------------------------------------------#
-      # compute Cophenetic Coeff
-      my_hclust <- hclust(as.dist(dist_matrix))
-      dist_cophenetic <- as.matrix(cophenetic(my_hclust))
-      # take distance matrices without diagonal elements
-      diag(dist_matrix) <- NA
-      dist_matrix <- dist_matrix[which(!is.na(dist_matrix))]
-      diag(dist_cophenetic) <- NA
-      dist_cophenetic <- dist_cophenetic[which(!is.na(dist_cophenetic))]
-      copheneticCoeff = unlist(cor(cbind(dist_cophenetic, dist_matrix))[1, 2])
+    #------------------------------------------------------------------------#
+    #                         compute Amari Distances                        #
+    #------------------------------------------------------------------------#
+    distances_list <- unlist(lapply(1:(B - 1), function(b) {
+      distances <- lapply((b + 1):B, function(b.hat) {
+        amariDistance(WMatrix_list[[b]], WMatrix_list[[b.hat]])
+      })
+    }))
+    meanAmariDist <- unlist(mean(distances_list))
 
-      #------------------------------------------------------------------------#
-      #                         compute Amari Distances                        #
-      #------------------------------------------------------------------------#
-      distances_list <- unlist(lapply(1:(B - 1), function(b) {
-        distances <- lapply((b + 1):B, function(b.hat) {
-          amariDistance(WMatrix_list[[b]], WMatrix_list[[b.hat]])
-        })
-      }))
-      meanAmariDist <- unlist(mean(distances_list))
-
-    } else {
-      sumSilWidth     <- NA
-      meanSilWidth    <- NA
-      copheneticCoeff <- NA
-      meanAmariDist   <- NA
-    }
-    return(data.frame(sumSilWidth     = sumSilWidth,
-                      meanSilWidth    = meanSilWidth,
-                      copheneticCoeff = copheneticCoeff,
-                      meanAmariDist   = meanAmariDist))
-  })
-  sil_vec <- dplyr::bind_rows(sil_vec)
-
-  #----------------------------------------------------------------------------#
-  #                         compute Amari Distances                            #
-  #----------------------------------------------------------------------------#
+  } else {
+    sumSilWidth     <- NA
+    meanSilWidth    <- NA
+    copheneticCoeff <- NA
+    meanAmariDist   <- NA
+  }
 
   #----------------------------------------------------------------------------#
   #                         Return optimal K stats                             #
   #----------------------------------------------------------------------------#
-  data.frame(rank_id = colnames(frob_errors_df),
-             k       = as.numeric(sub("^k", "", colnames(frob_errors_df))),
+  data.frame(rank_id = paste0("k", k),
+             k       = k,
              min     = min_frobError,
              mean    = mean_frobError,
              sd      = sd_frobError,
              cv      = cv_frobError,
-             sumSilWidth     = sil_vec$sumSilWidth,
-             meanSilWidth    = sil_vec$meanSilWidth,
-             copheneticCoeff = sil_vec$copheneticCoeff,
-             meanAmariDist   = sil_vec$meanAmariDist)
+             sumSilWidth     = sumSilWidth,
+             meanSilWidth    = meanSilWidth,
+             copheneticCoeff = copheneticCoeff,
+             meanAmariDist   = meanAmariDist,
+             stringsAsFactors = FALSE)
 }
 
 

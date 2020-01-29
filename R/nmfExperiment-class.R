@@ -1,3 +1,6 @@
+#' @include generics.R
+NULL
+
 # Copyright © 2015-2017  The Bratwurst package contributors
 # This file is part of the Bratwurst package. The Bratwurst package is licenced
 # under GPL-3
@@ -31,10 +34,6 @@ nmfExperiment <- setClass(
 #============================================================================#
 #                                 Getter & Setter                            #
 #============================================================================#
-#### FrobError
-# Getter
-setGeneric("FrobError", function(x, ...) standardGeneric("FrobError"))
-
 #' Frobenius Error getter
 #'
 #' @param nmfExperiment
@@ -44,10 +43,6 @@ setGeneric("FrobError", function(x, ...) standardGeneric("FrobError"))
 #'
 #' @examples
 setMethod("FrobError", "nmfExperiment", function(x, ...) x@FrobError)
-
-# Setter
-setGeneric("setFrobError", function(nmfExperiment, FrobError)
-  standardGeneric("setFrobError"))
 
 #' Frobenius Error setter
 #'
@@ -62,10 +57,6 @@ setMethod("setFrobError", "nmfExperiment", function(nmfExperiment, FrobError) {
   return(nmfExperiment)
 })
 
-#### H-Matrix List
-# Getter
-setGeneric("HMatrixList", function(x, k = NULL, ...)
-  standardGeneric("HMatrixList"))
 
 #' H-Matrix List getter
 #'
@@ -83,10 +74,6 @@ setMethod("HMatrixList", "nmfExperiment", function(x, k = NULL, ...){
   }
 })
 
-# Setter
-setGeneric("setHMatrixList", function(nmfExperiment, HMatrixList)
-  standardGeneric("setHMatrixList"))
-
 #' H-Matrix List setter
 #'
 #' @param nmfExperiment
@@ -101,10 +88,6 @@ setMethod("setHMatrixList", "nmfExperiment",
             return(nmfExperiment)
           })
 
-#### W-Matrix
-# Getter
-setGeneric("WMatrixList", function(x, k = NULL, ...)
-  standardGeneric("WMatrixList"))
 
 #' W-Matrix list getter
 #'
@@ -122,10 +105,6 @@ setMethod("WMatrixList", "nmfExperiment", function(x, k = NULL, ...) {
   }
 })
 
-# Setter
-setGeneric("setWMatrixList", function(nmfExperiment, WMatrixList)
-  standardGeneric("setWMatrixList"))
-
 #' W-Matrix setter
 #'
 #' @param nmfExperiment
@@ -140,25 +119,7 @@ setMethod("setWMatrixList", "nmfExperiment",
             return(nmfExperiment)
           })
 
-#### H-Matrix (H-Matrix with smallest frobError)
-# Getter
-#' H-Matrix (H-Matrix with smallest frobError)
-#'
-#' Return a list of H-Matrices or an H-Matrix for the indicaded rank
-#'
-#' @param x an nmfExperiment or a nmfExperiment_lite object
-#' @param k numeric  - factorization rank
-#'
-#' @return list of H-Matrices or an H-Matrix for the indicaded rank
-#' @export
-#' @docType methods
-#' @rdname HMatrix-methods
-#'
-#' @examples
-#' HMatrix(nmf_exp)
-#' HMatrix(nmf_exp, k = 2)
-setGeneric("HMatrix", function(x, k = NULL, ...)
-  standardGeneric("HMatrix"))
+
 
 #' H-Matrix getter
 #'
@@ -182,24 +143,7 @@ setMethod("HMatrix", "nmfExperiment", function(x, k = NULL, ...) {
   return(H)
 })
 
-#### W-Matrix (W-Matrix with smallest frobError)
-# Getter
-#' W-Matrix (W-Matrix with smallest frobError)
-#'
-#' Return a list of W-Matrices or a W-Matrix for the indicaded rank
-#'
-#' @param x an nmfExperiment or a nmfExperiment_lite object
-#' @param k numeric  - factorization rank
-#'
-#' @return list of W-Matrices or a W-Matrix for the indicaded rank
-#' @export
-#' @docType methods
-#' @rdname WMatrix-methods
-#'
-#' @examples
-#' WMatrix(nmf_exp)
-#' WMatrix(nmf_exp, k = 2)
-setGeneric("WMatrix", function(x, k = NULL, ...) standardGeneric("WMatrix"))
+
 
 #' W-Matrix getter
 #'
@@ -223,9 +167,6 @@ setMethod("WMatrix", "nmfExperiment", function(x, k = NULL, ...) {
   return(W)
 })
 
-#### Optimal K Statistics
-# Getter
-setGeneric("OptKStats", function(x, ...) standardGeneric("OptKStats"))
 
 #' Optimal K Statistics getter
 #'
@@ -237,9 +178,7 @@ setGeneric("OptKStats", function(x, ...) standardGeneric("OptKStats"))
 #' @examples
 setMethod("OptKStats", "nmfExperiment", function(x, ...) x@OptKStats)
 
-# Setter
-setGeneric("setOptKStats", function(nmfExperiment, OptKStats)
-  standardGeneric("setOptKStats"))
+
 
 #' Optimal K Statistics setter
 #'
@@ -255,9 +194,6 @@ setMethod("setOptKStats", "nmfExperiment",
             return(nmfExperiment)
           })
 
-#### Optimal K
-# Getter
-setGeneric("OptK", function(x, ...) standardGeneric("OptK"))
 
 #' Optimal K
 #'
@@ -268,9 +204,6 @@ setGeneric("OptK", function(x, ...) standardGeneric("OptK"))
 #'
 #' @examples
 setMethod("OptK", "nmfExperiment", function(x, ...) x@OptK)
-
-# Setter
-setGeneric("setOptK", function(nmfExperiment, OptK) standardGeneric("setOptK"))
 
 #' Optimal K setter
 #'
@@ -285,9 +218,6 @@ setMethod("setOptK", "nmfExperiment", function(nmfExperiment, OptK) {
   return(nmfExperiment)
 })
 
-#### Feature Statistics
-# Getter
-setGeneric("FeatureStats", function(x, ...) standardGeneric("FeatureStats"))
 
 #' Feature Statistics getter
 #'
@@ -299,9 +229,6 @@ setGeneric("FeatureStats", function(x, ...) standardGeneric("FeatureStats"))
 #' @examples
 setMethod("FeatureStats", "nmfExperiment", function(x, ...) x@FeatureStats)
 
-# Setter
-setGeneric("setFeatureStats", function(nmfExperiment, FeatureStats)
-  standardGeneric("setFeatureStats"))
 
 #' Feature Statistics setter
 #'
@@ -322,10 +249,7 @@ setMethod("setFeatureStats", "nmfExperiment",
             return(nmfExperiment)
           })
 
-#### Signature specfific features
-# Getter
-setGeneric("SignatureSpecificFeatures",
-           function(x, ...) standardGeneric("SignatureSpecificFeatures"))
+
 
 #' Signature specfific features getter
 #'
@@ -337,12 +261,6 @@ setGeneric("SignatureSpecificFeatures",
 #' @examples
 setMethod("SignatureSpecificFeatures",
           "nmfExperiment", function(x, ...) x@SignatureSpecificFeatures)
-
-# Setter
-setGeneric("setSignatureSpecificFeatures",
-           function(nmfExperiment, SignatureSpecificFeatures){
-             standardGeneric("setSignatureSpecificFeatures")
-           })
 
 #' Feature Statistics setter
 #'
@@ -369,23 +287,6 @@ setMethod("setSignatureSpecificFeatures", "nmfExperiment",
 #==============================================================================#
 #                               NMF Normalization                              #
 #==============================================================================#
-#' Normalize the signatures matrix (W)
-#'
-#' After column normalization of the matrix W, the inverse factors are
-#' mutiplied with the rows of H in order to keep the matrix product W*H
-#' constant.
-#'
-#' @param nmf_exp an nmfExperiment or a nmfExperiment_lite object
-#'
-#' @return an nmfExperiment or a nmfExperiment_lite object normalized by W
-#' @export
-#' @docType methods
-#' @rdname normalizeW-methods
-#'
-#' @examples
-#' normalizeW(nmf_exp)
-setGeneric("normalizeW", function(nmf_exp, ...) standardGeneric("normalizeW"))
-
 #' @rdname normalizeW-methods
 #' @aliases normalizeW,ANY,ANY-method
 #'
@@ -437,23 +338,6 @@ setMethod("normalizeW", "nmfExperiment",
 
 
 
-#' Normalize the signatures matrix (H)
-#'
-#' After row normalization of the matrix H, the inverse factors are
-#' mutiplied with the columns of W in order to keep the matrix product W*H
-#' constant.
-#'
-#' @param nmf_exp an nmfExperiment or a nmfExperiment_lite object
-#'
-#' @return an nmfExperiment or a nmfExperiment_lite object normalized by W
-#' @export
-#' @docType methods
-#' @rdname normalizeH-methods
-#'
-#' @examples
-#' normalizeH(nmf_exp)
-setGeneric("normalizeH", function(nmf_exp, ...) standardGeneric("normalizeH"))
-
 #' @rdname normalizeH-methods
 #' @aliases normalizeH,ANY,ANY-method
 #'
@@ -493,24 +377,6 @@ setMethod("normalizeH", "nmfExperiment",
             return(nmf_exp)
           }
 )
-
-#' Regularize the signatures matrix (H)
-#'
-#' After row regularization of the matrix H, the inverse factors are
-#' mutiplied with the columns of W in order to keep the matrix product W*H
-#' constant.
-#'
-#' @param nmf_exp
-#'
-#' @return an nmfExperiment or a nmfExperiment_lite object normalized by W
-#'
-#' @export
-#' @docType methods
-#' @rdname regularizeH-methods
-#'
-#' @examples
-#' regularizeH(nmf_exp)
-setGeneric("regularizeH", function(nmf_exp, ...) standardGeneric("regularizeH"))
 
 #' @rdname regularizeH-methods
 #' @aliases regularizeH,ANY,ANY-method

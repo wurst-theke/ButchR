@@ -84,8 +84,11 @@ def jNMF_tensor_py(matrix_list, rank, n_initializations, iterations, Sp, stop_th
     Nviews = len(matrix_list)
     N = matrix_list[0].shape[0]
     Ms = [Xv.shape[1] for Xv in matrix_list]
+    
+    # Initialization Metrics 
     frobNorm = []
     iter_to_conv = []
+    W_eval = []
     
     # X matrices to tensor constant
     Xs = [tf.constant(matrix_list[i], name = ("X" + str(i)), dtype=tf.float32) for i in range(Nviews)]
@@ -107,17 +110,12 @@ def jNMF_tensor_py(matrix_list, rank, n_initializations, iterations, Sp, stop_th
     
         ##-------------------------------------------------------------------##
         ##                         Initialize H matrix                       ##
-        ##-------------------------------------------------------------------##
-    
+        ##-------------------------------------------------------------------##    
         H = tf.Variable(initializer(shape=[N, rank]), name="H")
-        #x = tf.reduce_sum([tf.linalg.norm(Xs[i] - tf.matmul(H, Ws[i])) / tf.linalg.norm(Xs[i]) for i in range(Nviews)])
-        #print("New frob:", x.numpy())
     
         ##-------------------------------------------------------------------##
         ##        Save initial max exposures in H matrices                   ##
         ##-------------------------------------------------------------------##
-        #Hts = [tf.add(H, Hv) for Hv in Hvs]
-        #oldExposures = tf.concat([tf.math.argmax(Ht, axis=1) for Ht in Hts], 0)
         oldExposures = tf.math.argmax(H, axis=1)
         const = 0        
 
@@ -128,27 +126,12 @@ def jNMF_tensor_py(matrix_list, rank, n_initializations, iterations, Sp, stop_th
             ##---------------------------------------------------------------##
             ##                          Update H                             ##
             ##---------------------------------------------------------------##
-            #H.assign(jNMF_uptade_H(Xs, Ws, H, Nviews))
             H = jNMF_uptade_H(Xs, Ws, H, Nviews)
-            #            num   = tf.reduce_sum([tf.matmul(Xs[i], Ws[i], transpose_b=True) for i in range(Nviews)], 0)
-            #            den_K = tf.reduce_sum([tf.matmul(Ws[i], Ws[i], transpose_b=True) for i in range(Nviews)], 0)
-            #            den    = tf.matmul(H, den_K, transpose_b=True)
-            #            H_new  = tf.multiply(H,  tf.divide(num, den))
-            #            H_new  = tf.where(tf.math.is_nan(H_new), tf.zeros_like(H_new), H_new)
-            #            H.assign(H_new)
     
             ##---------------------------------------------------------------##
             ##                            Update Ws                          ##
             ##---------------------------------------------------------------##   
             Ws = jNMF_uptade_Ws(Xs, Ws, H, Nviews, Sp)
-            #            HtH   = tf.matmul(H, H, transpose_a=True)
-            #            for i in range(Nviews):
-            #                den    = tf.matmul(HtH, Ws[i]) + Sp            
-            #                HX_den = tf.divide(tf.matmul(H, Xs[i], transpose_a=True), den)
-            #                W_new  = tf.multiply(Ws[i], HX_den)
-            #                W_new  = tf.where(tf.math.is_nan(W_new), tf.zeros_like(W_new), W_new)
-            #                Ws[i].assign(W_new)
-    
     
             ##---------------------------------------------------------------##
             ##                    Evaluate Convergence                       ##
@@ -186,6 +169,8 @@ def jNMF_tensor_py(matrix_list, rank, n_initializations, iterations, Sp, stop_th
         #        frobNorm_init = tf.reduce_sum(frobNorm_init)
         frobNorm.append(frobInit)
         iter_to_conv.append(inner+1)
+        W_eval.append(tf.concat(Ws, 1))
+        
         if frobInit < Best_frob :
             print('is less')
             Best_frob = frobInit
@@ -199,14 +184,13 @@ def jNMF_tensor_py(matrix_list, rank, n_initializations, iterations, Sp, stop_th
     ##-----------------------------------------------------------------------##
     ##             Convert to numpy, transpose and return                    ##
     ##-----------------------------------------------------------------------##
-    frobNorm = [i.numpy() for i in frobNorm]
-    #frobNorm.numpy()
-    #    Ws_num = [Wi.numpy().T for Wi in Ws]
-    #    H_num  = H.numpy().T
     Ws_num = [Wi.numpy().T for Wi in Best_Ws]
     H_num  = Best_H.numpy().T
 
-    return Ws_num, H_num, iter_to_conv, frobNorm
+    frobNorm = [i.numpy() for i in frobNorm]
+    W_eval_num  = [i.numpy().T for i in W_eval]
+
+    return Ws_num, H_num, iter_to_conv, frobNorm, W_eval_num
     
 
 #@tf.function

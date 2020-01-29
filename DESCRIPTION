@@ -29,3 +29,18 @@ Depends:
 Description: NMF implementation using tensorflow and helper functions to select optimal factorization rank and graphic representation of the matrix decomposition
 License: GPLv3
 RoxygenNote: 6.1.1
+Collate: 
+    'classifier_functions.R'
+    'enrichment_functions.R'
+    'generics.R'
+    'interact_functions.R'
+    'joinNMF.R'
+    'joinNMF_lite.R'
+    'nmfExperiment-class.R'
+    'nmfExperiment-class_lite.R'
+    'nmf_functions.R'
+    'nmf_functions_lite.R'
+    'plot_functions.R'
+    'plot_functions_lite.R'
+    'preprocessing_functions.R'
+    'tmp.R'

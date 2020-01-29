@@ -14,12 +14,12 @@ Join NMF Class
 \section{Slots}{
 
 \describe{
-\item{\code{shared_HMatrix_list}}{list.}
+\item{\code{HMatrix}}{list.}
 
-\item{\code{view_specific_WMatrix_list}}{list.}
+\item{\code{WMatrix_vs}}{list.}
 
-\item{\code{best_factorization_idx}}{numeric}
+\item{\code{FrobError}}{DataFrame.}
 
-\item{\code{view_specific_NMFexp_list}}{list}
+\item{\code{OptKStats}}{DataFrame.}
 }}
 

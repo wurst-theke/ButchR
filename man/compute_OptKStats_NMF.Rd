@@ -4,7 +4,7 @@
 \alias{compute_OptKStats_NMF}
 \title{Computes factorization optimal K stats}
 \usage{
-compute_OptKStats_NMF(complete_eval)
+compute_OptKStats_NMF(k_eval, k)
 }
 \arguments{
 \item{complete_eval}{internal object return after computing NMF with tensorflow}

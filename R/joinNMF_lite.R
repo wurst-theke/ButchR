@@ -1,172 +1,183 @@
-#lite_run_join_NMF_tensor <- function (matrix_list,
+#' @include generics.R
+NULL
+
+#' Join NMF
+#'
+#' Computes join NMF on tensorflow using the reticulate framework,
+#' uses a list of non-negative matrices as input
+#'
+#' @param matrix_list List of non-negative matrices
+#' @param n_initializations Number of initializations to evaluate
+#' @param ranks numeric vector with ranks to factorize
+#' @param iterations Maximum number of iterations to run for every initialization
+#' @param convergence_threshold The factorization stops,
+#' if the convergence test is constant for this number of iterations
+#'
+#' @return A join_NMF object,
+#' containing a join H matrix and one W matrix for each input matrix
+#'
+#' @export
+#'
+#' @examples
+#' jnmf_exp <- run_joinNMF_tensor(list(a = matrix(1:1000, ncol = 10),
+#'                                     b = matrix(1:1000, ncol = 10)),
+#'                                ranks = 2:5,
+#'                                n_initializations     = 10,
+#'                                iterations            = 10^4,
+#'                                convergence_threshold = 40)
+#' jnmf_exp
 run_joinNMF_tensor <- function (matrix_list,
-                                 k_min = 2,
-                                 k_max = 2,
-                                 outer_iter = 10,
-                                 inner_iter = 10^4,
-                                 conver_stop_threshold = 40,
-                                 Sp = 0){
+                                ranks  = 2,
+                                n_initializations     = 10,
+                                iterations            = 10^4,
+                                convergence_threshold = 40,
+                                Sp = 0){
+
+  #----------------------------------------------------------------------------#
+  #                            Setup and data check                            #
+  #----------------------------------------------------------------------------#
+  # Check  data
+  if (!is.list(matrix_list) &
+      (!sum(sapply(matrix_list, is.matrix)) == length(matrix_list))) {
+    stop("\nmatrix_list should be a list of Non-negative matrices\n")
+  }
+  if (min(sapply(matrix_list, min)) < 0 ) {
+    stop("\nNegative values present in input matrix\n
+         only non-negative matrices supported\n")
+  }
+  if (!all(sapply(lapply(matrix_list, colnames),
+                  identical, colnames(matrix_list[[1]])))) {
+    stop("\nColumn names should be identical between matrices\n")
+  }
+  if (is.null(names(matrix_list))) {
+    names(matrix_list) <- paste0("view", 1:length(matrix_list))
+    warning("Input matrix list do not have names, assigning ids:\n", names(matrix_list), "\n")
+  }
+
   # Convert params to integer
-  nmf_params <- lapply(list(k_min = k_min,
-                            k_max = k_max,
-                            outer_iter = outer_iter,
-                            inner_iter = inner_iter,
-                            conver_stop_threshold = conver_stop_threshold),
+  nmf_params <- lapply(list(ranks                 = ranks,
+                            n_initializations     = n_initializations,
+                            iterations            = iterations,
+                            convergence_threshold = convergence_threshold),
                        as.integer)
+  names(nmf_params$ranks) <- paste0("k", nmf_params$ranks)
   viewsIDs <- setNames(names(matrix_list), names(matrix_list))
   #----------------------------------------------------------------------------#
-  #     Run integrative NMF - returns list with all ks and all iterations      #
+  #          Run join NMF - returns list with all ks and all iterations        #
   #----------------------------------------------------------------------------#
-  # Source NMF tensorflow python script
+  # Source jNMF tensorflow python function
   jNMF_tensor_py <- source_NMFtensor_function("jNMF")
-  #source_python(file.path(system.file(package = "Bratwurst"), "python/tensor_jNMF_lite.py"))
 
+  # Run jNMF
   cat("Running join NMF for views: ", paste(names(matrix_list), collapse = ","), "\n")
-
-  # Run NMF
-  complete_eval <- lapply(k_min:k_max, function(k) {
-    k <- as.integer(k)
-
+  complete_eval <- lapply(nmf_params$ranks, function(k) {
     print(Sys.time())
     cat("Factorization rank: ", k, "\n")
-    # k_eval <- lapply(1:outer_iter, function(i) {
-    #   if (i%%10 == 0) cat("\tIteration: ", i, "\n")
-    #
-    #   jnmf_eval <- jNMF_tensor_py(unname(matrix_list),
-    #                               rank              = k,
-    #                               n_initializations = outer_iter,
-    #                               iterations        = nmf_params$inner_iter,
-    #                               Sp                = Sp,
-    #                               stop_threshold    = nmf_params$conver_stop_threshold)
-    #
-    #   names(jnmf_eval) <- c("Ws", "sharedH", "iterations", "Frob_error")
-    #   names(jnmf_eval$Ws)         <- names(matrix_list)
-    #   names(jnmf_eval$Frob_error) <- names(matrix_list)
-    #   return(jnmf_eval)
-    # })
-    # names(k_eval) <- paste0("iter", 1:outer_iter)
     k_eval <- jNMF_tensor_py(unname(matrix_list),
                              rank              = k,
-                             n_initializations = nmf_params$outer_iter,
-                             iterations        = nmf_params$inner_iter,
+                             n_initializations = nmf_params$n_initializations,
+                             iterations        = nmf_params$iterations,
                              Sp                = Sp,
-                             stop_threshold    = nmf_params$conver_stop_threshold)
+                             stop_threshold    = nmf_params$convergence_threshold)
 
+    names(k_eval)     <- c("Ws", "sharedH", "iterations", "Frob_error", "W_eval")
+    names(k_eval$Ws)  <- viewsIDs
+    k_eval$iterations <- unlist(k_eval$iterations)
+    k_eval$Frob_error <- unlist(k_eval$Frob_error)
 
-    names(k_eval) <- c("Ws", "sharedH", "iterations", "Frob_error")
-    names(k_eval$Ws)         <- names(matrix_list)
-    #names(jnmf_eval$Frob_error) <- names(matrix_list)
+    # Optimal K stats
+    k_eval$OptKStats <- try(compute_OptKStats_NMF(k_eval, k), silent = FALSE)
+    k_eval$W_eval <- NULL
 
-    iters <- paste(k_eval$iterations, collapse = ",")
-    #iters <- paste(sapply(k_eval, function(x) {x$iterations}), collapse = ",")
-    print(paste("NMF converged after ", iters, "iterations"))
-
+    print(paste("join NMF converged after ",
+                paste(k_eval$iterations, collapse = ","),
+                "iterations"))
     return(k_eval)
   })
+  #----------------------------------------------------------------------------#
+  #                    Build join NMF object slots                             #
+  #----------------------------------------------------------------------------#
+  # input data info
+  input_data <- list(hash = digest::digest(matrix_list),
+                     dim  = data.frame(view_ids = names(matrix_list),
+                                       do.call(rbind, lapply(matrix_list,
+                                                             dim))),
+                     colnames = colnames(matrix_list[[1]]),
+                     rownames = lapply(matrix_list, rownames))
 
-  # Build NMF object
-  names(complete_eval) <- paste0("k", k_min:k_max)
-  #----------------------------------------------------------------------------#
-  #      Build old NMF experiment objects to return factorization metrics      #
-  #----------------------------------------------------------------------------#
-  # nmfExp_list <- lapply(viewsIDs, function(viewID){
-  #   nmf.exp <- nmfExperimentFromMatrix(matrix_list[[viewID]])
-  #
-  #
-  #   dec.matrix <- lapply(1:(k_max-k_min+1), function(k) {
-  #     k <- as.integer(k)
-  #     k.matrix <- lapply(1, function(i) {
-  #       list(W = complete_eval[[k]][["Ws"]][[viewID]],
-  #            H = complete_eval[[k]][["sharedH"]],
-  #            Frob.error = complete_eval[[k]][["Frob_error"]][[viewID]])
-  #     })
-  #     names(k.matrix) <- 1
-  #     return(k.matrix)
-  #   })
-  #   # Build NMF object
-  #   print("Echoecho")
-  #   names(dec.matrix) <- k_min:k_max
-  #   frob.errors <- DataFrame(getFrobError(dec.matrix))
-  #   colnames(frob.errors) <- as.character(k_min:k_max)
-  #   nmf.exp <- setFrobError(nmf.exp, frob.errors)
-  #   nmf.exp <- setHMatrixList(nmf.exp, getHMatrixList(dec.matrix))
-  #   nmf.exp <- setWMatrixList(nmf.exp, getWMatrixList(dec.matrix))
-  #   nmf.exp <- computeFrobErrorStats(nmf.exp)
-  #   nmf.exp <- computeSilhoutteWidth(nmf.exp)
-  #   nmf.exp <- computeCopheneticCoeff(nmf.exp)
-  #   nmf.exp <- computeAmariDistances(nmf.exp)
-  #   return(nmf.exp)
-  # })
-  #----------------------------------------------------------------------------#
-  #    Select which outer iteration was the best, based on the Frob error      #
-  #------------------x----------------------------------------------------------#
-  # FrobError_list <- lapply(nmfExp_list, function(nmf.exp){
-  #   as.matrix(nmf.exp@FrobError)
-  # })
-  # best_factorization_idx <- apply(Reduce("+", FrobError_list), 2, which.min)
-  # names(best_factorization_idx) <- paste0("k", names(best_factorization_idx))
+  # Frob. error data frame
+  frob_errors <- as.data.frame(do.call(cbind, lapply(complete_eval, "[[" , "Frob_error")))
 
-  #----------------------------------------------------------------------------#
-  #        Organize objects to save to an integrative_NMF class4 object        #
-  #----------------------------------------------------------------------------#
+
+  # Optimal K stats
+  OptKStats <- lapply(complete_eval, "[[" , "OptKStats")
+  if (!any(sapply(OptKStats, inherits, "try-error"))) {
+    OptKStats <- as.data.frame(dplyr::bind_rows(OptKStats))
+
+    # Optimal K
+    indCopheneticCoeff <- which(local.maxima(OptKStats$copheneticCoeff)) # Max Cophenetic Coeff
+    indMeanAmariDist   <- which(local.minima(OptKStats$meanAmariDist))   # Min Amari Dist
+    OptK <- OptKStats$k[intersect(indCopheneticCoeff, indMeanAmariDist)]
+    if (length(OptK) == 0) {
+      #warning("No optimal K could be determined from the Optimal K stat\n")
+      cat("No optimal K could be determined from the Optimal K stat\n")
+    }
+
+  } else {
+    OptKStats <- data.frame()
+    OptK <- integer()
+    cat("Error found while computing factorization stats\nSkipping Optimal K\n")
+  }
+
   # Shared H matrix list
   shared_HMatrix_list <- lapply(complete_eval, function(k_eval){
     k_eval$sharedH
-    # lapply(k_eval, function(jnmf_eval){
-    #   jnmf_eval$sharedH
-    # })
   })
 
   # View specific W matrix list
   view_specific_WMatrix_list <- lapply(complete_eval, function(k_eval){
     k_eval$Ws
-    # lapply(k_eval, function(jnmf_eval){
-    #   jnmf_eval$Ws
-    # })
   })
 
   #----------------------------------------------------------------------------#
-  #                       Return integrative_NMF class4 object                 #
+  #                              Return join_NMF object                        #
   #----------------------------------------------------------------------------#
 
-  join_NMF(shared_HMatrix_list        = shared_HMatrix_list,
-           view_specific_WMatrix_list = view_specific_WMatrix_list)
-           #best_factorization_idx     = best_factorization_idx)
-           #view_specific_NMFexp_list  = nmfExp_list)
+  join_NMF(input_data = input_data,
+           HMatrix    = shared_HMatrix_list,
+           WMatrix_vs = view_specific_WMatrix_list,
+           FrobError  = frob_errors,
+           OptKStats  = OptKStats,
+           OptK       = OptK)
 }
-# environment(lite_run_join_NMF_tensor) <- asNamespace("Bratwurst")
-#
-#
-#
-#
+
+
+
+# #
+# #
+# environment(run_joinNMF_tensor) <- asNamespace("Bratwurst")
 # jnmf_exp <- run_joinNMF_tensor(norm_mat_list,
-#                                 k_min = 5,
-#                                 k_max = 6,
-#                                 outer_iter = 2,
-#                                 inner_iter = 10^4,
-#                                 conver_stop_threshold = 40)
+#                                 ranks  = 4:10,
+#                                 n_initializations     = 3,
+#                                 iterations            = 10^4,
+#                                 convergence_threshold = 40,
+#                                 Sp = 0)
+# gg_plotKStats(jnmf_exp)
+# HMatrix(jnmf_exp)
 
+#
 # jnmf_exp
-# jnmf_exp@shared_HMatrix_list
-# jnmf_exp@view_specific_WMatrix_list
+# FrobError(jnmf_exp)
+# HMatrix(jnmf_exp)
+# lapply(WMatrix(jnmf_exp)[[1]], head)
+# jnmf_exp@OptKStats
+# jnmf_exp@OptK
 #
+# all.equal(lapply(norm_mat_list, colnames))
+# matrix_list
 #
+# x <- list(a = matrix(1:1000, ncol = 10),
+#           b = matrix(1:1000, ncol = 10))
 #
-# nmf_exp <- nmfExperimentFromMatrix(matrix = norm_mat_list[[1]])
-# nmf_exp <- runNMFtensor(nmf_exp,
-#                         k.min = 5,
-#                         k.max = 6,
-#                         outer.iter = 2,
-#                         inner.iter = 10^4,
-#                         conver.test.stop.threshold = 40)
-# FrobError(nmf_exp)
-
-
-
-#   nmf.exp <- setFrobError(nmf.exp, frob.errors)
-#   nmf.exp <- setHMatrixList(nmf.exp, getHMatrixList(dec.matrix))
-#   nmf.exp <- setWMatrixList(nmf.exp, getWMatrixList(dec.matrix))
-#   nmf.exp <- computeFrobErrorStats(nmf.exp)
-#   nmf.exp <- computeSilhoutteWidth(nmf.exp)
-#   nmf.exp <- computeCopheneticCoeff(nmf.exp)
-#   nmf.exp <- computeAmariDistances(nmf.exp)
+# x <- try(aa, silent = TRUE)
+# inherits(x, "try-error")
