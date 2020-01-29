@@ -51,8 +51,6 @@ setMethod("show",
 #==============================================================================#
 #### H-Matrix (H-Matrix with smallest frobError)
 # Getter
-#setGeneric("HMatrix", function(x, k = NULL, ...) standardGeneric("HMatrix"))
-
 #' Return a list of H-Matrices or an H-Matrix for the indicaded rank
 #'
 #' @param x an nmfExperiment_lite object
@@ -94,8 +92,6 @@ setMethod("HMatrix",
 
 #### W-Matrix (W-Matrix with smallest frobError)
 # Getter
-#setGeneric("WMatrix", function(x, k = NULL, ...) standardGeneric("WMatrix"))
-
 #' Return a list of W-Matrices or a W-Matrix for the indicaded rank
 #'
 #' @param x an nmfExperiment_lite object
@@ -138,8 +134,6 @@ setMethod("WMatrix",
 
 #### FrobError
 # Getter
-#setGeneric("FrobError", function(x, ...) standardGeneric("FrobError"))
-
 #' Return Frobenius Error from all initializations
 #'
 #' @param x an nmfExperiment_lite object
@@ -157,9 +151,7 @@ setMethod("FrobError", "nmfExperiment_lite", function(x, ...) x@FrobError)
 #==============================================================================#
 #### Optimal K Statistics
 # Getter
-#setGeneric("OptKStats", function(x, ...) standardGeneric("OptKStats"))
-
-#' Return optimal K Statistics
+#' Return optimal factorization rank (K) Statistics
 #'
 #' @param x an nmfExperiment_lite object
 #'
@@ -168,14 +160,10 @@ setMethod("FrobError", "nmfExperiment_lite", function(x, ...) x@FrobError)
 #'
 #' @examples
 #' OptKStats(nmf_exp)
-setMethod("OptKStats", "nmfExperiment", function(x, ...) x@OptKStats)
-
-
+setMethod("OptKStats", "nmfExperiment_lite", function(x, ...) x@OptKStats)
 
 #### Optimal K
 # Getter
-#setGeneric("OptK", function(x, ...) standardGeneric("OptK"))
-
 #' Return optimal K
 #'
 #' @param x an nmfExperiment_lite object
@@ -185,7 +173,7 @@ setMethod("OptKStats", "nmfExperiment", function(x, ...) x@OptKStats)
 #'
 #' @examples
 #' OptK(nmf_exp)
-setMethod("OptK", "nmfExperiment", function(x, ...) x@OptK)
+setMethod("OptK", "nmfExperiment_lite", function(x, ...) x@OptK)
 
 
 
@@ -279,6 +267,18 @@ setMethod("regularizeH",
             return(nmf_exp)
           }
 )
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
