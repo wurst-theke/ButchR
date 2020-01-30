@@ -101,8 +101,32 @@ setGeneric("setFeatureStats", function(nmfExperiment, FeatureStats)
 
 #### Signature specfific features
 # Getter
+#' Signature Specific Features
+#'
+#' Returns the list of signatures specific features
+#' for all factorization ranks or for the indicaded rank,
+#' if return_all_features = TRUE
+#' returns a binary matrix for every factorization rank,
+#' with features in the rows and samples in the columns,
+#' in which 1 means that the features is contributing to the signature,
+#' and 0 it does not.
+#' The extraction of Signature Specific Features is not supported for k = 2
+#'
+#' @param x an nmfExperiment or a nmfExperiment_lite object
+#' @param k numeric  - factorization rank
+#'
+#' @return list of signature specific fatures or binary matrices for all features
+#' @export
+#' @docType methods
+#' @rdname SignatureSpecificFeatures-methods
+#'
+#' @examples
+#' SignatureSpecificFeatures(nmf_exp)
+#' SignatureSpecificFeatures(nmf_exp, k = 2)
+#' SignatureSpecificFeatures(nmf_exp, k = 2, return_all_features = TRUE)
 setGeneric("SignatureSpecificFeatures",
-           function(x, ...) standardGeneric("SignatureSpecificFeatures"))
+           function(x, k = NULL, return_all_features = FALSE, ...)
+             standardGeneric("SignatureSpecificFeatures"))
 
 # Setter
 setGeneric("setSignatureSpecificFeatures",

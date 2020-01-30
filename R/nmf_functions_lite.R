@@ -14,9 +14,9 @@ np <- NULL
 # This file is part of the Bratwurst package. The Bratwurst package is licenced
 # under GPL-3
 
-#==============================================================================#
+#------------------------------------------------------------------------------#
 #                         NMF GPU Wrapper - FUNCTIONS                          #
-#==============================================================================#
+#------------------------------------------------------------------------------#
 #' Single view NMF implementations
 #'
 #' Python functions to run several NMF implementations on tensorflow
@@ -46,9 +46,9 @@ source_NMFtensor_function <- function(method) {
 }
 
 
-#==============================================================================#
+#------------------------------------------------------------------------------#
 #                      NMF tensorflow Wrapper - FUNCTION                       #
-#==============================================================================#
+#------------------------------------------------------------------------------#
 
 #' Single view NMF
 #'
@@ -64,6 +64,7 @@ source_NMFtensor_function <- function(method) {
 #' @param n_neighbors for method "GRNMF_SC", the number of neighbors to take into account when building the graph G
 #' @param alpha for method "GRNMF_SC", regularization parameter alpha
 #' @param lamb for method "GRNMF_SC", regularization parameter alpha
+#' @param extract_features if TRUE performs feature extraction for all factorization ranks > 2
 #'
 #'
 #' @return A nmfExperiment_lite object, containg the factorized matrices W and H, along with factorization metrics
@@ -85,7 +86,8 @@ runNMFtensor_lite <- function (X,
                                convergence_threshold = 40,
                                n_neighbors = 4,
                                alpha = 0.1,
-                               lamb  = 10 ){
+                               lamb  = 10,
+                               extract_features = FALSE){
 
   #----------------------------------------------------------------------------#
   #                                    Setup                                   #
@@ -170,6 +172,25 @@ runNMFtensor_lite <- function (X,
   }
 
   #----------------------------------------------------------------------------#
+  #                  Compute signatures specific features                      #
+  #----------------------------------------------------------------------------#
+  if (extract_features) {
+    SignFeatures <- lapply(lapply(complete_eval, "[[" , "W"), function(W){
+      if (ncol(W) == 2) {
+        return(NULL)
+      } else {
+        rownames(W) <- rownames(X)
+        return(WcomputeFeatureStats(W))
+      }
+    })
+    SignFeatures <- data.frame(do.call(cbind, SignFeatures),
+                               stringsAsFactors = FALSE)
+  } else {
+    SignFeatures <- data.frame()
+  }
+
+
+  #----------------------------------------------------------------------------#
   #                       Return nmfExperiment_lite object                     #
   #----------------------------------------------------------------------------#
   nmfExperiment_lite(input_matrix = input_matrix,
@@ -177,15 +198,13 @@ runNMFtensor_lite <- function (X,
                      HMatrix      = lapply(complete_eval, "[[" , "H"),
                      FrobError    = frob_errors,
                      OptKStats    = OptKStats,
-                     OptK         = OptK)
-                     #FeatureStats              = "data.frame",
-                     #SignatureSpecificFeatures = "list" )
-                     #Factorization_ranks       = Factorization_ranks)
+                     OptK         = OptK,
+                     SignFeatures = SignFeatures)
 }
 
-#==============================================================================#
+#------------------------------------------------------------------------------#
 #             Criteria for optimal factorization rank - FUNCTIONS              #
-#==============================================================================#
+#------------------------------------------------------------------------------#
 
 #' Computes factorization optimal K stats
 #'
@@ -265,106 +284,42 @@ compute_OptKStats_NMF <- function(k_eval, k) {
 }
 
 
-#' #==============================================================================#
-#' #                         H-MATRIX ANALYSIS FUNCTIONS                          #
-#' #==============================================================================#
+
+#------------------------------------------------------------------------------#
+#                       Computes Signature specific features                   #
+#------------------------------------------------------------------------------#
+#' Computes Signature specific features
 #'
-#' #' Regularize the signatures matrix (H)
-#' #'
-#' #' After row regularization of the matrix H, the inverse factors are
-#' #' mutiplied with the columns of W in order to keep the matrix product W*H
-#' #' constant.
-#' #'
-#' #' @param nmf.exp
-#' #'
-#' #' @return A data structure of type nmfExperiment
-#' #'
-#' #' @export
-#' #'
-#' #' @examples
-#' #'  NULL
-#' #'
-#' regularizeH <- function(nmf.exp){
-#'   # account for WMatrixList and HMatrixList
-#'   all_list <- lapply(seq_along(WMatrixList(nmf.exp)), function(k_ind){
-#'     k_list <-
-#'       lapply(seq_along(WMatrixList(nmf.exp)[[k_ind]]), function(init_ind){
-#'         tempW <- WMatrixList(nmf.exp)[[k_ind]][[init_ind]]
-#'         tempH <- HMatrixList(nmf.exp)[[k_ind]][[init_ind]]
-#'         normFactor <- rowMax(tempH)
-#'         newExpo <- tempH / normFactor
-#'         newSigs <- tempW * normFactor
-#'         return(list(W = newSigs,
-#'                     H = newExpo))
-#'       })
-#'     names(k_list) <- names(WMatrixList(nmf.exp)[[k_ind]])
-#'     return(k_list)
-#'   })
-#'   names(all_list) <- names(WMatrixList(nmf.exp))
-#'   thisWMatrixList <- lapply(all_list, function(current_k_list){
-#'     kWMatrixList <- lapply(current_k_list, function(current_entry){
-#'       return(current_entry$W)
-#'     })
-#'   })
-#'   nmf.exp <- setWMatrixList(nmf.exp, thisWMatrixList)
-#'   thisHMatrixList <- lapply(all_list, function(current_k_list){
-#'     kHMatrixList <- lapply(current_k_list, function(current_entry){
-#'       return(current_entry$H)
-#'     })
-#'   })
-#'   nmf.exp <- setHMatrixList(nmf.exp, thisHMatrixList)
-#'   return(nmf.exp)
-#' }
+#' @param W W matrix with more than 2 signatures
 #'
-#'
-#' #' Compute signature specific features
-#' #'
-#' #' @param nmf.exp A NMF experiment object
-#' #' @param rowDataId The index of the rowData(nmf.exp) data.frame that should be used for
-#' #'  feature extraction. In case rowData(nmf.exp)[,1] is a GRanges or a related object like
-#' #'  GenomicInteractions this parameter can be ignored
-#' #'
-#' #' @return nmf.exp with filles SignatureSpecificFeatures container
-#' #'
-#' #'
-#' #' @export
-#' #'
-#' #' @examples
-#' #'
-#' computeSignatureSpecificFeatures <- function(nmf.exp, rowDataId = 3){
-#'   if (length(OptK(nmf.exp)) == 0){
-#'     stop("You need to first define an optimal k before being able to compute
-#'            signature specific features!")
-#'   } else {
-#'     if (nrow(FeatureStats(nmf.exp)) == 0){
-#'       message("Computing feature stats...")
-#'       nmf.exp <- computeFeatureStats(nmf.exp)
-#'     }
-#'     fstats <- FeatureStats(nmf.exp)
-#'     # identify unique cluster membership strings
-#'     clusterMemberships <-
-#'       sapply(unique(as.character(fstats$cluster)),
-#'              function (x) lengths(regmatches(x, gregexpr("1", x))))
-#'     sigSpecClusters <-
-#'       sort(names(clusterMemberships[which(clusterMemberships == 1)]),
-#'            decreasing = TRUE)
-#'
-#'     if (class(rowData(nmf.exp)[, 1]) %in% c("GRanges", "GInteractions",
-#'                                             "GenomicInteractions")){
-#'       signatureSpecificFeatures <- lapply(sigSpecClusters, function(ssc){
-#'         features <- rowData(nmf.exp)[, 1][which(fstats$cluster == ssc)]
-#'         return(features)
-#'       })
-#'     }else{
-#'       signatureSpecificFeatures <- lapply(sigSpecClusters, function(ssc){
-#'         features <- rowData(nmf.exp)[, rowDataId][which(fstats$cluster == ssc)]
-#'         return(features)
-#'       })
-#'     }
-#'     names(signatureSpecificFeatures) <- sigSpecClusters
-#'     nmf.exp@SignatureSpecificFeatures <- signatureSpecificFeatures
-#'     return(nmf.exp)
-#'   }
-#' }
-#'
-#'
+#' @examples
+#' WcomputeFeatureStats(W)
+WcomputeFeatureStats <- function(W) {
+  #----------------------------------------------------------------------------#
+  #    find features with no contribution and assign names if not present      #
+  #----------------------------------------------------------------------------#
+  k = ncol(W)
+  if (is.null(rownames(W))) {
+    rownames(W) <- paste0("f", 1:nrow(W))
+  }
+  idx <- rowSums(W) == 0
+  # Features that contribute towards one or more signatures
+  Wf <- W[!idx,]
+  # Non-signature features - features with 0 contribution to all signatures
+  nsf <- setNames(rep(paste(rep("0", k), collapse = ""), sum(idx)), rownames(W)[idx])
+
+  #----------------------------------------------------------------------------#
+  #      Run k means over all rows and assign features to the clusters         #
+  #----------------------------------------------------------------------------#
+  ssf <- apply(Wf, 1, function(x){
+    x <- sigmoidTransform(x)
+    k <- kmeans(x, 2)
+    max_idx <- which.max(k$centers)
+    paste(if_else(k$cluster == max_idx, "1", "0"), collapse = "")
+  })
+
+  # Combine with features with no contribution and sort
+  sig_features <- c(ssf, nsf)
+  sig_features <- sig_features[match(rownames(W), names(sig_features))]
+  return(sig_features)
+}

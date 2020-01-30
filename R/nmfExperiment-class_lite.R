@@ -22,9 +22,7 @@ nmfExperiment_lite <- setClass(
                FrobError    = "data.frame",
                OptKStats    = "data.frame",
                OptK         = "numeric",
-               FeatureStats              = "data.frame",
-               #Factorization_ranks       = "data.frame",
-               SignatureSpecificFeatures = "list" )
+               SignFeatures = "data.frame" )
 
 )
 
@@ -45,10 +43,9 @@ setMethod("show",
           }
 )
 
-
-#==============================================================================#
-#                                 Getter & Setter                              #
-#==============================================================================#
+#------------------------------------------------------------------------------#
+#                             H and W matrices                                 #
+#------------------------------------------------------------------------------#
 #### H-Matrix (H-Matrix with smallest frobError)
 # Getter
 #' Return a list of H-Matrices or an H-Matrix for the indicaded rank
@@ -74,7 +71,7 @@ setMethod("HMatrix",
                 })
               }
             } else {
-              idx <- x@OptKStats$rank_id[x@OptKStats$k == k]
+              idx <- as.character(x@OptKStats$rank_id[x@OptKStats$k == k])
               if (length(idx) == 0 ) {
                 stop("No H matrix present for k = ", k,
                      "\nPlease select from ranks = ", paste0(x@OptKStats$k, collapse = ","))
@@ -115,7 +112,7 @@ setMethod("WMatrix",
                 })
               }
             } else {
-              idx <- x@OptKStats$rank_id[x@OptKStats$k == k]
+              idx <- as.character(x@OptKStats$rank_id[x@OptKStats$k == k])
               if (length(idx) == 0 ) {
                 stop("No W matrix present for k = ", k,
                      "\nPlease select from ranks = ", paste0(x@OptKStats$k, collapse = ","))
@@ -130,8 +127,9 @@ setMethod("WMatrix",
           }
 )
 
-
-
+#------------------------------------------------------------------------------#
+#                              Optimal K Statistics                            #
+#------------------------------------------------------------------------------#
 #### FrobError
 # Getter
 #' Return Frobenius Error from all initializations
@@ -146,9 +144,6 @@ setMethod("WMatrix",
 setMethod("FrobError", "nmfExperiment_lite", function(x, ...) x@FrobError)
 
 
-#==============================================================================#
-#                              Optimal K Statistics                            #
-#==============================================================================#
 #### Optimal K Statistics
 # Getter
 #' Return optimal factorization rank (K) Statistics
@@ -175,12 +170,9 @@ setMethod("OptKStats", "nmfExperiment_lite", function(x, ...) x@OptKStats)
 #' OptK(nmf_exp)
 setMethod("OptK", "nmfExperiment_lite", function(x, ...) x@OptK)
 
-
-
-
-#==============================================================================#
+#------------------------------------------------------------------------------#
 #                               NMF Normalization                              #
-#==============================================================================#
+#------------------------------------------------------------------------------#
 #' @rdname normalizeW-methods
 #' @aliases normalizeW,ANY,ANY-method
 #'
@@ -268,96 +260,58 @@ setMethod("regularizeH",
           }
 )
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#' #### Feature Statistics
-#' # Getter
-#' setGeneric("FeatureStats", function(x, ...) standardGeneric("FeatureStats"))
+#------------------------------------------------------------------------------#
+#                       Signature specfific features                           #
+#------------------------------------------------------------------------------#
+#### Signature specfific features
+#' Signature specfific features getter
 #'
-#' #' Feature Statistics getter
-#' #'
-#' #' @param nmfExperiment
-#' #'
-#' #' @return
-#' #' @export
-#' #'
-#' #' @examples
-#' setMethod("FeatureStats", "nmfExperiment", function(x, ...) x@FeatureStats)
+#' @param nmfExperiment_lite
 #'
-#' # Setter
-#' setGeneric("setFeatureStats", function(nmfExperiment, FeatureStats)
-#'   standardGeneric("setFeatureStats"))
+#' @return
+#' @export
 #'
-#' #' Feature Statistics setter
-#' #'
-#' #' @param nmfExperiment
-#' #'
-#' #' @return
-#' #' @export
-#' #'
-#' #' @examples
-#' setMethod("setFeatureStats", "nmfExperiment",
-#'           function(nmfExperiment, FeatureStats) {
-#'             if(nrow(nmfExperiment@FeatureStats) == 0) {
-#'               nmfExperiment@FeatureStats <- FeatureStats
-#'             } else {
-#'               nmfExperiment@FeatureStats <-
-#'                 cbind(nmfExperiment@FeatureStats, FeatureStats)
-#'             }
-#'             return(nmfExperiment)
-#'           })
-#'
-#' #### Signature specfific features
-#' # Getter
-#' setGeneric("SignatureSpecificFeatures",
-#'            function(x, ...) standardGeneric("SignatureSpecificFeatures"))
-#'
-#' #' Signature specfific features getter
-#' #'
-#' #' @param nmfExperiment
-#' #'
-#' #' @return
-#' #' @export
-#' #'
-#' #' @examples
-#' setMethod("SignatureSpecificFeatures",
-#'           "nmfExperiment", function(x, ...) x@SignatureSpecificFeatures)
-#'
-#' # Setter
-#' setGeneric("setSignatureSpecificFeatures",
-#'            function(nmfExperiment, SignatureSpecificFeatures){
-#'              standardGeneric("setSignatureSpecificFeatures")
-#'            })
-#'
-#' #' Feature Statistics setter
-#' #'
-#' #' @param nmfExperiment
-#' #'
-#' #' @return
-#' #' @export
-#' #'
-#' #' @examples
-#' setMethod("setSignatureSpecificFeatures", "nmfExperiment",
-#'           function(nmfExperiment, SignatureSpecificFeatures) {
-#'             if(nrow(nmfExperiment@SignatureSpecificFeatures) == 0) {
-#'               nmfExperiment@SignatureSpecificFeatures <- SignatureSpecificFeatures
-#'             } else {
-#'               nmfExperiment@SignatureSpecificFeatures <-
-#'                 c(nmfExperiment@SignatureSpecificFeatures,
-#'                   SignatureSpecificFeatures)
-#'             }
-#'             return(nmfExperiment)
-#'           })
+#' @examples
+#' SignatureSpecificFeatures(nmf_exp)
+#' lapply(SignatureSpecificFeatures(nmf_exp), function(x) sapply(x, length))
+#' SignatureSpecificFeatures(nmf_exp, k = 3)
+#' SignatureSpecificFeatures(nmf_exp, k = 3, return_all_features = TRUE)
+setMethod("SignatureSpecificFeatures",
+          "nmfExperiment_lite",
+          function(x, k = NULL, return_all_features = FALSE, ...){
+
+            # String of 0 and 1 to matrix
+            bin_str_tu_mat <- function(binstr, return_all_features){
+              names(binstr) <- rownames(x@SignFeatures)
+              sig_feats <- do.call(rbind, lapply(strsplit(binstr, split = ""), as.numeric))
+              if (return_all_features) {
+                return(sig_feats)
+              } else {
+                sig_feats <- sig_feats[rowSums(sig_feats) == 1,,drop=FALSE]
+                apply(sig_feats, 2, function(is_sig){
+                  is_sig <- is_sig[is_sig == 1]
+                  return(names(is_sig))
+                })
+              }
+            }
+
+
+            if(is.null(k)) {
+              ssf <- lapply(x@SignFeatures, function(binstr) {
+                bin_str_tu_mat(binstr, return_all_features)
+              })
+            } else {
+              if (k == 2 ) {
+                stop("Signature Specific Features extraction is not supported for K = 2")
+              }
+
+              idx <- as.character(x@OptKStats$rank_id[x@OptKStats$k == k])
+              if (length(idx) == 0 ) {
+                stop("No W matrix present for k = ", k,
+                     "\nPlease select from ranks = ", paste0(x@OptKStats$k, collapse = ","))
+              }
+              ssf <- bin_str_tu_mat(x@SignFeatures[,idx], return_all_features)
+            }
+            return(ssf)
+          }
+)

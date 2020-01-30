@@ -710,6 +710,8 @@ getSignatureNames <- function(nmf.exp, k.opt) {
 #'
 #' @examples
 computeEntropy <- function(matrix) {
+  #matrix(1:100, ncol =10)/1:10
+  #matrix(1:100, ncol =10)
   matrix.relativ <- t(apply(matrix, 1, function(x) x / sum(x)))
   matrix.entropy <- apply(matrix.relativ, 1, function(x) {
     p <- x * log2(length(x) * x)

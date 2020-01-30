@@ -9,3 +9,10 @@
 #                                convergence_threshold = 2,
 #                                Sp = 0)
 # jnmf_exp@OptKStats
+
+
+
+# environment(WcomputeFeatureStats) <- asNamespace("Bratwurst")
+# WcomputeFeatureStats(WMatrix(nmf_exp, k = 4))
+#
+# Bratwurst:::WcomputeFeatureStats(WMatrix(nmf_exp, k = 4))

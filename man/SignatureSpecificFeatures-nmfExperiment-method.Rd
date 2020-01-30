@@ -5,7 +5,8 @@
 \alias{SignatureSpecificFeatures,nmfExperiment-method}
 \title{Signature specfific features getter}
 \usage{
-\S4method{SignatureSpecificFeatures}{nmfExperiment}(x, ...)
+\S4method{SignatureSpecificFeatures}{nmfExperiment}(x, k = NULL,
+  return_all_features = FALSE, ...)
 }
 \arguments{
 \item{nmfExperiment}{}
