@@ -1,5 +1,18 @@
 #### FrobError
-# Getter
+#' Frobenius error for all factorization ranks
+#'
+#' Returns a data.frame with factorization ranks in the columns,
+#' and the Frobenius error for every NMF initialization in the rows.
+#'
+#' @param x an R object of type nmfExperiment, nmfExperiment_lite, join_NMF or
+#' integrative_NMF.
+#'
+#' @return data.frame with Frobenius errors
+#' @docType methods
+#' @rdname FrobError-methods
+#' @exportMethod FrobError
+#' @examples
+#' FrobError(nmf_exp)
 setGeneric("FrobError", function(x, ...) standardGeneric("FrobError"))
 
 # Setter
@@ -26,20 +39,18 @@ setGeneric("setWMatrixList", function(nmfExperiment, WMatrixList)
   standardGeneric("setWMatrixList"))
 
 
-#### H-Matrix (H-Matrix with smallest frobError)
-# Getter
 #' H-Matrix (H-Matrix with smallest frobError)
 #'
 #' Return a list of H-Matrices or an H-Matrix for the indicaded rank
 #'
-#' @param x an nmfExperiment or a nmfExperiment_lite object
-#' @param k numeric  - factorization rank
+#' @param x an R object of type nmfExperiment, nmfExperiment_lite, join_NMF or
+#' integrative_NMF.
+#' @param k numeric - factorization rank.
 #'
-#' @return list of H-Matrices or an H-Matrix for the indicaded rank
-#' @export
+#' @return list of H-Matrices or an H-Matrix for the indicaded rank.
 #' @docType methods
 #' @rdname HMatrix-methods
-#'
+#' @exportMethod HMatrix
 #' @examples
 #' HMatrix(nmf_exp)
 #' HMatrix(nmf_exp, k = 2)
@@ -47,21 +58,18 @@ setGeneric("HMatrix", function(x, k = NULL, ...)
   standardGeneric("HMatrix"))
 
 
-
-#### W-Matrix (W-Matrix with smallest frobError)
-# Getter
 #' W-Matrix (W-Matrix with smallest frobError)
 #'
 #' Return a list of W-Matrices or a W-Matrix for the indicaded rank
 #'
-#' @param x an nmfExperiment or a nmfExperiment_lite object
-#' @param k numeric  - factorization rank
+#' @param x an R object of type nmfExperiment, nmfExperiment_lite, join_NMF or
+#' integrative_NMF.
+#' @param k numeric - factorization rank.
 #'
-#' @return list of W-Matrices or a W-Matrix for the indicaded rank
-#' @export
+#' @return list of W-Matrices or a W-Matrix for the indicaded rank.
 #' @docType methods
 #' @rdname WMatrix-methods
-#'
+#' @exportMethod WMatrix
 #' @examples
 #' WMatrix(nmf_exp)
 #' WMatrix(nmf_exp, k = 2)
@@ -98,9 +106,7 @@ setGeneric("setFeatureStats", function(nmfExperiment, FeatureStats)
   standardGeneric("setFeatureStats"))
 
 
-
 #### Signature specfific features
-# Getter
 #' Signature Specific Features
 #'
 #' Returns the list of signatures specific features
@@ -116,10 +122,9 @@ setGeneric("setFeatureStats", function(nmfExperiment, FeatureStats)
 #' @param k numeric  - factorization rank
 #'
 #' @return list of signature specific fatures or binary matrices for all features
-#' @export
 #' @docType methods
 #' @rdname SignatureSpecificFeatures-methods
-#'
+#' @exportMethod SignatureSpecificFeatures
 #' @examples
 #' SignatureSpecificFeatures(nmf_exp)
 #' SignatureSpecificFeatures(nmf_exp, k = 2)

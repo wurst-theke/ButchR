@@ -58,6 +58,9 @@ def NMF_tensor_py(matrix, rank, n_initializations, iterations, stop_threshold=40
     D = tf.linalg.tensor_diag(D)
     
     L = D - G 
+    #    print(D.numpy()[0:5, 0:5] )
+    #    print(G.numpy()[0:5, 0:5] )
+    #    print(L.numpy()[0:5, 0:5] )
     #print('nearest neighbors graph G completed')
 
     ##-----------------------------------------------------------------------##
@@ -182,7 +185,7 @@ def NMF_tensor_py(matrix, rank, n_initializations, iterations, stop_threshold=40
             Best_frob = frobInit
             Best_H    = H
             Best_W    = W
-        x = nmf_obj_eval(X, W, H, L, alpha, lamb)
+        #x = nmf_obj_eval(X, W, H, L, alpha, lamb)
         #print("Best frob:", Best_frob.numpy())
         #print("Current frob", frobInit.numpy())
         #fb = tf.reduce_sum(fb, 0)

@@ -150,7 +150,7 @@ def jNMF_tensor_py(matrix_list, rank, n_initializations, iterations, Sp, stop_th
         ##                     Initialize frob error                         ##
         ##-------------------------------------------------------------------##
         if init_n == 0 :
-            Best_frob = tf.reduce_sum([tf.linalg.norm(Xs[i] - tf.matmul(H, Ws[i])) / tf.linalg.norm(Xs[i]) for i in range(Nviews)])
+            Best_frob = nmf_obj_eval(Xs, Ws, H, Nviews)
             Best_H    = H
             Best_Ws   = Ws
             
@@ -160,7 +160,7 @@ def jNMF_tensor_py(matrix_list, rank, n_initializations, iterations, Sp, stop_th
         ##-------------------------------------------------------------------##
         ##         Evaluate if best factorization initialization             ##
         ##-------------------------------------------------------------------##
-        frobInit = tf.reduce_sum([tf.linalg.norm(Xs[i] - tf.matmul(H, Ws[i])) / tf.linalg.norm(Xs[i]) for i in range(Nviews)])
+        frobInit = nmf_obj_eval(Xs, Ws, H, Nviews)
         #        frobNorm_init = []
         #        for i in range(Nviews):
         #            #Ht = tf.add(H, Hvs[i])
@@ -172,13 +172,13 @@ def jNMF_tensor_py(matrix_list, rank, n_initializations, iterations, Sp, stop_th
         W_eval.append(tf.concat(Ws, 1))
         
         if frobInit < Best_frob :
-            print('is less')
+            #print('is less')
             Best_frob = frobInit
             Best_H    = H
             Best_Ws   = Ws
-        x = tf.reduce_sum([tf.linalg.norm(Xs[i] - tf.matmul(Best_H, Best_Ws[i])) / tf.linalg.norm(Xs[i]) for i in range(Nviews)])
-        print("Best frob:", x.numpy())
-        print("Current frob", frobInit.numpy())
+        #x = nmf_obj_eval(Xs, Ws, H, Nviews)
+        #print("Best frob:", x.numpy())
+        #print("Current frob", frobInit.numpy())
         #fb = tf.reduce_sum(fb, 0)
     
     ##-----------------------------------------------------------------------##

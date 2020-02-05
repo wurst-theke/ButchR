@@ -31,7 +31,8 @@ run_joinNMF_tensor <- function (matrix_list,
                                 n_initializations     = 10,
                                 iterations            = 10^4,
                                 convergence_threshold = 40,
-                                Sp = 0){
+                                Sp = 0,
+                                extract_features = FALSE){
 
   #----------------------------------------------------------------------------#
   #                            Setup and data check                            #
@@ -140,28 +141,53 @@ run_joinNMF_tensor <- function (matrix_list,
   })
 
   #----------------------------------------------------------------------------#
+  #                  Compute signatures specific features                      #
+  #----------------------------------------------------------------------------#
+  if (extract_features) {
+    SignFeatures <- lapply(viewsIDs, function(viewsID){
+
+      #print(names(k_eval))
+      SignFeatures_eval <- lapply(view_specific_WMatrix_list, function(k_eval){
+        W <- k_eval[[viewsID]]
+        if (ncol(W) == 2) {
+          return(NULL)
+        } else {
+          rownames(W) <- input_data$rownames[[viewsID]]
+          return(WcomputeFeatureStats(W))
+        }
+      })
+      SignFeatures_eval <- data.frame(do.call(cbind, SignFeatures_eval),
+                                      stringsAsFactors = FALSE)
+      return(SignFeatures_eval)
+    })
+  } else {
+    SignFeatures <- list()
+  }
+
+  #----------------------------------------------------------------------------#
   #                              Return join_NMF object                        #
   #----------------------------------------------------------------------------#
 
-  join_NMF(input_data = input_data,
-           HMatrix    = shared_HMatrix_list,
-           WMatrix_vs = view_specific_WMatrix_list,
-           FrobError  = frob_errors,
-           OptKStats  = OptKStats,
-           OptK       = OptK)
+  join_NMF(input_data   = input_data,
+           HMatrix      = shared_HMatrix_list,
+           WMatrix_vs   = view_specific_WMatrix_list,
+           FrobError    = frob_errors,
+           OptKStats    = OptKStats,
+           OptK         = OptK,
+           SignFeatures = SignFeatures)
 }
 
 
 
-# #
-# #
 # environment(run_joinNMF_tensor) <- asNamespace("Bratwurst")
 # jnmf_exp <- run_joinNMF_tensor(norm_mat_list,
-#                                 ranks  = 4:10,
-#                                 n_initializations     = 3,
-#                                 iterations            = 10^4,
-#                                 convergence_threshold = 40,
-#                                 Sp = 0)
+#                                ranks  = 2:4,
+#                                n_initializations     = 3,
+#                                iterations            = 10^4,
+#                                convergence_threshold = 2,
+#                                Sp = 0,
+#                                extract_features = TRUE)
+# jnmf_exp@SignFeatures
 # gg_plotKStats(jnmf_exp)
 # HMatrix(jnmf_exp)
 

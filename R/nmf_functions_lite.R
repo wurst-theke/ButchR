@@ -34,7 +34,8 @@ np <- NULL
 source_NMFtensor_function <- function(method) {
   NMF_methods_list <- list(NMF      = c("nmf_tensor_lite", "NMF_tensor_py"),
                            GRNMF_SC = c("nmf_tensor_regularized_lite", "NMF_tensor_py"),
-                           jNMF     = c("tensor_jNMF_lite", "jNMF_tensor_py"))
+                           jNMF     = c("tensor_jNMF_lite", "jNMF_tensor_py"),
+                           iNMF     = c("tensor_iNMF_lite", "iNMF_tensor_py"))
   module = NMF_methods_list[[method]]
 
   # Source NMF tensorflow python script

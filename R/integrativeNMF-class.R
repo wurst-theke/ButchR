@@ -2,12 +2,13 @@
 NULL
 
 #------------------------------------------------------------------------------#
-#                  Join NMF tensorflow Wrapper - CLASS - FUNCTION              #
+#             Integrative NMF tensorflow Wrapper - CLASS - FUNCTION            #
 #------------------------------------------------------------------------------#
 
-#' Join NMF Class
+#' Integrative NMF Class
 #'
 #' @slot HMatrix list.
+#' @slot HMatrix_vs list.
 #' @slot WMatrix_vs list.
 #' @slot FrobError DataFrame.
 #' @slot OptKStats DataFrame.
@@ -17,10 +18,11 @@ NULL
 #' @export
 #'
 #' @examples
-join_NMF <- setClass(
-  Class = "join_NMF",
+integrative_NMF <- setClass(
+  Class = "integrative_NMF",
   slots = list(input_data   = "list",
                HMatrix      = "list",
+               HMatrix_vs   = "list",
                WMatrix_vs   = "list",
                FrobError    = "data.frame",
                OptKStats    = "data.frame",
@@ -29,11 +31,11 @@ join_NMF <- setClass(
 )
 
 setMethod("show",
-          "join_NMF",
+          "integrative_NMF",
           function(object) {
-            #cat("class: join NMF object \n")
+            #cat("class: integrative NMF object \n")
             #cat("Best factorization index: ", object@best_factorization_idx, "\n")
-            cat("class: join NMF object \n")
+            cat("class: integrative NMF object \n")
             x <- apply(object@input_data$dim, 1, paste, collapse = ",")
             x <- gsub(" ", "", x)
             cat("Original matrices dimensions: ", x, "\n")
@@ -48,62 +50,124 @@ setMethod("show",
 )
 
 
+
+
 #------------------------------------------------------------------------------#
 #                               H and W matrices                               #
 #------------------------------------------------------------------------------#
 #### H-Matrix (H-Matrix with smallest frobError)
 #' @rdname HMatrix-methods
 #' @aliases HMatrix,ANY-method
+#'
+#' @param view_id for integrative NMF; character vector with views
+#'  from which to extract H matrices
+#' @param type for integrative NMF; type of H matrix to extract, could be:
+#' \itemize{
+#' \item shared - shared H matrix
+#' \item viewspec - view specific H matrix
+#' \item total - sum of shared H matrix and view specific H matrix.
+#' \item all - shared H matrix and view specific H matrices.
+#' }
 #' @export
 #'
 #' @examples
 #' # For integrative_NMF objects:
-#' HMatrix(jnmf_exp)
-#' HMatrix(jnmf_exp, k = 2)
-#' lapply(HMatrix(jnmf_exp, k = 2), head)
-#' HMatrix(jnmf_exp, k = 2, view_id = "atac")
+#' # extract H matrices for all factorization ranks
+#' HMatrix(inmf_exp, type = "shared")
+#' HMatrix(inmf_exp, type = "viewspec")
+#' HMatrix(inmf_exp, type = "total")
+#' HMatrix(inmf_exp, type = "all")
+#' # extract H matrices only for selected rank
+#' HMatrix(inmf_exp, k = 2, type = "shared")
+#' HMatrix(inmf_exp, k = 2, type = "viewspec")
+#' HMatrix(inmf_exp, k = 2, type = "total")
+#' HMatrix(inmf_exp, k = 2, type = "all")
+#' # extract H matrices only for selected view and rank
+#' HMatrix(inmf_exp, k = 2, view_id = "atac", type = "viewspec")
+#' HMatrix(inmf_exp, k = 2, view_id = "atac", type = "total")
 setMethod("HMatrix",
-          "join_NMF",
-          function(x, k = NULL, ...) {
-            if(is.null(k)) {
-              H <- x@HMatrix
-              if (!is.null(x@input_data$colnames)) {
-                H <- lapply(H, function(hi) {
-                  colnames(hi) <- x@input_data$colnames
-                  hi
-                })
-              }
+          "integrative_NMF",
+          function(x, k = NULL, view_id = NULL, type, ...) {
+            # Check if view id is indeed one of the views
+            if (is.null(view_id)) {
+              view_id <- as.character(x@input_data$dim$view_ids)
+              view_id <- setNames(view_id, view_id)
+            } else if (all(view_id %in% x@input_data$dim$view_ids)) {
+              view_id <- setNames(view_id, view_id)
             } else {
+              view_id <- view_id[!view_id %in% x@input_data$dim$view_ids]
+              stop("View: ", paste0(view_id, collapse = ","),
+                   "\nis not present, please select from views = ",
+                   paste0(x@input_data$dim$view_ids, collapse = ","))
+            }
+            # Only selected views and assign colnames
+            Hshared <- lapply(x@HMatrix, function(hi) {
+              colnames(hi) <- x@input_data$colnames
+              hi
+            })
+
+            HMatrix_vs <- lapply(x@HMatrix_vs, function(hi) {
+              lapply(view_id, function(view_idi){
+                colnames(hi[[view_idi]]) <- x@input_data$colnames
+                hi[[view_idi]]
+              })
+            })
+
+
+            if (type == "shared") {
+              Hfinal <- Hshared
+            } else if (type == "viewspec") {
+              Hfinal <- HMatrix_vs
+            } else if (type == "total") {
+              rank_ids <- setNames(names(HMatrix_vs), names(HMatrix_vs))
+              Hfinal <- lapply(rank_ids, function(rank_id){
+                lapply(HMatrix_vs[[rank_id]], function(hvs_rank){
+                  Hshared[[rank_id]] + hvs_rank
+                })
+              })
+
+            } else if (type == "all") {
+              rank_ids <- setNames(names(HMatrix_vs), names(HMatrix_vs))
+              Hfinal <- lapply(rank_ids, function(rank_id){
+                c(list(shared = Hshared[[rank_id]]), HMatrix_vs[[rank_id]])
+              })
+
+            } else {
+              stop("Please select the type of H matrices to retrieve from:",
+                   "\n type = 'shared' 'viewspec' 'total' 'all'")
+            }
+
+            # Selected ranks
+            if(!is.null(k)) {
               idx <- x@OptKStats$rank_id[x@OptKStats$k == k]
               if (length(idx) == 0 ) {
                 stop("No H matrix present for k = ", k,
                      "\nPlease select from ranks = ", paste0(x@OptKStats$k, collapse = ","))
               }
-
-              H <- x@HMatrix[[idx]]
-              if (!is.null(x@input_data$colnames)) {
-                colnames(H) <- x@input_data$colnames
-              }
+              Hfinal <- Hfinal[[idx]]
             }
-            return(H)
+            # return only one matrix id list is equal to 1
+            if (length(Hfinal) == 1) {
+              Hfinal <- Hfinal[[1]]
+            }
+            return(Hfinal)
           }
 )
+
 
 # W-Matrix (W-Matrix with smallest frobError)
 #' @rdname WMatrix-methods
 #' @aliases WMatrix,ANY-method
-#'
-#' @param view_id character vector with views from which to extract W matrices
 #' @export
 #'
 #' @examples
-#' # For join_NMF objects:
-#' WMatrix(jnmf_exp)
-#' WMatrix(jnmf_exp, k = 2)
-#' lapply(WMatrix(jnmf_exp, k = 2), head)
-#' WMatrix(jnmf_exp, k = 2, view_id = "atac")
+#' # For integrative_NMF objects:
+#' WMatrix(inmf_exp)
+#' WMatrix(inmf_exp, k = 2)
+#' lapply(WMatrix(inmf_exp, k = 2), head)
+#' WMatrix(inmf_exp, k = 2, view_id = "atac")
 setMethod("WMatrix",
-          "join_NMF",
+          "integrative_NMF",
           function(x, k = NULL, view_id = NULL, ...) {
             # Check if view id is indeed one of the views
             if (is.null(view_id)) {
@@ -124,7 +188,6 @@ setMethod("WMatrix",
                 rownames(wi[[view_idi]]) <- x@input_data$rownames[[view_idi]]
                 wi[[view_idi]]
               })
-
             })
 
             if(is.null(k)) {
@@ -145,15 +208,13 @@ setMethod("WMatrix",
           }
 )
 
-
-
 # Return Frobenius Error from all initializations
 
 #' @rdname FrobError-methods
 #' @aliases SignatureSpecificFeatures,ANY-method
 #' @export
 #'
-setMethod("FrobError", "join_NMF", function(x, ...) x@FrobError)
+setMethod("FrobError", "integrative_NMF", function(x, ...) x@FrobError)
 
 
 #------------------------------------------------------------------------------#
@@ -164,19 +225,21 @@ setMethod("FrobError", "join_NMF", function(x, ...) x@FrobError)
 
 #' @rdname SignatureSpecificFeatures-methods
 #' @aliases SignatureSpecificFeatures,ANY-method
+#'
+#' @param view_id character vector with views from which sigature specific
+#' features will be extracted.
 #' @export
 #'
 #' @examples
-#' # For join_NMF objects:
-#' SignatureSpecificFeatures(jnmf_exp)
-#' SignatureSpecificFeatures(jnmf_exp)
-#' lapply(SignatureSpecificFeatures(jnmf_exp), function(view) sapply(view, function(x) sapply(x, length)))
-#' lapply(SignatureSpecificFeatures(jnmf_exp, k = 3), function(view) sapply(view, length))
-#' SignatureSpecificFeatures(jnmf_exp, k = 3, return_all_features = TRUE)
-#' SignatureSpecificFeatures(jnmf_exp, k = 3, return_all_features = TRUE, view_id = "atac")
-#' SignatureSpecificFeatures(jnmf_exp, return_all_features = TRUE, view_id = "atac")
+#' # For integrative_NMF objects:
+#' SignatureSpecificFeatures(inmf_exp)
+#' lapply(SignatureSpecificFeatures(inmf_exp), function(view) sapply(view, function(x) sapply(x, length)))
+#' lapply(SignatureSpecificFeatures(inmf_exp, k = 3), function(view) sapply(view, length))
+#' SignatureSpecificFeatures(inmf_exp, k = 3, return_all_features = TRUE)
+#' SignatureSpecificFeatures(inmf_exp, k = 3, return_all_features = TRUE, view_id = "atac")
+#' SignatureSpecificFeatures(inmf_exp, return_all_features = TRUE, view_id = "atac")
 setMethod("SignatureSpecificFeatures",
-          "join_NMF",
+          "integrative_NMF",
           function(x, k = NULL, return_all_features = FALSE, view_id = NULL, ...){
             # Check if view id is indeed one of the views
             if (is.null(view_id)) {
@@ -235,3 +298,5 @@ setMethod("SignatureSpecificFeatures",
             return(ssf)
           }
 )
+
+

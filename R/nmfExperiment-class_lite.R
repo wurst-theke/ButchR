@@ -1,3 +1,6 @@
+#' @include generics.R
+NULL
+
 # Copyright © 2015-2020  The Bratwurst package contributors
 # This file is part of the Bratwurst package. The Bratwurst package is licenced
 # under GPL-3
@@ -47,13 +50,8 @@ setMethod("show",
 #                             H and W matrices                                 #
 #------------------------------------------------------------------------------#
 #### H-Matrix (H-Matrix with smallest frobError)
-# Getter
-#' Return a list of H-Matrices or an H-Matrix for the indicaded rank
-#'
-#' @param x an nmfExperiment_lite object
-#' @param k numeric  - factorization rank
-#'
-#' @return list of H-Matrices or an H-Matrix for the indicaded rank
+#' @rdname HMatrix-methods
+#' @aliases HMatrix,ANY-method
 #' @export
 #'
 #' @examples
@@ -87,17 +85,13 @@ setMethod("HMatrix",
 )
 
 
-#### W-Matrix (W-Matrix with smallest frobError)
-# Getter
-#' Return a list of W-Matrices or a W-Matrix for the indicaded rank
-#'
-#' @param x an nmfExperiment_lite object
-#' @param k numeric  - factorization rank
-#'
-#' @return list of W-Matrices or a W-Matrix for the indicaded rank
+# W-Matrix (W-Matrix with smallest frobError)
+#' @rdname WMatrix-methods
+#' @aliases WMatrix,ANY-method
 #' @export
 #'
 #' @examples
+#' # For nmfExperiment_lite objects:
 #' WMatrix(nmf_exp)
 #' WMatrix(nmf_exp, k = 2)
 setMethod("WMatrix",
@@ -130,17 +124,12 @@ setMethod("WMatrix",
 #------------------------------------------------------------------------------#
 #                              Optimal K Statistics                            #
 #------------------------------------------------------------------------------#
-#### FrobError
-# Getter
-#' Return Frobenius Error from all initializations
-#'
-#' @param x an nmfExperiment_lite object
-#'
-#' @return data.frame with Frobenius error for all factorization ranks
+# Return Frobenius Error from all initializations
+
+#' @rdname FrobError-methods
+#' @aliases SignatureSpecificFeatures,ANY-method
 #' @export
 #'
-#' @examples
-#' FrobError(nmf_exp)
 setMethod("FrobError", "nmfExperiment_lite", function(x, ...) x@FrobError)
 
 
@@ -263,15 +252,14 @@ setMethod("regularizeH",
 #------------------------------------------------------------------------------#
 #                       Signature specfific features                           #
 #------------------------------------------------------------------------------#
-#### Signature specfific features
-#' Signature specfific features getter
-#'
-#' @param nmfExperiment_lite
-#'
-#' @return
+# Signature specfific features
+
+#' @rdname SignatureSpecificFeatures-methods
+#' @aliases SignatureSpecificFeatures,ANY-method
 #' @export
 #'
 #' @examples
+#' # For nmfExperiment_lite objects:
 #' SignatureSpecificFeatures(nmf_exp)
 #' lapply(SignatureSpecificFeatures(nmf_exp), function(x) sapply(x, length))
 #' SignatureSpecificFeatures(nmf_exp, k = 3)
