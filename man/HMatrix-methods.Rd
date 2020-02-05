@@ -61,7 +61,8 @@ HMatrix(inmf_exp, k = 2, type = "all")
 # extract H matrices only for selected view and rank
 HMatrix(inmf_exp, k = 2, view_id = "atac", type = "viewspec")
 HMatrix(inmf_exp, k = 2, view_id = "atac", type = "total")
-# For integrative_NMF objects:
+
+# For join_NMF objects:
 HMatrix(jnmf_exp)
 HMatrix(jnmf_exp, k = 2)
 lapply(HMatrix(jnmf_exp, k = 2), head)

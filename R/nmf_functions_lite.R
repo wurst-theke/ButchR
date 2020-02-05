@@ -81,14 +81,14 @@ source_NMFtensor_function <- function(method) {
 #' nmf_exp
 runNMFtensor_lite <- function (X,
                                ranks,
-                               method = "NMF",
+                               method                = "NMF",
                                n_initializations     = 10,
                                iterations            = 10^4,
                                convergence_threshold = 40,
-                               n_neighbors = 4,
-                               alpha = 0.1,
-                               lamb  = 10,
-                               extract_features = FALSE){
+                               n_neighbors           = 4,
+                               alpha                 = 0.1,
+                               lamb                  = 10,
+                               extract_features      = FALSE){
 
   #----------------------------------------------------------------------------#
   #                                    Setup                                   #
@@ -143,10 +143,18 @@ runNMFtensor_lite <- function (X,
   #                        Build NMF object slots                              #
   #----------------------------------------------------------------------------#
   # input matrix info
-  input_matrix <- list(hash     = digest::digest(X),
-                       dim      = dim(X),
-                       colnames = colnames(X),
-                       rownames = rownames(X))
+  input_matrix <- list(hash       = digest::digest(X),
+                       dim        = dim(X),
+                       colnames   = colnames(X),
+                       rownames   = rownames(X),
+                       run_params = list(method            = method,
+                                         n_initializations = nmf_params$n_initializations,
+                                         iterations        = nmf_params$iterations,
+                                         stop_threshold    = nmf_params$convergence_threshold,
+                                         n_neighbors       = nmf_params$n_neighbors,
+                                         alpha             = alpha,
+                                         lamb              = lamb,
+                                         extract_features  = extract_features))
 
   # Frob. error data frame
   frob_errors <- as.data.frame(do.call(cbind, lapply(complete_eval, "[[" , "Frob_error")))

@@ -44,6 +44,13 @@ setMethod("show",
               OptK <- object@OptK
             }
             cat("Optimal K based on factorization metrics: ", OptK, "\n")
+            rparams <- object@input_data$run_params
+            cat("Running parameters: \n")
+            cat("method = join NMF \n")
+            cat("n_initializations = ", rparams$n_initializations, " \n")
+            cat("iterations = ", rparams$iterations, " \n")
+            cat("stop_threshold = ", rparams$stop_threshold, " \n")
+            cat("extract_features = ", rparams$extract_features, " \n")
           }
 )
 
@@ -57,7 +64,7 @@ setMethod("show",
 #' @export
 #'
 #' @examples
-#' # For integrative_NMF objects:
+#' # For join_NMF objects:
 #' HMatrix(jnmf_exp)
 #' HMatrix(jnmf_exp, k = 2)
 #' lapply(HMatrix(jnmf_exp, k = 2), head)
@@ -102,6 +109,7 @@ setMethod("HMatrix",
 #' WMatrix(jnmf_exp, k = 2)
 #' lapply(WMatrix(jnmf_exp, k = 2), head)
 #' WMatrix(jnmf_exp, k = 2, view_id = "atac")
+#'
 setMethod("WMatrix",
           "join_NMF",
           function(x, k = NULL, view_id = NULL, ...) {

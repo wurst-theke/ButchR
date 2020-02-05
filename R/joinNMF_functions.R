@@ -27,12 +27,12 @@ NULL
 #'                                convergence_threshold = 40)
 #' jnmf_exp
 run_joinNMF_tensor <- function (matrix_list,
-                                ranks  = 2,
+                                ranks                 = 2,
                                 n_initializations     = 10,
                                 iterations            = 10^4,
                                 convergence_threshold = 40,
-                                Sp = 0,
-                                extract_features = FALSE){
+                                Sp                    = 0,
+                                extract_features      = FALSE){
 
   #----------------------------------------------------------------------------#
   #                            Setup and data check                            #
@@ -99,12 +99,17 @@ run_joinNMF_tensor <- function (matrix_list,
   #                    Build join NMF object slots                             #
   #----------------------------------------------------------------------------#
   # input data info
-  input_data <- list(hash = digest::digest(matrix_list),
-                     dim  = data.frame(view_ids = names(matrix_list),
-                                       do.call(rbind, lapply(matrix_list,
-                                                             dim))),
-                     colnames = colnames(matrix_list[[1]]),
-                     rownames = lapply(matrix_list, rownames))
+  input_data <- list(hash       = digest::digest(matrix_list),
+                     dim        = data.frame(view_ids = names(matrix_list),
+                                             do.call(rbind, lapply(matrix_list,
+                                                                   dim))),
+                     colnames   = colnames(matrix_list[[1]]),
+                     rownames   = lapply(matrix_list, rownames),
+                     run_params = list(n_initializations = nmf_params$n_initializations,
+                                       iterations        = nmf_params$iterations,
+                                       stop_threshold    = nmf_params$convergence_threshold,
+                                       Sp                = Sp,
+                                       extract_features  = extract_features))
 
   # Frob. error data frame
   frob_errors <- as.data.frame(do.call(cbind, lapply(complete_eval, "[[" , "Frob_error")))

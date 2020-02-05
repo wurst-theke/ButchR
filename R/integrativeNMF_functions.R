@@ -27,12 +27,13 @@ NULL
 #'                                convergence_threshold = 40)
 #' inmf_exp
 run_iNMF_tensor <- function (matrix_list,
-                                ranks  = 2,
-                                n_initializations     = 10,
-                                iterations            = 10^4,
-                                convergence_threshold = 40,
-                                Sp = 0,
-                                extract_features = FALSE){
+                             ranks                 = 2,
+                             n_initializations     = 10,
+                             iterations            = 10^4,
+                             convergence_threshold = 40,
+                             Sp                    = 0,
+                             lamb                  = 10,
+                             extract_features      = FALSE){
 
   #----------------------------------------------------------------------------#
   #                            Setup and data check                            #
@@ -70,16 +71,17 @@ run_iNMF_tensor <- function (matrix_list,
   iNMF_tensor_py <- source_NMFtensor_function("iNMF")
 
   # Run jNMF
-  cat("Running join NMF for views: ", paste(names(matrix_list), collapse = ","), "\n")
+  cat("Running integrative NMF for views: ", paste(names(matrix_list), collapse = ","), "\n")
   complete_eval <- lapply(nmf_params$ranks, function(k) {
     print(Sys.time())
     cat("Factorization rank: ", k, "\n")
-    k_eval <- iNMF_tensor_py(unname(matrix_list),
+    k_eval <- iNMF_tensor_py(matrix_list       = unname(matrix_list),
                              rank              = k,
                              n_initializations = nmf_params$n_initializations,
                              iterations        = nmf_params$iterations,
                              Sp                = Sp,
-                             stop_threshold    = nmf_params$convergence_threshold)
+                             stop_threshold    = nmf_params$convergence_threshold,
+                             lamb              = lamb)
 
     names(k_eval)     <- c("Ws", "sharedH", "Hs", "iterations", "Frob_error", "W_eval")
     names(k_eval$Ws)  <- viewsIDs
@@ -100,12 +102,21 @@ run_iNMF_tensor <- function (matrix_list,
   #              Build integrative NMF object slots                            #
   #----------------------------------------------------------------------------#
   # input data info
-  input_data <- list(hash = digest::digest(matrix_list),
-                     dim  = data.frame(view_ids = names(matrix_list),
+  input_data <- list(hash       = digest::digest(matrix_list),
+                     dim        = data.frame(view_ids = names(matrix_list),
                                        do.call(rbind, lapply(matrix_list,
                                                              dim))),
-                     colnames = colnames(matrix_list[[1]]),
-                     rownames = lapply(matrix_list, rownames))
+                     colnames   = colnames(matrix_list[[1]]),
+                     rownames   = lapply(matrix_list, rownames),
+                     run_params = list(n_initializations = nmf_params$n_initializations,
+                                       iterations        = nmf_params$iterations,
+                                       stop_threshold    = nmf_params$convergence_threshold,
+                                       Sp                = Sp,
+                                       lamb              = lamb,
+                                       extract_features  = extract_features))
+
+
+
 
   # Frob. error data frame
   frob_errors <- as.data.frame(do.call(cbind, lapply(complete_eval, "[[" , "Frob_error")))

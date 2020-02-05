@@ -46,10 +46,16 @@ setMethod("show",
               OptK <- object@OptK
             }
             cat("Optimal K based on factorization metrics: ", OptK, "\n")
+            rparams <- object@input_data$run_params
+            cat("Running parameters: \n")
+            cat("method = integrative NMF \n")
+            cat("lamb = ", rparams$lamb, " \n")
+            cat("n_initializations = ", rparams$n_initializations, " \n")
+            cat("iterations = ", rparams$iterations, " \n")
+            cat("stop_threshold = ", rparams$stop_threshold, " \n")
+            cat("extract_features = ", rparams$extract_features, " \n")
           }
 )
-
-
 
 
 #------------------------------------------------------------------------------#
@@ -85,6 +91,7 @@ setMethod("show",
 #' # extract H matrices only for selected view and rank
 #' HMatrix(inmf_exp, k = 2, view_id = "atac", type = "viewspec")
 #' HMatrix(inmf_exp, k = 2, view_id = "atac", type = "total")
+#'
 setMethod("HMatrix",
           "integrative_NMF",
           function(x, k = NULL, view_id = NULL, type, ...) {

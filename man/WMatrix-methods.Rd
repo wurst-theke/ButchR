@@ -48,4 +48,5 @@ WMatrix(jnmf_exp)
 WMatrix(jnmf_exp, k = 2)
 lapply(WMatrix(jnmf_exp, k = 2), head)
 WMatrix(jnmf_exp, k = 2, view_id = "atac")
+
 }

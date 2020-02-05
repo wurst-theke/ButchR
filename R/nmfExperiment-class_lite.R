@@ -43,9 +43,22 @@ setMethod("show",
             }
 
             cat("Optimal K based on factorization metrics: ", OptK, "\n")
+            rparams <- object@input_matrix$run_params
+            cat("Running parameters: \n")
+            cat("method = ", rparams$method, " \n")
+            cat("n_initializations = ", rparams$n_initializations, " \n")
+            cat("iterations = ", rparams$iterations, " \n")
+            cat("stop_threshold = ", rparams$stop_threshold, " \n")
+            if (rparams$method == "GRNMF_SC") {
+              cat("n_neighbors = ", rparams$n_neighbors, " \n")
+              cat("alpha = ", rparams$alpha, " \n")
+              cat("lamb = ", rparams$lamb, " \n")
+            }
+            cat("extract_features = ", rparams$extract_features, " \n")
+
           }
 )
-
+#nmf_exp
 #------------------------------------------------------------------------------#
 #                             H and W matrices                                 #
 #------------------------------------------------------------------------------#
