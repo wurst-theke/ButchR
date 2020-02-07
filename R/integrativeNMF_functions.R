@@ -210,7 +210,6 @@ run_iNMF_tensor <- function (matrix_list,
 #' single view NMFs (sNMF), the principle is that join NMF
 #' represents complete homogeneity and single view NMF
 #' represents complete heterogeneity.
-#'
 #' To avoid overfitting the best lambda can be selected by plotting
 #' the difference of the unsquared residual quantities of
 #' jNMF and iNMF (Ri - Rj) over multiple values of lambda,
@@ -218,6 +217,8 @@ run_iNMF_tensor <- function (matrix_list,
 #' sNMF and jNMF c*(Rj - Rs).
 #' The optimal lambda usually is the first lambda in which
 #' (Ri - Rj) < c*(Rj - Rs).
+#' Where c is a constant >= 2.
+#'
 #' @param matrix_list List of non-negative matrices.
 #' @param lambdas a sequence of lambdas to test.
 #' @param Output_type Type of desired output, could be:
