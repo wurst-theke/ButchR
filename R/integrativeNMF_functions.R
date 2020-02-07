@@ -238,7 +238,7 @@ run_iNMF_tensor <- function (matrix_list,
 #' @param convergence_threshold The factorization stops,
 #' if the convergence test is constant for this number of iterations.
 #' @param Sp Sparcity constrain, values > 0 force sparcity in the H matrix.
-#' @param show_plot \code{TRUE} print plot
+#' @param show_plot \code{TRUE} print plot;
 #' \code{FALSE} plot is only returned if it is selected in Output_type.
 #' @param extract_features \code{TRUE} Extract signature specific features.
 #'

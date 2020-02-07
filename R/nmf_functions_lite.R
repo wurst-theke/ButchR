@@ -64,7 +64,7 @@ source_NMFtensor_function <- function(method) {
 #' @param convergence_threshold The factorization stops, if the convergence test is constant for this number of iterations
 #' @param n_neighbors for method "GRNMF_SC", the number of neighbors to take into account when building the graph G
 #' @param alpha for method "GRNMF_SC", regularization parameter alpha
-#' @param lamb for method "GRNMF_SC", regularization parameter alpha
+#' @param lamb for method "GRNMF_SC", regularization parameter lambda
 #' @param extract_features if TRUE performs feature extraction for all factorization ranks > 2
 #'
 #'

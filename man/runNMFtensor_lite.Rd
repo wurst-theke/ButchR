@@ -26,7 +26,7 @@ runNMFtensor_lite(X, ranks, method = "NMF", n_initializations = 10,
 
 \item{alpha}{for method "GRNMF_SC", regularization parameter alpha}
 
-\item{lamb}{for method "GRNMF_SC", regularization parameter alpha}
+\item{lamb}{for method "GRNMF_SC", regularization parameter lambda}
 
 \item{extract_features}{if TRUE performs feature extraction for all factorization ranks > 2}
 }

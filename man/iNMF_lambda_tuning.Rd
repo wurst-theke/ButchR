@@ -39,7 +39,7 @@ if the convergence test is constant for this number of iterations.}
 
 \item{Sp}{Sparcity constrain, values > 0 force sparcity in the H matrix.}
 
-\item{show_plot}{\code{TRUE} print plot
+\item{show_plot}{\code{TRUE} print plot;
 \code{FALSE} plot is only returned if it is selected in Output_type.}
 
 \item{extract_features}{\code{TRUE} Extract signature specific features.}
