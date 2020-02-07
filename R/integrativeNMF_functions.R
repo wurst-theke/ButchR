@@ -199,151 +199,242 @@ run_iNMF_tensor <- function (matrix_list,
 
 
 
+
+
+
+#' Integrative NMF Tune Lambda
 #'
+#' Based on Yang and Michailidis, 2016,
+#' to tune the value of the parameter lambda for the integrative NMF (iNMF),
+#' the objectives values of join NMF (jNMF) are compared to
+#' single view NMFs (sNMF), the principle is that join NMF
+#' represents complete homogeneity and single view NMF
+#' represents complete heterogeneity.
 #'
-#'
-#' #' Computes integrative NMF on tensorflow using the reticulate framework
-#' #'
-#' #' @param matrix_list
-#' #' @param k_min
-#' #' @param k_max
-#' #' @param outer_iter
-#' #' @param inner_iter
-#' #' @param conver_stop_threshold
-#' #' @param lambda
-#' #'
-#' #' @return
-#' #'
-#' #' @import SummarizedExperiment
-#' #' @importFrom data.table fread
-#' #' @importFrom S4Vectors DataFrame
-#' #' @export
-#' #'
-#' #' @examples
-#' run_integrative_NMF_tensor <- function (matrix_list,
-#'                                         k_min = 2,
-#'                                         k_max = 2,
-#'                                         outer_iter = 10,
-#'                                         inner_iter = 10^4,
-#'                                         conver_stop_threshold = 40,
-#'                                         lambda = 1,
-#'                                         Sp = 0){
-#'   # Convert params to integer
-#'   nmf_params <- lapply(list(k_min = k_min,
-#'                             k_max = k_max,
-#'                             outer_iter = outer_iter,
-#'                             inner_iter = inner_iter,
-#'                             conver_stop_threshold = conver_stop_threshold,
-#'                             lambda = lambda),
-#'                        as.integer)
-#'   viewsIDs <- setNames(names(matrix_list), names(matrix_list))
-#'   # Source NMF tensorflow python script
-#'   source_python(file.path(system.file(package = "Bratwurst"), "python/intnmf_tensor.py"))
-#'
-#'   cat("Running integrative NMF for views: ", paste(names(matrix_list), collapse = ","), "\n")
-#'   #============================================================================#
-#'   #     Run integrative NMF - returns list with all ks and all iterations      #
-#'   #============================================================================#
-#'   complete_eval <- lapply(k_min:k_max, function(k) {
-#'     k <- as.integer(k)
-#'
-#'     print(Sys.time())
-#'     cat("Factorization rank: ", k, "\n")
-#'     k_eval <- lapply(1:outer_iter, function(i) {
-#'       if (i%%10 == 0) cat("\tIteration: ", i, "\n")
-#'
-#'       inmf_eval <- iNMF(unname(matrix_list),
-#'                         rank           = k,
-#'                         iterations     = nmf_params$inner_iter,
-#'                         L              = nmf_params$lambda,
-#'                         Sp             = Sp,
-#'                         stop_threshold = nmf_params$conver_stop_threshold)
-#'
-#'       names(inmf_eval) <- c("Ws", "sharedH", "viewHs", "iterations", "Frob_error")
-#'       names(inmf_eval$Ws)         <- names(matrix_list)
-#'       names(inmf_eval$viewHs)     <- names(matrix_list)
-#'       names(inmf_eval$Frob_error) <- names(matrix_list)
-#'       return(inmf_eval)
-#'     })
-#'     names(k_eval) <- paste0("iter", 1:outer_iter)
-#'
-#'     iters <- paste(sapply(k_eval, function(x) {x$iterations}), collapse = ",")
-#'     print(paste("NMF converged after ", iters, "iterations"))
-#'
-#'     return(k_eval)
-#'   })
-#'
-#'   # Build NMF object
-#'   names(complete_eval) <- paste0("k", k_min:k_max)
-#'
-#'   #============================================================================#
-#'   #      Build old NMF experiment objects to return factorization metrics      #
-#'   #============================================================================#
-#'   nmfExp_list <- lapply(viewsIDs, function(viewID){
-#'     nmf.exp <- nmfExperimentFromMatrix(matrix_list[[viewID]])
-#'
-#'
-#'     dec.matrix <- lapply(1:(k_max-k_min+1), function(k) {
-#'       k <- as.integer(k)
-#'       k.matrix <- lapply(1:outer_iter, function(i) {
-#'         list(W = complete_eval[[k]][[i]][["Ws"]][[viewID]],
-#'              H = complete_eval[[k]][[i]][["sharedH"]] + complete_eval[[k]][[i]][["viewHs"]][[viewID]],
-#'              Frob.error = complete_eval[[k]][[i]][["Frob_error"]][[viewID]])
-#'       })
-#'       names(k.matrix) <- 1:outer_iter
-#'       return(k.matrix)
-#'     })
-#'     # Build NMF object
-#'     names(dec.matrix) <- k_min:k_max
-#'     frob.errors <- DataFrame(getFrobError(dec.matrix))
-#'     colnames(frob.errors) <- as.character(k_min:k_max)
-#'     nmf.exp <- setFrobError(nmf.exp, frob.errors)
-#'     nmf.exp <- setHMatrixList(nmf.exp, getHMatrixList(dec.matrix))
-#'     nmf.exp <- setWMatrixList(nmf.exp, getWMatrixList(dec.matrix))
-#'     nmf.exp <- computeFrobErrorStats(nmf.exp)
-#'     nmf.exp <- computeSilhoutteWidth(nmf.exp)
-#'     nmf.exp <- computeCopheneticCoeff(nmf.exp)
-#'     nmf.exp <- computeAmariDistances(nmf.exp)
-#'     return(nmf.exp)
-#'   })
-#'   #============================================================================#
-#'   #    Select which outer iteration was the best, based on the Frob error      #
-#'   #============================================================================#
-#'   FrobError_list <- lapply(nmfExp_list, function(nmf.exp){
-#'     as.matrix(nmf.exp@FrobError)
-#'   })
-#'   best_factorization_idx <- apply(Reduce("+", FrobError_list), 2, which.min)
-#'   names(best_factorization_idx) <- paste0("k", names(best_factorization_idx))
-#'
-#'   #============================================================================#
-#'   #        Organize objects to save to an integrative_NMF class4 object        #
-#'   #============================================================================#
-#'   # Shared H matrix list
-#'   shared_HMatrix_list <- lapply(complete_eval, function(k_eval){
-#'     lapply(k_eval, function(inmf_eval){
-#'       inmf_eval$sharedH
-#'     })
-#'   })
-#'   # View specific H matrix list
-#'   view_specific_HMatrix_list <- lapply(complete_eval, function(k_eval){
-#'     lapply(k_eval, function(inmf_eval){
-#'       inmf_eval$viewHs
-#'     })
-#'   })
-#'   # View specific W matrix list
-#'   view_specific_WMatrix_list <- lapply(complete_eval, function(k_eval){
-#'     lapply(k_eval, function(inmf_eval){
-#'       inmf_eval$Ws
-#'     })
-#'   })
-#'
-#'   #============================================================================#
-#'   #                       Return integrative_NMF class4 object                 #
-#'   #============================================================================#
-#'
-#'   integrative_NMF(shared_HMatrix_list        = shared_HMatrix_list,
-#'                   view_specific_HMatrix_list = view_specific_HMatrix_list,
-#'                   view_specific_WMatrix_list = view_specific_WMatrix_list,
-#'                   best_factorization_idx     = best_factorization_idx,
-#'                   view_specific_NMFexp_list  = nmfExp_list)
+#' To avoid overfitting the best lambda can be selected by plotting
+#' the difference of the unsquared residual quantities of
+#' jNMF and iNMF (Ri - Rj) over multiple values of lambda,
+#' and compare it to the difference of the unsquared residual quantities of
+#' sNMF and jNMF c*(Rj - Rs).
+#' The optimal lambda usually is the first lambda in which
+#' (Ri - Rj) < c*(Rj - Rs).
+#' @param matrix_list List of non-negative matrices.
+#' @param lambdas a sequence of lambdas to test.
+#' @param Output_type Type of desired output, could be:
+#' \itemize{
+#' \item residuals - Residual quantities data.frame.
+#' \item iNMF - Returns the integrative NMF object for the optimal estimated lambda.
+#' \item all_iNMF - Returns a list with an integrative NMF object for every  lambda.
+#' \item plot - Residual quantities plot,
+#' (Ri - Rj) and 2(Rj - Rs) vs lamda range.
+#' \item all - list containing all computed NMF objects,
+#' Residual quantities data.frame and Residual quantities plot.
 #' }
+#' @param thr_cons numeric value, Threshold constant c, in  c*(Rj - Rs).
+#' @param rank numeric vector with rank to factorize.
+#' @param n_initializations Number of initializations to evaluate.
+#' @param iterations Maximum number of iterations to run for every initialization.
+#' @param convergence_threshold The factorization stops,
+#' if the convergence test is constant for this number of iterations.
+#' @param Sp Sparcity constrain, values > 0 force sparcity in the H matrix.
+#' @param show_plot \code{TRUE} print plot
+#' \code{FALSE} plot is only returned if it is selected in Output_type.
+#' @param extract_features \code{TRUE} Extract signature specific features.
+#'
+#'
+#' @return A integrative_NMF object,
+#' containing a integrative H matrix and one W matrix for each input matrix
+#'
+#' @export
+#'
+#' @examples
+#' # Compare the residual across multiple lambdas:
+#' iNMF_lambda_tuning(matrix_list           = norm_mat_list,
+#'                    lambdas               = seq(0, 1, 0.1),
+#'                    Output_type           = "residuals",
+#'                    rank                  = 9,
+#'                    n_initializations     = 5,
+#'                    iterations            = 10^4,
+#'                    convergence_threshold = 40,
+#'                    Sp                    = 0,
+#'                    extract_features      = FALSE)
+#' # Retrieve all the objects and extract the iNMF for the best lambda:
+#' inmf_tune <- iNMF_lambda_tuning(matrix_list           = norm_mat_list,
+#'                                 lambdas               = seq(0, 1, 0.1),
+#'                                 thr_cons              = 4,
+#'                                 Output_type           = "all",
+#'                                 rank                  = 9,
+#'                                 n_initializations     = 5,
+#'                                 iterations            = 10^4,
+#'                                 convergence_threshold = 40)
+#' min(inmf_tune$residuals$lambda[inmf_tune$residuals$best_lambda])
+#' inmf_tune$iNMF$lambda_0.2
+iNMF_lambda_tuning <- function (matrix_list,
+                                lambdas               = seq(0, 1, 0.1),
+                                Output_type           = "residuals",
+                                thr_cons              = 3,
+                                rank                  = 2,
+                                n_initializations     = 10,
+                                iterations            = 10^4,
+                                convergence_threshold = 40,
+                                Sp                    = 0,
+                                show_plot             = TRUE,
+                                extract_features      = FALSE){
+
+  #----------------------------------------------------------------------------#
+  #                            Setup and data check                            #
+  #----------------------------------------------------------------------------#
+  # Check  data
+  if (!is.list(matrix_list) &
+      (!sum(sapply(matrix_list, is.matrix)) == length(matrix_list))) {
+    stop("\nmatrix_list should be a list of Non-negative matrices\n")
+  }
+  if (min(sapply(matrix_list, min)) < 0 ) {
+    stop("\nNegative values present in input matrix\n
+         only non-negative matrices supported\n")
+  }
+  if (!all(sapply(lapply(matrix_list, colnames),
+                  identical, colnames(matrix_list[[1]])))) {
+    stop("\nColumn names should be identical between matrices\n")
+  }
+  if (is.null(names(matrix_list))) {
+    names(matrix_list) <- paste0("view", 1:length(matrix_list))
+    warning("Input matrix list do not have names, assigning ids:\n", names(matrix_list), "\n")
+  }
+  if (!any(Output_type %in% c("residuals", "iNMF", "all_iNMF", "plot", "all")) &
+      !length(Output_type) == 1) {
+    stop("\nOutput_type invalid value, output types supported are only:\n
+         'residuals', 'iNMF', 'all_iNMF', 'plot' or 'all' \n")
+  }
+  if (!is.logical(show_plot) & !length(show_plot) == 1) {
+    stop("\nshow_plot invalid value, select TRUE or FALSE \n")
+  }
+  if (!length(rank) == 1) {
+    stop("\nrank has to be a unique integer number \n")
+  }
+
+
+  # Convert params to integer
+  nmf_params <- lapply(list(rank                  = rank,
+                            n_initializations     = n_initializations,
+                            iterations            = iterations,
+                            convergence_threshold = convergence_threshold),
+                       as.integer)
+  names(nmf_params$rank) <- paste0("k", nmf_params$rank)
+  viewsIDs <- setNames(names(matrix_list), names(matrix_list))
+  #----------------------------------------------------------------------------#
+  #                                    Join NMF                                #
+  #----------------------------------------------------------------------------#
+  jnmf_obj <- run_joinNMF_tensor(matrix_list           = matrix_list,
+                                 ranks                 = nmf_params$rank,
+                                 n_initializations     = nmf_params$n_initializations,
+                                 iterations            = nmf_params$iterations,
+                                 convergence_threshold = nmf_params$convergence_threshold,
+                                 Sp                    = Sp,
+                                 extract_features = FALSE)
+  # Estimate Frob. norm
+  norm_jnmf <- lapply(viewsIDs, function(viewID){
+    #xn <- norm(matrix_list[[viewID]], type = "F")
+    x <- matrix_list[[viewID]]
+    w <- WMatrix(jnmf_obj, k = nmf_params$rank, view_id = viewID)
+    h <- HMatrix(jnmf_obj, k = nmf_params$rank)
+    #fn <- norm((matrix_list[[viewID]] - (w %*% h)), type = "F")
+    norm((x - (w %*% h)), type = "F")
+  })
+  norm_jnmf <- sum(unlist(norm_jnmf))
+
+  #----------------------------------------------------------------------------#
+  #                                Single view NMF                             #
+  #----------------------------------------------------------------------------#
+  snmf_obj_list <- lapply(viewsIDs, function(viewID){
+    cat("Running single view NMF for : ", viewID, "\n")
+    runNMFtensor_lite(X = matrix_list[[viewID]],
+                      ranks                 = nmf_params$rank,
+                      method = "NMF",
+                      n_initializations     = nmf_params$n_initializations,
+                      iterations            = nmf_params$iterations,
+                      convergence_threshold = nmf_params$convergence_threshold,
+                      extract_features = FALSE)
+  })
+  # Estimate Frob. norm
+  norm_snmf <- lapply(viewsIDs, function(viewID){
+    x <- matrix_list[[viewID]]
+    w <- WMatrix(snmf_obj_list[[viewID]], k = nmf_params$rank)
+    h <- HMatrix(snmf_obj_list[[viewID]], k = nmf_params$rank)
+    norm((x - (w %*% h)), type = "F")
+  })
+  norm_snmf <- sum(unlist(norm_snmf))
+
+
+  #thres <- norm_jnmf + c*(norm_jnmf - norm_snmf)
+  #----------------------------------------------------------------------------#
+  #                              Integrative NMF                               #
+  #----------------------------------------------------------------------------#
+  names(lambdas) <- paste0("lambda_", lambdas)
+  inmf_obj_list <- lapply(lambdas, function(lamb){
+    cat("Testing lamda : ", lamb, "\n")
+    inmf_obj <- run_iNMF_tensor(matrix_list           = matrix_list,
+                                ranks                 = nmf_params$rank,
+                                n_initializations     = nmf_params$n_initializations,
+                                iterations            = nmf_params$iterations,
+                                convergence_threshold = nmf_params$convergence_threshold,
+                                Sp                    = Sp,
+                                lamb                  = lamb,
+                                extract_features = FALSE)
+  })
+  # Estimate Frob. norm
+  norm_inmf <- sapply(inmf_obj_list, function(inmf_obj){
+    norm_inmf_sv <- lapply(viewsIDs, function(viewID){
+      x <- matrix_list[[viewID]]
+      w <- WMatrix(inmf_obj, k = nmf_params$rank, view_id = viewID)
+      h <- HMatrix(inmf_obj, k = nmf_params$rank, type = "shared")
+      norm((x - (w %*% h)), type = "F")
+    })
+    norm_inmf_sv <- sum(unlist(norm_inmf_sv))
+  })
+
+  residuals_df <- data.frame(norm_jnmf = norm_jnmf,
+                             norm_snmf = norm_snmf,
+                             #thres     = thres,
+                             norm_inmf = norm_inmf,
+                             lambda    = lambdas,
+                             stringsAsFactors = FALSE)
+  residuals_df <- residuals_df %>%
+    mutate(diff_iNMF_jNMF = norm_inmf - norm_jnmf) %>%
+    mutate(diff_iNMF_sNMF = abs(thr_cons*(norm_jnmf - norm_snmf))) %>%
+    #mutate(diff_iNMF_sNMF = thr_cons*(norm_jnmf - norm_snmf)) %>%
+    arrange(-lambda) %>%
+    mutate(best_lambda = cumsum(diff_iNMF_jNMF > diff_iNMF_sNMF) == 1) %>%
+    mutate(best_lambda = c(best_lambda[-1], best_lambda[1]))
+
+  if (Output_type %in% c("plot", "all") | show_plot) {
+    residuals_gg <- residuals_df %>%
+      select(lambda, diff_iNMF_jNMF, diff_iNMF_sNMF, best_lambda) %>%
+      tidyr::pivot_longer(-c("lambda", "best_lambda"), names_to = "norm", values_to = "unsquared_residual_quantities") %>%
+      ggplot(aes(x = lambda, y = unsquared_residual_quantities, color = norm)) +
+      geom_vline(data = function(x){x %>% filter(best_lambda)}, aes(xintercept = lambda)) +
+      geom_line() +
+      theme_bw()
+    if (show_plot & !Output_type == "plot") print(residuals_gg)
+  }
+
+  if (Output_type == "plot") {
+    return(residuals_gg)
+  } else if (Output_type == "residuals") {
+    return(residuals_df)
+  } else if (Output_type == "iNMF") {
+    idx <- which(lambdas == min(residuals_df$lambda[residuals_df$best_lambda]))
+    return(inmf_obj_list[[idx]])
+  } else if (Output_type == "all_iNMF") {
+    return(snmf_obj_list)
+  } else if (Output_type == "all") {
+    return(list(iNMF      = inmf_obj_list,
+                jNMF      = jnmf_obj,
+                sNMF      = snmf_obj_list,
+                plot      = residuals_gg,
+                residuals = residuals_df))
+  }
+}
+
+
+
