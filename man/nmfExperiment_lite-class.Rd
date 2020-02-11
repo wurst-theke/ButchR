@@ -23,3 +23,12 @@ NMF Experiment Class lite
 \item{\code{OptKStats}}{DataFrame.}
 }}
 
+\examples{
+nmfExperiment_lite(input_matrix = input_matrix,
+                   WMatrix      = lapply(complete_eval, "[[" , "W"),
+                   HMatrix      = lapply(complete_eval, "[[" , "H"),
+                   FrobError    = frob_errors,
+                   OptKStats    = OptKStats,
+                   OptK         = OptK,
+                   SignFeatures = SignFeatures)
+}

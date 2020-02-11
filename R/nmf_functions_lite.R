@@ -332,3 +332,52 @@ WcomputeFeatureStats <- function(W) {
   sig_features <- sig_features[match(rownames(W), names(sig_features))]
   return(sig_features)
 }
+
+
+
+
+
+#' Create distance matrix with cosine similarity with matrix operations
+#'
+#' @param in.matrix
+#' @param in.dimension
+#'
+#' @return
+#' @export
+#'
+#' @examples
+cosineDissMat <- function(in.matrix, in.dimension=2){
+  if(in.dimension == 1) in.matrix <- t(in.matrix)
+  squaredVectorSum <- apply(in.matrix, 2, function(m) { sqrt(sum(m * m)) })
+  squaredVectorProduct <- squaredVectorSum %*% t(squaredVectorSum)
+  squaredInputSum <- t(in.matrix) %*% in.matrix
+  # sum(a*b) for any a,b in M
+  diss.matrix <- 1 - squaredInputSum / squaredVectorProduct
+  # CosineDistance = 1 - CosineSimilarity
+  return(round(diss.matrix, digits = 14))
+}
+
+#' Compute amari type distance between two matrices
+#'
+#' @param matrix.A,matrix.B of the same dimensionality
+#'
+#' @return The amari type distance of matrix.A & matrix.B according
+#'        to [Wu et. al, PNAS 2016]
+#'
+#' @references \url{http://www.pnas.org/content/113/16/4290.long}
+#'
+#' @export
+#'
+#' @examples
+amariDistance <- function(matrix.A, matrix.B) {
+  K <- dim(matrix.A)[2]
+  C <- cor(matrix.A, matrix.B)
+  return(1 - (sum(apply(C, 1, max)) + sum(apply(C, 2, max))) / (2 * K))
+}
+
+
+local.minima <- function(x)
+  ifelse(dplyr::lag(x) >= x & dplyr::lead(x) >= x, TRUE, FALSE)
+local.maxima <- function(x)
+  ifelse(dplyr::lag(x) <= x & dplyr::lead(x) <= x, TRUE, FALSE)
+

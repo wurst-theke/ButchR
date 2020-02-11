@@ -20,15 +20,12 @@ Imports:
     caret,
     digest
 Depends:
-    SummarizedExperiment,
     dplyr,
     reticulate
 Description: NMF implementation using tensorflow and helper functions to select optimal factorization rank and graphic representation of the matrix decomposition
 License: GPLv3
 RoxygenNote: 6.1.1
 Collate: 
-    'classifier_functions.R'
-    'enrichment_functions.R'
     'generics.R'
     'nmfExperiment-class_lite.R'
     'integrativeNMF-class.R'
@@ -36,8 +33,6 @@ Collate:
     'interact_functions.R'
     'joinNMF-class.R'
     'joinNMF_functions.R'
-    'nmfExperiment-class.R'
-    'nmf_functions.R'
     'nmf_functions_lite.R'
     'plot_functions.R'
     'plot_functions_lite.R'

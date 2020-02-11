@@ -194,3 +194,28 @@ setGeneric("normalizeH", function(nmf_exp, ...) standardGeneric("normalizeH"))
 #' @examples
 #' regularizeH(nmf_exp)
 setGeneric("regularizeH", function(nmf_exp, ...) standardGeneric("regularizeH"))
+
+
+
+
+#' NMF riverplot
+#'
+#' Generate a riverplot object that displays the similarities between
+#' signatures at different factorization ranks
+#'
+#' @param nmf_exp an nmfExperiment or a nmfExperiment_lite object
+#' @param edges.cutoff cutoff until which similarities are displayed
+#' @param useH whether to relate signatures (FALSE) or exposures (TRUE)
+#' @param color whether to colorize the nodes based on PCA of the signatures
+#'
+#' @return ret riverplot object
+#'
+#' @import riverplot
+#' @export
+#'
+#' @docType methods
+#' @rdname generateRiverplot-methods
+#'
+#' @examples plt <- generateRiverplot(nmf_exp, edges.cutoff = 0.2)
+#' plot(plt, plot_area = 1, yscale = 0.6, nodewidth = 0.5)
+setGeneric("generateRiverplot", function(nmf_exp, ...) standardGeneric("generateRiverplot"))
