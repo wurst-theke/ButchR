@@ -290,7 +290,6 @@ setMethod("setSignatureSpecificFeatures", "nmfExperiment",
 #' @rdname normalizeW-methods
 #' @aliases normalizeW,ANY,ANY-method
 #'
-#' @importFrom YAPSA normalize_df_per_dim
 #' @export
 #'
 setMethod("normalizeW", "nmfExperiment",
@@ -341,7 +340,6 @@ setMethod("normalizeW", "nmfExperiment",
 #' @rdname normalizeH-methods
 #' @aliases normalizeH,ANY,ANY-method
 #'
-#' @importFrom YAPSA normalize_df_per_dim
 #' @export
 #'
 setMethod("normalizeH", "nmfExperiment",
@@ -381,7 +379,6 @@ setMethod("normalizeH", "nmfExperiment",
 #' @rdname regularizeH-methods
 #' @aliases regularizeH,ANY,ANY-method
 #'
-#' @importFrom YAPSA normalize_df_per_dim
 #' @export
 #'
 setMethod("regularizeH", "nmfExperiment",

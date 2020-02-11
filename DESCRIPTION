@@ -9,17 +9,14 @@ Maintainer: Sebastian Steinhauser <s.steinhauser@gmx.net>, Daniel Huebschmann
 Encoding: UTF-8
 biocViews:
 Imports: 
-    rtracklayer,
     data.table,
     reshape2,
     ggplot2,
     cowplot,
     ComplexHeatmap,
-    YAPSA,
     RcppCNPy,
     nnls,
     riverplot,
-    NMF,
     caret,
     digest
 Depends:

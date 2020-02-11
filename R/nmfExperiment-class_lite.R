@@ -175,10 +175,39 @@ setMethod("OptK", "nmfExperiment_lite", function(x, ...) x@OptK)
 #------------------------------------------------------------------------------#
 #                               NMF Normalization                              #
 #------------------------------------------------------------------------------#
+#' Normalize matrix by columns
+#'
+#' @param in_matrix  matrix to normalize.
+#' @param in_dimension normalize by rows == 1 or columns == 1 .
+#' @return matrix normalized by columns, colsum == 1.
+#'
+#' @examples
+#' normalize_matrix_per_dim(WMatrix(nmf_exp, k=2), 2)
+normalize_matrix_per_dim <- function (in_matrix, in_dimension) {
+  if (in_dimension == 1) {
+    choice_ind <- which(rowSums(in_matrix) > 0)
+    out_df <- matrix(0, nrow = nrow(in_matrix), ncol = ncol(in_matrix))
+    out_df[choice_ind, ] <- in_matrix[choice_ind, ]/rowSums(in_matrix)[choice_ind]
+  }
+  else if (in_dimension == 2) {
+    t_df <- t(in_matrix)
+    # Initialize a 0 Matrix in case one factor is only 0s
+    choice_ind <- which(rowSums(t_df) > 0)
+    temp_df <- matrix(0, nrow = nrow(t_df), ncol = ncol(t_df))
+    # Normalize
+    temp_df[choice_ind, ] <- t_df[choice_ind, ]/rowSums(t_df)[choice_ind]
+    out_df <- t(temp_df)
+  }
+  # assign columns and rownames
+  colnames(out_df) <- colnames(in_matrix)
+  rownames(out_df) <- rownames(in_matrix)
+  return(out_df)
+}
+
+
 #' @rdname normalizeW-methods
 #' @aliases normalizeW,ANY,ANY-method
 #'
-#' @importFrom YAPSA normalize_df_per_dim
 #' @export
 #'
 setMethod("normalizeW",
@@ -190,7 +219,8 @@ setMethod("normalizeW",
               tempW <- nmf_exp@WMatrix[[k_ind]]
               tempH <- nmf_exp@HMatrix[[k_ind]]
               normFactor <- colSums(tempW)
-              newSigs <- as.matrix(YAPSA::normalize_df_per_dim(tempW, 2))
+              newSigs <- normalize_matrix_per_dim(tempW, in_dimension = 2)
+              #newSigs <- as.matrix(YAPSA::normalize_df_per_dim(tempW, 2))
               newExpo <- tempH * normFactor
               return(list(W = newSigs,
                           H = newExpo))
@@ -207,7 +237,6 @@ setMethod("normalizeW",
 #' @rdname normalizeH-methods
 #' @aliases normalizeH,ANY,ANY-method
 #'
-#' @importFrom YAPSA normalize_df_per_dim
 #' @export
 #'
 setMethod("normalizeH",
@@ -219,7 +248,8 @@ setMethod("normalizeH",
               tempW <- nmf_exp@WMatrix[[k_ind]]
               tempH <- nmf_exp@HMatrix[[k_ind]]
               normFactor <- rowSums(tempH)
-              newExpo <- as.matrix(YAPSA::normalize_df_per_dim(tempH, 1))
+              newExpo <- normalize_matrix_per_dim(tempH, in_dimension = 1)
+              #newExpo <- as.matrix(normalize_df_per_dim(tempH, 1))
               newSigs <- tempW * normFactor
               return(list(W = newSigs,
                           H = newExpo))
@@ -236,7 +266,6 @@ setMethod("normalizeH",
 #' @rdname regularizeH-methods
 #' @aliases regularizeH,ANY,ANY-method
 #'
-#' @importFrom YAPSA normalize_df_per_dim
 #' @export
 #'
 setMethod("regularizeH",

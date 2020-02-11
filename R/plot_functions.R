@@ -424,7 +424,6 @@ setGeneric("generateRiverplot", function(nmf_exp, ...) standardGeneric("generate
 #' @rdname generateRiverplot-methods
 #' @aliases generateRiverplot,ANY,ANY-method
 #'
-#' @importFrom YAPSA normalize_df_per_dim
 #' @export
 #'
 setMethod("generateRiverplot",

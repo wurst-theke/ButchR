@@ -50,7 +50,6 @@ gg_plotKStats <- function(nmf_exp,
 #' @rdname generateRiverplot-methods
 #' @aliases generateRiverplot,ANY,ANY-method
 #'
-#' @importFrom YAPSA normalize_df_per_dim
 #' @export
 #'
 #' @examples
