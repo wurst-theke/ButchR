@@ -66,7 +66,8 @@ source_NMFtensor_function <- function(method) {
 #' @param alpha for method "GRNMF_SC", regularization parameter alpha
 #' @param lamb for method "GRNMF_SC", regularization parameter lambda
 #' @param graph for method "GRNMF_SC", square matrix representing a graph
-#' betwwen columns of input matrix, if NULL will compute own graph.
+#' between columns of the input matrix, values correspond to edge weight,
+#' if NULL will compute own graph.
 #' @param extract_features if TRUE performs feature extraction for all factorization ranks > 2
 #'
 #'

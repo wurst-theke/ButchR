@@ -29,7 +29,8 @@ runNMFtensor_lite(X, ranks, method = "NMF", n_initializations = 10,
 \item{lamb}{for method "GRNMF_SC", regularization parameter lambda}
 
 \item{graph}{for method "GRNMF_SC", square matrix representing a graph
-betwwen columns of input matrix, if NULL will compute own graph.}
+between columns of the input matrix, values correspond to edge weight,
+if NULL will compute own graph.}
 
 \item{extract_features}{if TRUE performs feature extraction for all factorization ranks > 2}
 }
