@@ -6,7 +6,7 @@
 \usage{
 runNMFtensor_lite(X, ranks, method = "NMF", n_initializations = 10,
   iterations = 10^4, convergence_threshold = 40, n_neighbors = 4,
-  alpha = 0.1, lamb = 10, extract_features = FALSE)
+  alpha = 0.1, lamb = 10, graph = NULL, extract_features = FALSE)
 }
 \arguments{
 \item{X}{Input matrix, should be a non-negative matrix}
@@ -27,6 +27,9 @@ runNMFtensor_lite(X, ranks, method = "NMF", n_initializations = 10,
 \item{alpha}{for method "GRNMF_SC", regularization parameter alpha}
 
 \item{lamb}{for method "GRNMF_SC", regularization parameter lambda}
+
+\item{graph}{for method "GRNMF_SC", square matrix representing a graph
+betwwen columns of input matrix, if NULL will compute own graph.}
 
 \item{extract_features}{if TRUE performs feature extraction for all factorization ranks > 2}
 }

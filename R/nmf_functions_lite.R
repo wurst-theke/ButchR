@@ -65,6 +65,8 @@ source_NMFtensor_function <- function(method) {
 #' @param n_neighbors for method "GRNMF_SC", the number of neighbors to take into account when building the graph G
 #' @param alpha for method "GRNMF_SC", regularization parameter alpha
 #' @param lamb for method "GRNMF_SC", regularization parameter lambda
+#' @param graph for method "GRNMF_SC", square matrix representing a graph
+#' betwwen columns of input matrix, if NULL will compute own graph.
 #' @param extract_features if TRUE performs feature extraction for all factorization ranks > 2
 #'
 #'
@@ -88,6 +90,7 @@ runNMFtensor_lite <- function (X,
                                n_neighbors           = 4,
                                alpha                 = 0.1,
                                lamb                  = 10,
+                               graph                 = NULL,
                                extract_features      = FALSE){
 
   #----------------------------------------------------------------------------#
@@ -126,7 +129,8 @@ runNMFtensor_lite <- function (X,
                             stop_threshold    = nmf_params$convergence_threshold,
                             n_neighbors       = nmf_params$n_neighbors,
                             alpha             = alpha,
-                            lamb              = lamb)
+                            lamb              = lamb,
+                            graph             = graph)
     names(k_eval) <- c("W", "H", "iterations", "Frob_error", "W_eval")
     k_eval$iterations <- unlist(k_eval$iterations)
     k_eval$Frob_error <- unlist(k_eval$Frob_error)

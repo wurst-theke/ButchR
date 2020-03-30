@@ -20,7 +20,7 @@ Created on Thu Jan  9 11:36:20 2020
 ##                Define Function to run NMF in tensorflow 2                 ##
 ##---------------------------------------------------------------------------##
 def NMF_tensor_py(matrix, rank, n_initializations, iterations, stop_threshold=40, 
-                  n_neighbors = 4, alpha = 0.1, lamb = 10, **kwargs):
+                  n_neighbors = 4, alpha = 0.1, lamb = 10, graph = None, **kwargs):
     
     
     # NMF in tensorflow
@@ -36,11 +36,15 @@ def NMF_tensor_py(matrix, rank, n_initializations, iterations, stop_threshold=40
     ##-----------------------------------------------------------------------##
     ##                   Compute nearest neighbors graph                     ##
     ##-----------------------------------------------------------------------##
-    r = tf.reduce_sum(tf.transpose(X)*tf.transpose(X), 1)
-    # turn r into column vector
-    r = tf.reshape(r, [-1, 1])
-    D = r - 2*tf.matmul(X, X, transpose_a=True) + tf.transpose(r)
-    
+    if graph is None:
+        r = tf.reduce_sum(tf.transpose(X)*tf.transpose(X), 1)
+        # turn r into column vector
+        r = tf.reshape(r, [-1, 1])
+        D = r - 2*tf.matmul(X, X, transpose_a=True) + tf.transpose(r)
+        #print(D)
+    else:
+        #print(graph)
+        D = graph
     # Find top n_neighbors neighbors
     b = tf.nn.top_k(D, (m-n_neighbors-1))
     kth = tf.reduce_min(b.values, axis=1)
@@ -61,6 +65,7 @@ def NMF_tensor_py(matrix, rank, n_initializations, iterations, stop_threshold=40
     #    print(D.numpy()[0:5, 0:5] )
     #    print(G.numpy()[0:5, 0:5] )
     #    print(L.numpy()[0:5, 0:5] )
+    #print(G)
     #print('nearest neighbors graph G completed')
 
     ##-----------------------------------------------------------------------##
