@@ -34,6 +34,7 @@ gg_plotKStats <- function(nmf_exp,
     tidyr::pivot_longer(names_to = "Metric", values_to = "Stat", -k)
 
   bind_rows(frob_df, metrics_df) %>%
+    filter(Metric %in% plot_vars) %>%
     mutate(Metric = factor(Metric, levels = unique(Metric))) %>%
     ggplot(aes(x = k, y = Stat)) +
     geom_vline(xintercept = nmf_exp@OptK, color = "firebrick") +
@@ -63,10 +64,12 @@ setMethod("generateRiverplot",
             #------------------------------------------------------------------#
             #                      Retrieve list of matrices                   #
             #------------------------------------------------------------------#
-            if(useH)
+            if(useH) {
               W_list <- lapply(HMatrix(nmf_exp), t)
-            else
+            } else {
               W_list <- WMatrix(nmf_exp)
+            }
+
 
             #------------------------------------------------------------------#
             #                  Build data frame with node names                #
