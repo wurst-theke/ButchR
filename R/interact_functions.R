@@ -19,7 +19,6 @@
 #'  inner list: different layers of information per factorization rank, e.g.
 #'  exposures, norm_exposures, signatures or out_sig_ind_df
 #'
-#' @importFrom YAPSA normalize_df_per_dim
 #' @export
 #'
 #' @seealso \code{\link{normalizeW}}

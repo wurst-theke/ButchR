@@ -12,4 +12,3 @@ orderBinary(matrix)
 \description{
 Function to order binary data matrix
 }
-

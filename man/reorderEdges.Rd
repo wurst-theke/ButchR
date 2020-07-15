@@ -15,4 +15,3 @@ edges
 \description{
 Order the riverplot edges to prevent crossings from a single node
 }
-

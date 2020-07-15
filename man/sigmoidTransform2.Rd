@@ -12,4 +12,3 @@ sigmoidTransform2(col.vector, q = 0.95)
 \description{
 Title
 }
-

@@ -18,4 +18,3 @@ plotKStats(nmf.exp, plot.vars = c("FrobError", "cv", "sumSilWidth",
 \description{
 Universal ploting function for Optimal K Statistics
 }
-
