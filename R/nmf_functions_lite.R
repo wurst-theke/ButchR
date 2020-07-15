@@ -40,7 +40,7 @@ source_NMFtensor_function <- function(method) {
 
   # Source NMF tensorflow python script
   #path <- file.path(system.file(package = "Bratwurst"), "python/tensorBratwurst")
-  path <- file.path(system.file(package = "Bratwurst"), "python/")
+  path <- file.path(system.file(package = "ButcheR"), "python/")
   tensorBratwurst <- import_from_path("tensorBratwurst", path = path)
   #return(tensorBratwurst[module[1]][module[2]])
   return(tensorBratwurst[[module[1]]][[module[2]]])
