@@ -9,8 +9,13 @@
 \usage{
 generateRiverplot(nmf_exp, ...)
 
-\S4method{generateRiverplot}{nmfExperiment_lite}(nmf_exp,
-  edges.cutoff = 0, useH = FALSE, color = TRUE, ranks = NULL)
+\S4method{generateRiverplot}{nmfExperiment_lite}(
+  nmf_exp,
+  edges.cutoff = 0,
+  useH = FALSE,
+  color = TRUE,
+  ranks = NULL
+)
 }
 \arguments{
 \item{nmf_exp}{an nmfExperiment or a nmfExperiment_lite object}

@@ -9,6 +9,9 @@ orderBinary(matrix)
 \arguments{
 \item{matrix}{}
 }
+\value{
+
+}
 \description{
 Function to order binary data matrix
 }

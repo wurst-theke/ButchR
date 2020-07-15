@@ -4,9 +4,15 @@
 \alias{yNodeCoords}
 \title{Order the riverplot nodes to minimize crossings}
 \usage{
-yNodeCoords(nodes, edges, rank_flag = FALSE, scale_factor = 1,
-  start_coords = c(1, 2), edgeWeightColName = "rescaled",
-  scale_fun = function(x) {     return(x) })
+yNodeCoords(
+  nodes,
+  edges,
+  rank_flag = FALSE,
+  scale_factor = 1,
+  start_coords = c(1, 2),
+  edgeWeightColName = "rescaled",
+  scale_fun = function(x) {     return(x) }
+)
 }
 \arguments{
 \item{sacle_fun}{}

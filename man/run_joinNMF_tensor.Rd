@@ -4,9 +4,15 @@
 \alias{run_joinNMF_tensor}
 \title{Join NMF}
 \usage{
-run_joinNMF_tensor(matrix_list, ranks = 2, n_initializations = 10,
-  iterations = 10^4, convergence_threshold = 40, Sp = 0,
-  extract_features = FALSE)
+run_joinNMF_tensor(
+  matrix_list,
+  ranks = 2,
+  n_initializations = 10,
+  iterations = 10^4,
+  convergence_threshold = 40,
+  Sp = 0,
+  extract_features = FALSE
+)
 }
 \arguments{
 \item{matrix_list}{List of non-negative matrices}

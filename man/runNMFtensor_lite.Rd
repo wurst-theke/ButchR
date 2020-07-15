@@ -4,9 +4,19 @@
 \alias{runNMFtensor_lite}
 \title{Single view NMF}
 \usage{
-runNMFtensor_lite(X, ranks, method = "NMF", n_initializations = 10,
-  iterations = 10^4, convergence_threshold = 40, n_neighbors = 4,
-  alpha = 0.1, lamb = 10, graph = NULL, extract_features = FALSE)
+runNMFtensor_lite(
+  X,
+  ranks,
+  method = "NMF",
+  n_initializations = 10,
+  iterations = 10^4,
+  convergence_threshold = 40,
+  n_neighbors = 4,
+  alpha = 0.1,
+  lamb = 10,
+  graph = NULL,
+  extract_features = FALSE
+)
 }
 \arguments{
 \item{X}{Input matrix, should be a non-negative matrix}

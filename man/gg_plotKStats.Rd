@@ -4,8 +4,11 @@
 \alias{gg_plotKStats}
 \title{Plots optimal K metrics}
 \usage{
-gg_plotKStats(nmf_exp, plot_vars = c("FrobError", "cv", "sumSilWidth",
-  "meanSilWidth", "copheneticCoeff", "meanAmariDist"))
+gg_plotKStats(
+  nmf_exp,
+  plot_vars = c("FrobError", "cv", "sumSilWidth", "meanSilWidth", "copheneticCoeff",
+    "meanAmariDist")
+)
 }
 \arguments{
 \item{nmf_exp}{A nmfExperiment_lite object}

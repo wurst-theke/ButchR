@@ -9,6 +9,9 @@ relabelRiverplot(in_riverplot, in_list)
 \arguments{
 \item{in_list}{}
 }
+\value{
+
+}
 \description{
 Relabel and recolour a riverplot
 }

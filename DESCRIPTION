@@ -1,11 +1,10 @@
-Package: Bratwurst
+Package: ButcheR
 Type: Package
 Title: Non-Negative Matrix Factorization Suite
-Version: 1.1
-Date: 2019-03-22
-Author: Sebastian Steinhauser, Daniel Huebschmann, HDSU dev Branch
-Maintainer: Sebastian Steinhauser <s.steinhauser@gmx.net>, Daniel Huebschmann
-    <huebschmann.daniel@googlemail.com>
+Version: 1.0
+Date: 2020-07-15
+Author: Andres Quintero, Sebastian Steinhauser, Daniel Huebschmann
+Maintainer: Andres Quintero <hdsu.service.user@gmail.com>
 Encoding: UTF-8
 biocViews:
 Imports: 
@@ -24,7 +23,7 @@ Depends:
     reticulate
 Description: NMF implementation using tensorflow and helper functions to select optimal factorization rank and graphic representation of the matrix decomposition
 License: GPLv3
-RoxygenNote: 6.1.1
+RoxygenNote: 7.1.1
 Collate: 
     'generics.R'
     'nmfExperiment-class_lite.R'

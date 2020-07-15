@@ -9,6 +9,9 @@ sigmoidTransform(col.vector, q = 0.95)
 \arguments{
 \item{q}{}
 }
+\value{
+
+}
 \description{
 Title
 }

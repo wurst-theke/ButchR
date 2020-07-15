@@ -4,9 +4,16 @@
 \alias{run_iNMF_tensor}
 \title{Integrative NMF}
 \usage{
-run_iNMF_tensor(matrix_list, ranks = 2, n_initializations = 10,
-  iterations = 10^4, convergence_threshold = 40, Sp = 0, lamb = 10,
-  extract_features = FALSE)
+run_iNMF_tensor(
+  matrix_list,
+  ranks = 2,
+  n_initializations = 10,
+  iterations = 10^4,
+  convergence_threshold = 40,
+  Sp = 0,
+  lamb = 10,
+  extract_features = FALSE
+)
 }
 \arguments{
 \item{matrix_list}{List of non-negative matrices}

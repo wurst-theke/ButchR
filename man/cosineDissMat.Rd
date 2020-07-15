@@ -9,6 +9,9 @@ cosineDissMat(in.matrix, in.dimension = 2)
 \arguments{
 \item{in.dimension}{}
 }
+\value{
+
+}
 \description{
 Create distance matrix with cosine similarity with matrix operations
 }

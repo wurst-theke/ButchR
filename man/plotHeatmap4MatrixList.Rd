@@ -5,8 +5,15 @@
 \title{OLD VERSION MIGHT BE REMOVABLE
 Plot H or W-Matrix as heatmaps for a given range of K's}
 \usage{
-plotHeatmap4MatrixList(nmf.exp, H = T, W = F, titles = NULL,
-  trans = F, cluster_columns = F, show.row = F)
+plotHeatmap4MatrixList(
+  nmf.exp,
+  H = T,
+  W = F,
+  titles = NULL,
+  trans = F,
+  cluster_columns = F,
+  show.row = F
+)
 }
 \arguments{
 \item{show.row}{}

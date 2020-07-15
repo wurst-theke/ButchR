@@ -9,6 +9,9 @@ rankTransform(matrix)
 \arguments{
 \item{matrix}{}
 }
+\value{
+
+}
 \description{
 Title
 }

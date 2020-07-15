@@ -10,17 +10,25 @@
 \alias{SignatureSpecificFeatures,join_NMF-method}
 \title{Signature Specific Features}
 \usage{
-SignatureSpecificFeatures(x, k = NULL, return_all_features = FALSE,
-  ...)
+SignatureSpecificFeatures(x, k = NULL, return_all_features = FALSE, ...)
 
-\S4method{SignatureSpecificFeatures}{nmfExperiment_lite}(x, k = NULL,
-  return_all_features = FALSE, ...)
+\S4method{SignatureSpecificFeatures}{nmfExperiment_lite}(x, k = NULL, return_all_features = FALSE, ...)
 
-\S4method{SignatureSpecificFeatures}{integrative_NMF}(x, k = NULL,
-  return_all_features = FALSE, view_id = NULL, ...)
+\S4method{SignatureSpecificFeatures}{integrative_NMF}(
+  x,
+  k = NULL,
+  return_all_features = FALSE,
+  view_id = NULL,
+  ...
+)
 
-\S4method{SignatureSpecificFeatures}{join_NMF}(x, k = NULL,
-  return_all_features = FALSE, view_id = NULL, ...)
+\S4method{SignatureSpecificFeatures}{join_NMF}(
+  x,
+  k = NULL,
+  return_all_features = FALSE,
+  view_id = NULL,
+  ...
+)
 }
 \arguments{
 \item{x}{an nmfExperiment or a nmfExperiment_lite object}

@@ -4,11 +4,19 @@
 \alias{iNMF_lambda_tuning}
 \title{Integrative NMF Tune Lambda}
 \usage{
-iNMF_lambda_tuning(matrix_list, lambdas = seq(0, 1, 0.1),
-  Output_type = "residuals", thr_cons = 3, rank = 2,
-  n_initializations = 10, iterations = 10^4,
-  convergence_threshold = 40, Sp = 0, show_plot = TRUE,
-  extract_features = FALSE)
+iNMF_lambda_tuning(
+  matrix_list,
+  lambdas = seq(0, 1, 0.1),
+  Output_type = "residuals",
+  thr_cons = 3,
+  rank = 2,
+  n_initializations = 10,
+  iterations = 10^4,
+  convergence_threshold = 40,
+  Sp = 0,
+  show_plot = TRUE,
+  extract_features = FALSE
+)
 }
 \arguments{
 \item{matrix_list}{List of non-negative matrices.}

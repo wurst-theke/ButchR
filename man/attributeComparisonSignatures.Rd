@@ -4,13 +4,21 @@
 \alias{attributeComparisonSignatures}
 \title{Preparation for relabelling and recolouring of a riverplot}
 \usage{
-attributeComparisonSignatures(in_nmf.exp, in_signatures_df, in_sigInd_df,
-  in_normalize = TRUE, in_optK = NULL)
+attributeComparisonSignatures(
+  in_nmf.exp,
+  in_signatures_df,
+  in_sigInd_df,
+  in_normalize = TRUE,
+  in_optK = NULL
+)
 }
 \arguments{
 \item{in_optK}{If non-NULL, specifies the optimal factorization rank.
 The signatures at this rank are the reference signatures, all other
 signatures will get the suffix "-like"}
+}
+\value{
+
 }
 \description{
 Preparation for relabelling and recolouring of a riverplot

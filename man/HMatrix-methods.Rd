@@ -14,8 +14,7 @@ HMatrix(x, k = NULL, ...)
 
 \S4method{HMatrix}{nmfExperiment_lite}(x, k = NULL, ...)
 
-\S4method{HMatrix}{integrative_NMF}(x, k = NULL, view_id = NULL, type,
-  ...)
+\S4method{HMatrix}{integrative_NMF}(x, k = NULL, view_id = NULL, type, ...)
 
 \S4method{HMatrix}{join_NMF}(x, k = NULL, ...)
 }

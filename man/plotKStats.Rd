@@ -4,8 +4,12 @@
 \alias{plotKStats}
 \title{Universal ploting function for Optimal K Statistics}
 \usage{
-plotKStats(nmf.exp, plot.vars = c("FrobError", "cv", "sumSilWidth",
-  "meanSilWidth", "copheneticCoeff", "meanAmariDist"), optK = NULL)
+plotKStats(
+  nmf.exp,
+  plot.vars = c("FrobError", "cv", "sumSilWidth", "meanSilWidth", "copheneticCoeff",
+    "meanAmariDist"),
+  optK = NULL
+)
 }
 \arguments{
 \item{plot.vars}{quality metrics to be displayed}
