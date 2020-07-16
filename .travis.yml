@@ -45,12 +45,18 @@ before_install:
 env:
  global:
    - CRAN: http://cran.rstudio.com
+   - R_BUILD_ARGS="--no-build-vignettes --no-manual"
+   - R_CHECK_ARGS="--no-build-vignettes --no-manual --timings"  ## do not build vignettes or manual
+   - _R_CHECK_TIMINGS_="0"  ## get the timing information for the examples for all of your functions
 #- BIOC_USE_DEVEL="FALSE"  ## Use the current release version
 
 r_packages:
    - testthat
    - reticulate
 
+# do not build vignettes...takes too long and times out on travis
+r_build_args: --no-build-vignettes --no-manual
+r_check_args: --no-build-vignettes --no-manual --timings
 
 
 notifications:
