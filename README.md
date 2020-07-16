@@ -25,7 +25,7 @@ library(tidyverse)
 ```
 
 # Introduction
-============
+
 
 **NMF** (**nonnegative matrix factorization**) is a matrix decomposition
 method. A description of the algorithm and it’s implementation can be
@@ -61,7 +61,7 @@ functions for estimation of the optimal factorization rank and post-hoc
 feature selection are provided.
 
 # The ButchR package
-==================
+
 
 The matrix decomposition results are stored in an S4 object called
 `nmfExperiment_lite`. `ButchR` provides functions to access the best
@@ -92,7 +92,7 @@ The package `ButchR` provides a function to visualize all factorization
 metrics.
 
 # Example: leukemia data
-======================
+
 
 Preparations
 
@@ -500,7 +500,7 @@ w_heatmap
 
 
 # References
-==========
+
 
 Alexandrov, LB, S Nik-Zainal, DC Wedge, SA Aparicio, S Behjati, AV
 Biankin, GR Bignell, et al. 2013. “Signatures of Mutational Processes in
