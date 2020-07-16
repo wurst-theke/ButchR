@@ -2,3 +2,5 @@
 ^\.Rproj\.user$
 ^R\/joinNMF\_lite_tmp\.R$
 ^R/tmp\.R$
+^doc$
+^Meta$

@@ -1,0 +1,580 @@
+---
+title: "ButchR"
+author: "Andres Quintero, Sebastian Steinhauser & Daniel Huebschmann"
+date: "15.07.2020"
+vignette: >
+  %\VignetteIndexEntry{MutationDensity}
+  %\VignetteEncoding{UTF-8}  
+  %\VignetteEngine{knitr::rmarkdown}
+output:
+  BiocStyle::html_document:
+    toc: yes
+references:
+- author:
+  - family: Alexandrov
+    given: LB
+  - family: Nik-Zainal
+    given: S
+  - family: Wedge
+    given: DC
+  - family: Aparicio
+    given: SA
+  - family: Behjati
+    given: S
+  - family: Biankin
+    given: AV
+  - family: Bignell
+    given: GR
+  - family: Bolli
+    given: N
+  - family: Borg
+    given: A
+  - family: Borresen-Dale
+    given: AL
+  - family: Boyault
+    given: S
+  - family: Burkhardt
+    given: B
+  - family: Butler
+    given: AP
+  - family: Caldas
+    given: C
+  - family: Davies
+    given: HR
+  - family: Desmedt
+    given: C
+  - family: Eils
+    given: R
+  - family: Eyfjörd
+    given: JE
+  - family: Greaves
+    given: M
+  - family: Hosoda
+    given: F
+  - family: Hutter
+    given: B
+  - family: Ilicic
+    given: T
+  - family: Imbeaud
+    given: S
+  - family: Imielinski
+    given: M
+  - family: Jäger
+    given: N
+  - family: Jones
+    given: DT
+  - family: Jones
+    given: D
+  - family: Knappskog
+    given: S
+  - family: Kool
+    given: M
+  - family: Lakhani
+    given: SR
+  - family: Lopez-Otin
+    given: C
+  - family: Martin
+    given: S
+  - family: Munshi
+    given: NC
+  - family: Nakamura
+    given: H
+  - family: Northcott
+    given: PA
+  - family: Pajic
+    given: M
+  - family: Papaemmanuil
+    given: E
+  - family: Paradiso
+    given: A
+  - family: Pearson
+    given: JV
+  - family: Puente
+    given: XS
+  - family: Raine
+    given: K
+  - family: Ramakrishna
+    given: M
+  - family: Richardson
+    given: AL
+  - family: Richter
+    given: J
+  - family: Rosenstiel
+    given: P
+  - family: Schlesner
+    given: M
+  - family: Schumacher
+    given: TN
+  - family: Span
+    given: PN
+  - family: Teague
+    given: JW
+  - family: Tokoti
+    given: Y
+  - family: Tutt
+    given: AN
+  - family: Valdes-Mas
+    given: R
+  - family: van Buuren
+    given: MM
+  - family: van't Veer
+    given: L
+  - family: Vincent-Salomon
+    given: A
+  - family: Waddell
+    given: N
+  - family: Yates
+    given: LR
+  - family: Australian Pancreatic Cancer Initiative
+    given: 
+  - family: ICGC Breast Cancer Consortium
+    given: 
+  - family: ICGC MMML-Seq Consortium
+    given: 
+  - family: ICGC PedBrain
+    given: 
+  - family: Zucman-Rossi
+    given: J
+  - family: Futreal
+    given: PA
+  - family: McDermott
+    given: U
+  - family: Lichter
+    given: P
+  - family: Meyerson
+    given: M
+  - family: Grimmond
+    given: SM
+  - family: Siebert
+    given: R
+  - family: Campo
+    given: E
+  - family: Shibata
+    given: T
+  - family: Pfister
+    given: SM
+  - family: Campbell
+    given: PJ
+  - family: Stratton
+    given: MR
+  container-title: Nature
+  id: Alex2013
+  issued:
+    month: 08
+    volume: 500
+    year: 2013
+  publisher: Nature Publishing Group
+  title: 'Signatures of Mutational Processes in Cancer'
+- author:
+  - family: Alexandrov
+    given: LB
+  id: Alex_package2012
+  issued:
+    year: 2012
+  title: 'WTSI Mutational Signature Framework'
+- author:
+  - family: Alexandrov
+    given: LB
+  - family: Nik-Zainal
+    given: S
+  - family: Wedge
+    given: DC
+  - family: Campbell
+    given: PJ
+  - family: Stratton
+    given: MR
+  container-title: Cell Reports
+  id: Alex_CellRep2013
+  issued:
+    year: 2013
+  title: > 
+    Deciphering signatures of mutational processes operative in human cancer
+- author:
+  - family: Gehring
+    given: Julian
+  - family: Fischer
+    given: Bernd
+  - family: Lawrence
+    given: Michael
+  - family: Huber
+    given: Wolfgang
+  container-title: Bioinformatics
+  id: Gehring_article2015
+  issued:
+    year: 2015
+  publisher: Oxford Journals
+  title: > 
+    variants
+    SomaticSignatures: inferring mutational signatures from single-nucleotide
+- author:
+  - family: Lee
+    given: Daniel D.
+  - family: Seung
+    given: Sebastian
+  container-title: Nature
+  id: Lee_article1999
+  issued:
+    year: 1999
+  publisher: Nature Publishing Group
+  title: > 
+    Learning the parts of objects by non-negative matrix factorization
+- author:
+  - family: Brunet
+    given: Jean-Philippe
+  - family: Tamayo
+    given: Pablo
+  - family: Golub
+    given: Todd R.
+  - family: Mesirov
+    given: Jill P.
+  container-title: PNAS
+  id: Brunet_article2003
+  issued:
+    year: 2003
+  publisher: PNAS
+  title: > 
+    Metagenes and molecular pattern discovery using matrix factorization
+- author:
+  - family: Gaujoux
+    given: Renaud
+  - family: Seoighe
+    given: Cathal
+  container-title: BMC Bioinformatics
+  id: Gaujoux_article2010
+  issued:
+    year: 2010
+  publisher: BMC
+  title: > 
+    A flexible R package for nonnegative matrix factorization
+- author:
+  - family: Mejia-Roa
+    given: Edgardo
+  - family: Tabas-Madrid
+    given: Daniel
+  - family: Setoain
+    given: Javier
+  - family: Garcia
+    given: Carlos
+  - family: Tirado
+    given: Francisco
+  - family: Pascual-Montano
+    given: Alberto
+  container-title: BMC Bioinformatics
+  id: Mejia_article2015
+  issued:
+    year: 2015
+  publisher: BMC
+  title: > 
+    NMF-mGPU: non-negative matrix factorization on multi-GPU systems
+- author:
+  - family: Gu 
+    given: Z
+  container-title: R package version 1.4.4
+  id: ComplexHeatmap2015
+  issued:
+    year: 2015
+  title: 'ComplexHeatmap: Making Complex Heatmaps'
+editor_options: 
+  chunk_output_type: console
+---
+
+  
+```{r load_style, warning=FALSE, message=FALSE, results="hide"}
+library(BiocStyle)
+library(ButchR)
+library(knitr)
+library(ComplexHeatmap)
+library(viridis)
+library(tidyverse)
+```
+
+# Introduction {#introduction}
+
+**NMF** (**nonnegative matrix factorization**) is a matrix decomposition 
+method. A description of the algorithm and it's implementation can be found 
+e.g. in [@Lee_article1999]. In 2003, Brunet et al. applied NMF to gene 
+expression data [@Brunet_article2003]. In 2010, `r CRANpkg("NMF")`, an R 
+package implementing several NMF solvers was published [@Gaujoux_article2010].
+NMF basically solves the problem as illustrated in the following figure
+(Image taken from 
+<https://en.wikipedia.org/wiki/Non-negative_matrix_factorization>):
+
+![NMF](NMF.png)
+
+Here, $V$ is an input matrix with dimensions $n \times m$. It is decomposed
+into two matrices $W$ of dimension $n \times l$ and $H$ of dimension
+$l \times m$, which when multiplied approximate the original matrix $V$. $l$ is
+a free parameter in NMF, it is called the factorization rank. If we call the 
+columns of $W$ \emph{signatures}, then $l$ corresponds to the number of 
+signatures. The decomposition thus leads to a reduction in complexity if 
+$l < n$, i.e. if the number of signatures is smaller than the number of 
+features, as indicated in the above figure.
+
+In 2015, Mejia-Roa et al. introduced an implementation of an NMF-solver in 
+CUDA, which lead to significant reduction of computation times by making use of
+massive parallelisation on GPUs [@Mejia_article2015]. Other implementations of
+NMF-solvers on GPUs exist.
+
+It is the pupose of the package `ButchR` described here to provide wrapper 
+functions in R to these NMF-solvers in TensorFlow. Massive parallelisation not only 
+leads to faster algorithms, but also makes the benefits of NMF accessible to 
+much bigger matrices. Furthermore, functions for estimation of
+the optimal factorization rank and post-hoc feature selection are provided.
+
+# The ButchR package {#ButchR_package}
+
+The matrix decomposition results are stored in an S4 object called 
+`nmfExperiment_lite`. `ButchR` provides functions to access the best 
+factorzation after $n$ initailization $W$ and $H$ matrices for a given 
+factorzation rank.
+
+A crucial step in data analysis with NMF is the determination of the optimal 
+factorization rank, i.e. the number of columns of the matrix $W$ or 
+equivalently the number of rows of the matrix $H$. No consensus method for an 
+automatic evaluation of the optimal factorization rank has been found to date. 
+Instead, the decomposition is usually performed iteratively over a range of 
+possible factorization ranks and different quality measures are computed for 
+every tested factorization ranks. Many quality measures have been proposed:
+
+* The `Frobenius reconstruction error`, i.e. the Frobenius norm of the 
+residuals of the decomposition: $||W \cdot H - V||_{F}$
+* Criteria to assess the stability of the decomposition:
+
+  + The `cophenetic correlation coefficient`
+  + An `Amari type distance`
+  + `Silhouette values` over clusters of patterns extracted iteratively at the 
+  same factorization rank
+
+The package `ButchR` provides a function to visualize all factorization metrics.
+
+# Example: leukemia data
+
+Preparations
+
+
+Load the example data
+
+```{r, eval = T}
+data(leukemia)
+```
+
+Now we are ready to start an NMF analysis.
+
+## NMF analysis
+
+### Call wrapper function
+
+The wrapper function for the NMF solvers in the ButchR package is 
+`runNMFtensor_lite`. It is called as follows:
+
+```{r}
+k_min <- 2
+k_max <- 4
+
+leukemia_nmf_exp <- runNMFtensor_lite(X = leukemia$matrix,
+                                      ranks = k_min:k_max,
+                                      method = "NMF",
+                                      n_initializations = 10, 
+                                      extract_features = TRUE)
+```
+
+Depending on the choice of parameters (dimensions of the input matrix, number 
+of iterations), this step may take some time. Note that the algorithm updates 
+the user about the progress in the iterations.
+
+### normalize W matrix  
+To make the features in the $W$ matrix comparable, the factorization is 
+normalized to make all columns of $W$ sum 1.
+
+```{r}
+leukemia_nmf_exp <- normalizeW(leukemia_nmf_exp)
+```
+ 
+
+Several functions to access the results are available:
+
+### `HMatrix` 
+
+Returns the matrix `H` for the optimal decomposition (i.e. the one 
+with the minimal residual) for a specific factorization rank `k`. 
+The number of rows of the matrix `H` corresponds to the 
+chosen factorization rank.
+
+```{r}
+leukemia_Hk2 <- HMatrix(leukemia_nmf_exp, k = 2)
+class(leukemia_Hk2)
+dim(leukemia_Hk2)
+kable(leukemia_Hk2[, 1:5])
+```
+
+If no value for `k` is supplied, the function returns a list of matrices, 
+one for every factorization rank.
+
+```{r}
+leukemia_Hlist <- HMatrix(leukemia_nmf_exp)
+class(leukemia_Hlist)
+length(leukemia_Hlist)
+kable(leukemia_Hlist$k2[, 1:5])
+```
+
+
+### `WMatrix`
+
+Returns the matrix `W` for the optimal decomposition (i.e. the one 
+with the minimal residual) for a specific factorization rank `k`. 
+The number of columns of the matrix `W` corresponds to the 
+chosen factorization rank.
+
+```{r}
+leukemia_Wk2 <- WMatrix(leukemia_nmf_exp, k = 2)
+class(leukemia_Wk2)
+dim(leukemia_Wk2)
+kable(as.data.frame(leukemia_Wk2[1:5, ]))
+```
+
+If no value for `k` is supplied, the function returns a list of matrices, 
+one for every factorization rank.
+
+```{r}
+leukemia_Wlist <- WMatrix(leukemia_nmf_exp)
+class(leukemia_Wlist)
+length(leukemia_Wlist)
+kable(as.data.frame(leukemia_Wlist$k2[1:5, ]))
+```
+
+
+### `FrobError`
+
+Returns a data frame with as many columns as there are iterated factorization 
+ranks and as many rows as there are iterations per factorization rank.
+
+```{r}
+kable(FrobError(leukemia_nmf_exp))
+```
+
+## Determine the optimal factorization rank
+
+In NMF, Several methods have been described to assess the optimal factorization
+rank. The ButchR package implements some of them:  
+
+- *Frobenius error:* The most important information about the many iterated d
+ecompositions is the norm of the residual. In NMF this is often called the 
+Frobenius error, as the Frobenius norm may be used.  
+- *Alexandrov Criterion:* In [@Alex2013] an approach is described in which a 
+modified silhouette criterion is used to estimate the stability across iteration 
+steps for one fixed factorization rank `k`.  
+- *Cophenetic correlation coefficient*  
+- *Amari distance*
+
+The values of the computed factorization metrics 
+can be accessed with `OptKStats`:
+
+
+```{r}
+kable(OptKStats(leukemia_nmf_exp))
+```
+
+These quality measures can be displayed together:
+
+### Generate plots to estimate optimal k
+
+```{r, warning = FALSE, message = FALSE}
+gg_plotKStats(leukemia_nmf_exp)
+```
+
+
+## Visualize the matrix H (exposures)
+
+The matrices `H` may be visualized as heatmaps. We can define a meta
+information object and annotate meta data:
+
+```{r}
+heat_anno <- HeatmapAnnotation(df = leukemia$annotation[, c("ALL_AML", "Type")],
+                               col = list(ALL_AML = c("ALL" = "grey80", 
+                                                      "AML" = "grey20"),
+                                          Type = c("-" = "white",
+                                                   "B-cell" = "grey80",
+                                                   "T-cell" = "grey20")))
+```
+
+And now display the matrices `H` with meta data annotation:
+
+
+```{r results='asis'}
+
+for(ki in k_min:k_max) {
+  cat("\n")
+  cat("  \n#### H matrix for k=",  ki, "   \n  ")
+  #plot H matrix
+  tmp_hmatrix <- HMatrix(leukemia_nmf_exp, k = ki)
+  h_heatmap <- Heatmap(tmp_hmatrix,
+                       col = viridis(100),
+                       name = "Exposure",
+                       clustering_distance_columns = 'pearson',
+                       show_column_dend = TRUE,
+                       top_annotation = heat_anno,
+                       show_column_names = FALSE,
+                       show_row_names = FALSE,
+                       cluster_rows = FALSE)
+  print(h_heatmap)
+}
+
+
+```
+
+## Feature selection 
+### Row K-means to determine signature specific features
+
+```{r}
+### Find representative regions.
+# Get W for best K
+leukemia_features <- SignatureSpecificFeatures(leukemia_nmf_exp,
+                                               k = 4, 
+                                               return_all_features = TRUE)
+colnames(leukemia_features) <- paste0("Sign.", 1:4)
+kable(head(leukemia_features))
+
+```
+
+### Feature visualization
+
+```{r}
+# List of signature specific features
+# leukemia_specific <- SignatureSpecificFeatures(leukemia_nmf_exp,
+#                                                k = 4, 
+#                                                return_all_features = FALSE)
+
+
+leukemia_specific <- rownames(leukemia_features)[rowSums(leukemia_features) == 1]
+leukemia_Wspecific <- WMatrix(leukemia_nmf_exp, k = 4)[leukemia_specific, ]
+colnames(leukemia_Wspecific) <- paste0("Sign.", 1:4)
+
+# normalize exposure score in W matrix across rows
+leukemia_Wspecific <- as.data.frame(leukemia_Wspecific) %>% 
+  rownames_to_column("GeneID") %>% 
+  pivot_longer(-GeneID, names_to = "SignatureID", values_to = "exposure") %>% 
+  group_by(GeneID) %>% 
+  mutate(exposure = exposure/max(exposure)) %>% 
+  pivot_wider(id_cols = GeneID, names_from = "SignatureID", values_from = "exposure") %>% 
+  column_to_rownames("GeneID") %>% 
+  as.matrix()
+  
+
+
+# Display selected features on W matrix
+w_heatmap <- Heatmap(leukemia_Wspecific,
+                     col = inferno(100),
+                     name = "W matrix",
+                     clustering_distance_columns = 'pearson',
+                     show_column_dend = TRUE,
+                     show_column_names = TRUE,
+                     show_row_names = FALSE,
+                     cluster_rows = TRUE,
+                     cluster_columns = FALSE)
+w_heatmap
+
+
+```
+
+
+# References
