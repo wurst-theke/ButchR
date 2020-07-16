@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.org/hdsu-bioquant/ButchR.svg?branch=master)](https://travis-ci.org/hdsu-bioquant/ButchR)
+
+
 # ButchR
 Andres Quintero, Daniel Huebschmann & Sebastian Steinhauser  
 15.07.2020  

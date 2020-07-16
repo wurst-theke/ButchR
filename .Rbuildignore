@@ -4,3 +4,4 @@
 ^R/tmp\.R$
 ^doc$
 ^Meta$
+^\.travis\.yml$

@@ -1,0 +1,46 @@
+# R for travis: see documentation at https://docs.travis-ci.com/user/languages/r
+
+language: R
+warnings_are_errors: false
+sudo: required
+dist: bionic
+cache: packages
+
+
+before_install:
+  - pip install --upgrade pip setuptools
+  - pip install numpy tensorflow-cpu=2.2.0
+
+
+# matrix:
+#   include:
+#     - python: 3.7
+#       env:
+#         - TOXENV=py37
+#         - TF_VERSION=2.1.0
+#         - TF_PACKAGE=tensorflow-cpu
+#     - python: 3.8
+#       env:
+#         - TOXENV=py38
+#         - TF_VERSION=2.2.0
+#         - TF_PACKAGE=tensorflow-cpu
+# install:
+#   - pip install --upgrade pip setuptools
+#   - pip install
+#   - pip install -e ".[tests]"
+
+
+env:
+ global:
+   - CRAN: http://cran.rstudio.com
+#- BIOC_USE_DEVEL="FALSE"  ## Use the current release version
+
+r_packages:
+   - testthat
+   - reticulate
+
+
+
+notifications:
+  email:
+    on_failure: change
