@@ -1,755 +1,523 @@
-# Bratwurst
-Daniel Huebschmann & Sebastian Steinhauser  
-20.07.2016, major update 09.10.2017  
+# ButchR
+Andres Quintero, Daniel Huebschmann & Sebastian Steinhauser  
+15.07.2020  
 
-`Bratwurst` is a software package providing functions for preprocessing,
-wrappers for non-negative matrix factorization and postprocessing in `R`. This 
-repo hosts the code of the Bratwurst software package.  
+`ButchR` is an R package providing functions to perform 
+non-negative matrix factorization and postprocessing using TensorFlow.  
+
 A detailed description 
 of the software and an application to cells of the human hematopoietic system 
 are available as a preprint: https://doi.org/10.1101/199547.  
 Intermediate results for the analysis on hematopoietic cells are available on
 zenodo: https://doi.org/10.5281/zenodo.800049.  
-In this README document, we present major parts of the vignette of the package. 
-First some packages have to be loaded.
-  
 
-```r
+
+## How to use ButchR
+
+
+``` r
+library(BiocStyle)
+library(ButchR)
 library(knitr)
 library(ComplexHeatmap)
+library(viridis)
+library(tidyverse)
 ```
 
 # Introduction
+============
 
-**NMF** (**nonnegative matrix factorization**) is a matrix decomposition 
-method. It was originally described by Lee & Seung in 1999. In 2003, Brunet et 
-al. applied NMF to gene expression data. In 2010, *[NMF](http://cran.fhcrc.org/web/packages/NMF/index.html)*, an R 
-package implementing several NMF solvers was published by Gaujoux et al.
-NMF basically solves the problem as illustrated in the following figure
-(Image taken from 
-<https://en.wikipedia.org/wiki/Non-negative_matrix_factorization>):
+**NMF** (**nonnegative matrix factorization**) is a matrix decomposition
+method. A description of the algorithm and it’s implementation can be
+found e.g. in (Lee and Seung 1999). In 2003, Brunet et al. applied NMF
+to gene expression data (Brunet et al. 2003). In 2010,
+*[NMF](https://CRAN.R-project.org/package=NMF)*, an R package
+implementing several NMF solvers was published (Gaujoux and Seoighe
+2010). NMF basically solves the problem as illustrated in the following
+figure (Image taken from
+<a href="https://en.wikipedia.org/wiki/Non-negative_matrix_factorization" class="uri">https://en.wikipedia.org/wiki/Non-negative_matrix_factorization</a>):
 
 ![NMF](vignettes/NMF.png)
 
-Here, `V` is an input matrix with dimensions `n x m`. It is decomposed
-into two matrices `W` of dimension `n x l` and `H` of dimension
-`l x m`, which when multiplied approximate the original matrix `V`. `l` is
-a free parameter in NMF, it is called the factorization rank. If we call the 
-columns of `W` signatures, then `l` corresponds to the number of 
-signatures. The decomposition thus leads to a reduction in complexity if 
-`l < n`, i.e. if the number of signatures is smaller than the number of 
-features, as indicated in the above figure.
+Here, *V* is an input matrix with dimensions *n* × *m*. It is decomposed
+into two matrices *W* of dimension *n* × *l* and *H* of dimension
+*l* × *m*, which when multiplied approximate the original matrix *V*.
+*l* is a free parameter in NMF, it is called the factorization rank. If
+we call the columns of *W* , then *l* corresponds to the number of
+signatures. The decomposition thus leads to a reduction in complexity if
+*l* \< *n*, i.e. if the number of signatures is smaller than the number
+of features, as indicated in the above figure.
 
-In 2015, Mejia-Roa et al. introduced an implementation of an NMF-solver in 
-CUDA, which lead to significant reduction of computation times by making use of
-massive parallelisation on GPUs. Other implementations of
-NMF-solvers on GPUs exist.
+In 2015, Mejia-Roa et al. introduced an implementation of an NMF-solver
+in CUDA, which lead to significant reduction of computation times by
+making use of massive parallelisation on GPUs (Mejia-Roa et al. 2015).
+Other implementations of NMF-solvers on GPUs exist.
 
-It is the pupose of the package `Bratwurst` described here to provide wrapper 
-functions in R to these NMF-solvers in CUDA. Massive parallelisation not only 
-leads to faster algorithms, but also makes the benefits of NMF accessible to 
-much bigger matrices. Furthermore, functions for preprocessing, estimation of
-the optimal factorization rank and post-hoc feature selection are provided.
+It is the pupose of the package `ButchR` described here to provide
+wrapper functions in R to these NMF-solvers in TensorFlow. Massive
+parallelisation not only leads to faster algorithms, but also makes the
+benefits of NMF accessible to much bigger matrices. Furthermore,
+functions for estimation of the optimal factorization rank and post-hoc
+feature selection are provided.
 
-# The Bratwurst package 
+# The ButchR package
+==================
 
-The main feature of the package `Bratwurst` is an S4 object called `nmf.exp`. 
-It is derived from `SummarizedExperiment`, has containers for a data matrix, 
-column annotation data and row annotation data and inherits 
-`SummarizedExperiment`'s accessor functions `colData` and `rowData`. The matrix
-to be stored in this data structure is the matrix V as described above, 
-corresponding to the input matrix for the NMF-solver. `nmf.exp` furthermore has
-containers for the matrices W and H which are results of the decomposition.
-As NMF algorithms have to be run iteratively, an instance of the class 
-`nmf.exp` can store large lists of matrices, corresponding to the results of 
-different iteration steps. Accessor functions to all different containers are 
-provided.
+The matrix decomposition results are stored in an S4 object called
+`nmfExperiment_lite`. `ButchR` provides functions to access the best
+factorzation after *n* initailization *W* and *H* matrices for a given
+factorzation rank.
 
-A crucial step in data analysis with NMF is the determination of the optimal 
-factorization rank, i.e. the number of columns of the matrix W or 
-equivalently the number of rows of the matrix H. No consensus method for an 
-automatic evaluation of the optimal factorization rank has been found to date. 
-Instead, the decomposition is usually performed iteratively over a range of 
-possible factorization ranks and different quality measures are computed for 
-every tested factorization ranks. Many quality measures have been proposed:
+A crucial step in data analysis with NMF is the determination of the
+optimal factorization rank, i.e. the number of columns of the matrix *W*
+or equivalently the number of rows of the matrix *H*. No consensus
+method for an automatic evaluation of the optimal factorization rank has
+been found to date. Instead, the decomposition is usually performed
+iteratively over a range of possible factorization ranks and different
+quality measures are computed for every tested factorization ranks. Many
+quality measures have been proposed:
 
-* The `Frobenius reconstruction error`, i.e. the Frobenius norm of the 
-residuals of the decomposition: ||W x H - V||
-* Criteria to assess the stability of the decomposition:
+-   The `Frobenius reconstruction error`, i.e. the Frobenius norm of the
+    residuals of the decomposition:
+    \|\|*W* ⋅ *H* − *V*\|\|<sub>*F*</sub>
 
-  + The `cophenetic correlation coefficient`
-  + An `Amari type distance`
-  + `Silhouette values` over clusters of patterns extracted iteratively at the 
-  same factorization rank
+-   Criteria to assess the stability of the decomposition:
 
-The package `Bratwurst` provides functions to compute all 
+    -   The `cophenetic correlation coefficient`
+    -   An `Amari type distance`
+    -   `Silhouette values` over clusters of patterns extracted
+        iteratively at the same factorization rank
+
+The package `ButchR` provides a function to visualize all factorization
+metrics.
 
 # Example: leukemia data
+======================
 
-In this README, as in the vignette for the package, we use a dataset containing 
-Affymetrix Hgu6800 microarray expression data of B-ALL, T-ALL and AML samples. 
-This dataset had also been used by Brunet et al. (PNAS, 2004) and Gaujoux et 
-al. (BMC Bioinformatics, 2010). In Brunet et al., this dataset is called the 
-__Golub__ dataset.
-Preparations: load the necessary software packages:
+Preparations
 
+Load the example data
 
-```r
-library(Bratwurst)
-library(NMF)
-```
-
-Load the example data (the __Golub__ dataset is stored in the R package 
-`Bratwurst`)
-
-
-```r
+``` r
 data(leukemia)
-samples <- "leukemia"
-```
-
-This data was initially generated by the following commands:
-
-
-```r
-data.path  <- file.path(getwd(), "data")
-matrix.file <- list.files(data.path, "*data.txt", full.names = T)
-rowAnno.file <- list.files(data.path, "micro.*anno.*txt", full.names = T)
-rowAnno.bed <- list.files(data.path, ".bed", full.names = T)
-colAnno.file <- list.files(data.path, "sample.*anno.*txt", full.names = T)
-# Read files to summarizedExperiment
-leukemia.nmf.exp <- nmfExperimentFromFile(matrix.file = matrix.file,
-                                          rowAnno.file = rowAnno.file,
-                                          colData.file = colAnno.file)
-save(leukemia.nmf.exp, file = file.path(data.path, "leukemia.rda"))
 ```
 
 Now we are ready to start an NMF analysis.
 
-## NMF analysis
+NMF analysis
+------------
 
 ### Call wrapper function
 
-The wrapper function for the NMF solvers in the Bratwurst package is 
-`runNmfGpu`. It is called as follows:
+The wrapper function for the NMF solvers in the ButchR package is
+`runNMFtensor_lite`. It is called as follows:
 
+``` r
+k_min <- 2
+k_max <- 4
 
-```r
-k.max <- 4
-outer.iter <- 10
-inner.iter <- 10^4
-
-leukemia.nmf.exp<- runNmfGpuPyCuda(nmf.exp = leukemia.nmf.exp,
-                                   k.max = k.max,
-                                   outer.iter = outer.iter,
-                                   inner.iter = inner.iter,
-                                   tmp.path = "/tmp/tmp_leukemia",
-                                   cpu = TRUE)
+leukemia_nmf_exp <- runNMFtensor_lite(X = leukemia$matrix,
+                                      ranks = k_min:k_max,
+                                      method = "NMF",
+                                      n_initializations = 10, 
+                                      extract_features = TRUE)
 ```
 
-```
-## [1] "2017-10-09 14:37:55 CEST"
-## Factorization rank:  2 
-## [1] "2017-10-09 14:38:11 CEST"
-## Factorization rank:  3 
-## [1] "2017-10-09 14:38:30 CEST"
-## Factorization rank:  4
+    ## [1] "2020-07-16 17:50:42 CEST"
+    ## Factorization rank:  2 
+    ## [1] "NMF converged after  75,123,64,69,58,126,141,83,54,87 iterations"
+    ## [1] "2020-07-16 17:50:42 CEST"
+    ## Factorization rank:  3 
+    ## [1] "NMF converged after  154,79,90,87,66,84,76,151,115,102 iterations"
+    ## [1] "2020-07-16 17:50:44 CEST"
+    ## Factorization rank:  4 
+    ## [1] "NMF converged after  108,189,202,108,121,76,104,150,110,132 iterations"
+    ## No optimal K could be determined from the Optimal K stat
+
+Depending on the choice of parameters (dimensions of the input matrix,
+number of iterations), this step may take some time. Note that the
+algorithm updates the user about the progress in the iterations.
+
+### normalize W matrix
+
+To make the features in the *W* matrix comparable, the factorization is
+normalized to make all columns of *W* sum 1.
+
+``` r
+leukemia_nmf_exp <- normalizeW(leukemia_nmf_exp)
 ```
 
-Depending on the choice of parameters (dimensions of the input matrix, number 
-of iterations), this step may take some time. Note that the algorithm updates 
-the user about the progress in the iterations.
+Several functions to access the results are available:
 
-Several getter functions are available to access the data in the generated 
-`nmf.exp` object:
+### `HMatrix`
 
-### `HMatrixList` 
+Returns the matrix `H` for the optimal decomposition (i.e. the one with
+the minimal residual) for a specific factorization rank `k`. The number
+of rows of the matrix `H` corresponds to the chosen factorization rank.
 
-Returns a list of matrices `H` for a specific factorization 
-rank `k`. There are as many entries in this list as there were iterations in
-the outer iteration. Of course the number of rows of the matrix `H` corresponds
-to the chosen factorization rank.
-
-
-```r
-tmp.object <- HMatrixList(leukemia.nmf.exp, k = 2)
-class(tmp.object)
+``` r
+leukemia_Hk2 <- HMatrix(leukemia_nmf_exp, k = 2)
+class(leukemia_Hk2)
 ```
 
-```
-## [1] "list"
+    ## [1] "matrix" "array"
+
+``` r
+dim(leukemia_Hk2)
 ```
 
-```r
-length(tmp.object)
+    ## [1]  2 38
+
+``` r
+kable(leukemia_Hk2[, 1:5])
 ```
 
-```
-## [1] 10
+|     ALL001|     ALL002|     ALL003|     ALL004|     ALL005|
+|----------:|----------:|----------:|----------:|----------:|
+|  1543455.8|  1356277.8|  1460730.1|  1420151.7|  1286558.2|
+|   229239.7|   281053.9|   280561.9|   298372.2|   257627.2|
+
+If no value for `k` is supplied, the function returns a list of
+matrices, one for every factorization rank.
+
+``` r
+leukemia_Hlist <- HMatrix(leukemia_nmf_exp)
+class(leukemia_Hlist)
 ```
 
-```r
-class(tmp.object[[1]])
+    ## [1] "list"
+
+``` r
+length(leukemia_Hlist)
 ```
 
-```
-## [1] "matrix"
+    ## [1] 3
+
+``` r
+kable(leukemia_Hlist$k2[, 1:5])
 ```
 
-```r
-dim(tmp.object[[1]])
-```
-
-```
-## [1]  2 38
-```
-
-If no value for `k` is supplied, the function returns a list of lists, one for
-every iterated factorization rank.
-
-
-```r
-tmp.object <- HMatrixList(leukemia.nmf.exp)
-class(tmp.object)
-```
-
-```
-## [1] "list"
-```
-
-```r
-length(tmp.object)
-```
-
-```
-## [1] 3
-```
-
-```r
-class(tmp.object[[1]])
-```
-
-```
-## [1] "list"
-```
-
-```r
-length(tmp.object[[1]])
-```
-
-```
-## [1] 10
-```
-
-### `HMatrix` 
-
-Returns the matrix `H` for the optimal decomposition (i.e. the one 
-with the minimal residual) for a specific factorization rank `k`. As in the 
-previous paragraph, the number of rows of the matrix `H` corresponds to the 
-chosen factorization rank.
-
-
-```r
-tmp.object <- HMatrix(leukemia.nmf.exp, k = 2)
-class(tmp.object)
-```
-
-```
-## [1] "matrix"
-```
-
-```r
-dim(tmp.object)
-```
-
-```
-## [1]  2 38
-```
-
-If no value for `k` is supplied, the function returns a list of optimal 
-matrices, one for every iterated factorization rank.
-
-
-```r
-H.list <- HMatrix(leukemia.nmf.exp)
-class(H.list)
-```
-
-```
-## [1] "list"
-```
-
-```r
-length(H.list)
-```
-
-```
-## [1] 3
-```
-
-### `WMatrixList` 
-
-Returns a list of matrices `W` for a specific factorization 
-rank `k`. There are as many entries in this list as there were iterations in
-the outer iteration. Of course the number of columns of the matrix `W` 
-corresponds to the chosen factorization rank.
-
-
-```r
-tmp.object <- WMatrixList(leukemia.nmf.exp, k = 2)
-class(tmp.object)
-```
-
-```
-## [1] "list"
-```
-
-```r
-length(tmp.object)
-```
-
-```
-## [1] 10
-```
-
-```r
-class(tmp.object[[1]])
-```
-
-```
-## [1] "matrix"
-```
-
-```r
-dim(tmp.object[[1]])
-```
-
-```
-## [1] 4951    2
-```
-
-If no value for `k` is supplied, the function returns a list of lists, one for
-every iterated factorization rank.
+|     ALL001|     ALL002|     ALL003|     ALL004|     ALL005|
+|----------:|----------:|----------:|----------:|----------:|
+|  1543455.8|  1356277.8|  1460730.1|  1420151.7|  1286558.2|
+|   229239.7|   281053.9|   280561.9|   298372.2|   257627.2|
 
 ### `WMatrix`
 
-Returns the matrix `W` for the optimal decomposition (i.e. the one 
-with the minimal residual) for a specific factorization rank `k`. As in the 
-previous paragraph, the number of columns of the matrix `W` corresponds to the 
-chosen factorization rank.
+Returns the matrix `W` for the optimal decomposition (i.e. the one with
+the minimal residual) for a specific factorization rank `k`. The number
+of columns of the matrix `W` corresponds to the chosen factorization
+rank.
 
-
-```r
-tmp.object <- WMatrix(leukemia.nmf.exp, k = 2)
-class(tmp.object)
+``` r
+leukemia_Wk2 <- WMatrix(leukemia_nmf_exp, k = 2)
+class(leukemia_Wk2)
 ```
 
-```
-## [1] "matrix"
+    ## [1] "matrix" "array"
+
+``` r
+dim(leukemia_Wk2)
 ```
 
-```r
-dim(tmp.object)
+    ## [1] 4452    2
+
+``` r
+kable(as.data.frame(leukemia_Wk2[1:5, ]))
 ```
 
-```
-## [1] 4951    2
+|       |         V1|        V2|
+|:------|----------:|---------:|
+| A2M   |  0.0000453|  6.77e-05|
+| AADAC |  0.0000793|  9.02e-05|
+| AARS  |  0.0006768|  1.68e-04|
+| ABAT  |  0.0001170|  1.41e-04|
+| ABCA3 |  0.0000322|  8.74e-05|
+
+If no value for `k` is supplied, the function returns a list of
+matrices, one for every factorization rank.
+
+``` r
+leukemia_Wlist <- WMatrix(leukemia_nmf_exp)
+class(leukemia_Wlist)
 ```
 
-If no value for `k` is supplied, the function returns a list of optimal 
-matrices, one for every iterated factorization rank.
+    ## [1] "list"
 
-
-```r
-W.list <- WMatrix(leukemia.nmf.exp)
-class(W.list)
+``` r
+length(leukemia_Wlist)
 ```
 
-```
-## [1] "list"
+    ## [1] 3
+
+``` r
+kable(as.data.frame(leukemia_Wlist$k2[1:5, ]))
 ```
 
-```r
-length(W.list)
-```
-
-```
-## [1] 3
-```
-
+|       |         V1|        V2|
+|:------|----------:|---------:|
+| A2M   |  0.0000453|  6.77e-05|
+| AADAC |  0.0000793|  9.02e-05|
+| AARS  |  0.0006768|  1.68e-04|
+| ABAT  |  0.0001170|  1.41e-04|
+| ABCA3 |  0.0000322|  8.74e-05|
 
 ### `FrobError`
 
-Returns a data frame with as many columns as there are iterated factorization 
-ranks and as many rows as there are iterations per factorization rank.
+Returns a data frame with as many columns as there are iterated
+factorization ranks and as many rows as there are iterations per
+factorization rank.
 
-
-```r
-FrobError(leukemia.nmf.exp)
+``` r
+kable(FrobError(leukemia_nmf_exp))
 ```
 
-```
-## DataFrame with 10 rows and 3 columns
-##            2         3         4
-##    <numeric> <numeric> <numeric>
-## 1  0.5583464 0.5139642 0.4641748
-## 2  0.5583473 0.5139693 0.4644978
-## 3  0.5583461 0.5139688 0.4646465
-## 4  0.5583477 0.5139639 0.4644630
-## 5  0.5583457 0.5139707 0.4645478
-## 6  0.5583460 0.5139682 0.4644090
-## 7  0.5583472 0.5139721 0.4644547
-## 8  0.5583457 0.5139675 0.4646729
-## 9  0.5583472 0.5139689 0.4645166
-## 10 0.5583456 0.5139694 0.4646634
-```
+|         k2|         k3|         k4|
+|----------:|----------:|----------:|
+|  0.5338607|  0.4778121|  0.4417868|
+|  0.5342311|  0.4779813|  0.4408565|
+|  0.5338451|  0.4783073|  0.4427480|
+|  0.5338433|  0.4781617|  0.4410060|
+|  0.5336356|  0.4780584|  0.4540046|
+|  0.5335016|  0.4781451|  0.4413026|
+|  0.5334857|  0.4779530|  0.4411095|
+|  0.5335520|  0.4783140|  0.4411363|
+|  0.5336552|  0.4779924|  0.4415452|
+|  0.5335182|  0.4787099|  0.4409682|
 
-## Determine the optimal factorization rank
+Determine the optimal factorization rank
+----------------------------------------
 
-In NMF, Several methods have been described to assess the optimal factorization
-rank. The Bratwurst packages implements some of them. They are computed by 
-applying custom functions which subsequently update the data structure of type
-`nmf.exp`.
+In NMF, Several methods have been described to assess the optimal
+factorization rank. The ButchR package implements some of them:
 
-### Get Frobenius error.
+-   *Frobenius error:* The most important information about the many
+    iterated d ecompositions is the norm of the residual. In NMF this is
+    often called the Frobenius error, as the Frobenius norm may be
+    used.  
+-   *Alexandrov Criterion:* In (Alexandrov et al. 2013) an approach is
+    described in which a modified silhouette criterion is used to
+    estimate the stability across iteration steps for one fixed
+    factorization rank `k`.  
+-   *Cophenetic correlation coefficient*  
+-   *Amari distance*
 
-The most important information about the many iterated decompositions is the
-norm of the residual. In NMF this is often called the Frobenius error, as the
-Frobenius norm may be used.
+The values of the computed factorization metrics can be accessed with
+`OptKStats`:
 
-
-```r
-leukemia.nmf.exp <- computeFrobErrorStats(leukemia.nmf.exp)
-```
-
-### Evaluate silhouette values
-
-In 2013, Alexandrov et al. published an NMF analysis on mutational signatures.
-They used an approach which a modified silhouette criterion is used to estimate 
-the stability across iteration steps for one fixed factorization rank `k`.
-
-
-```r
-leukemia.nmf.exp <- computeSilhoutteWidth(leukemia.nmf.exp)
+``` r
+kable(OptKStats(leukemia_nmf_exp))
 ```
 
-### Cophenetic correlation coefficient plot
-
-
-```r
-leukemia.nmf.exp <- computeCopheneticCoeff(leukemia.nmf.exp)
-```
-
-### Compute amari type distance
-
-
-```r
-leukemia.nmf.exp <- computeAmariDistances(leukemia.nmf.exp)
-```
-
-After having executed all these functions, the values of the computed measures
-can be accessed with `OptKStats`:
-
-
-```r
-OptKStats(leukemia.nmf.exp)
-```
-
-```
-## DataFrame with 3 rows and 9 columns
-##           k       min      mean           sd           cv sumSilWidth
-##   <numeric> <numeric> <numeric>    <numeric>    <numeric>   <numeric>
-## 2         2 0.5583456 0.5583465 7.751192e-07 1.388241e-06    20.00000
-## 3         3 0.5139639 0.5139683 2.577000e-06 5.013928e-06    29.99996
-## 4         4 0.4641748 0.4645046 1.482698e-04 3.191999e-04    39.99228
-##   meanSilWidth copheneticCoeff meanAmariDist
-##      <numeric>       <numeric>     <numeric>
-## 2    0.9999999       0.9999999  2.709082e-08
-## 3    0.9999988       0.9616090  3.969754e-07
-## 4    0.9998071       0.9866591  8.592894e-05
-```
+<table style="width:100%;">
+<colgroup>
+<col style="width: 7%" />
+<col style="width: 2%" />
+<col style="width: 9%" />
+<col style="width: 9%" />
+<col style="width: 9%" />
+<col style="width: 9%" />
+<col style="width: 11%" />
+<col style="width: 12%" />
+<col style="width: 15%" />
+<col style="width: 13%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">rank_id</th>
+<th style="text-align: right;">k</th>
+<th style="text-align: right;">min</th>
+<th style="text-align: right;">mean</th>
+<th style="text-align: right;">sd</th>
+<th style="text-align: right;">cv</th>
+<th style="text-align: right;">sumSilWidth</th>
+<th style="text-align: right;">meanSilWidth</th>
+<th style="text-align: right;">copheneticCoeff</th>
+<th style="text-align: right;">meanAmariDist</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">k2</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0.5334857</td>
+<td style="text-align: right;">0.5337128</td>
+<td style="text-align: right;">0.0002343</td>
+<td style="text-align: right;">0.0004391</td>
+<td style="text-align: right;">19.95919</td>
+<td style="text-align: right;">0.9979595</td>
+<td style="text-align: right;">0.9964766</td>
+<td style="text-align: right;">0.0008694</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">k3</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">0.4778121</td>
+<td style="text-align: right;">0.4781435</td>
+<td style="text-align: right;">0.0002538</td>
+<td style="text-align: right;">0.0005307</td>
+<td style="text-align: right;">29.94162</td>
+<td style="text-align: right;">0.9980541</td>
+<td style="text-align: right;">0.9765375</td>
+<td style="text-align: right;">0.0008432</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">k4</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">0.4408565</td>
+<td style="text-align: right;">0.4426464</td>
+<td style="text-align: right;">0.0040295</td>
+<td style="text-align: right;">0.0091031</td>
+<td style="text-align: right;">37.69052</td>
+<td style="text-align: right;">0.9422630</td>
+<td style="text-align: right;">0.9591708</td>
+<td style="text-align: right;">0.0237371</td>
+</tr>
+</tbody>
+</table>
 
 These quality measures can be displayed together:
 
 ### Generate plots to estimate optimal k
 
-
-```r
-gg.optK <- plotKStats(leukemia.nmf.exp)
-gg.optK
+``` r
+gg_plotKStats(leukemia_nmf_exp)
 ```
 
-![](README_files/figure-html/unnamed-chunk-18-1.png)
+![](README_files/figure-html/kstats-1.png)
 
-### Generate ranked error plot.
-
-It may also be useful to inspect the Frobenius error after ranking. This may 
-give an estimation of the convergence in the parameter space of initial 
-conditions.
-
-
-```r
-gg.rankedFrobError <- plotRankedFrobErrors(leukemia.nmf.exp)
-```
-
-```
-## Warning: `legend.margin` must be specified using `margin()`. For the old
-## behavior use legend.spacing
-```
-
-```r
-gg.rankedFrobError
-```
-
-![](README_files/figure-html/unnamed-chunk-19-1.png)
-
-
-
-## Visualize the matrix H (exposures)
+Visualize the matrix H (exposures)
+----------------------------------
 
 The matrices `H` may be visualized as heatmaps. We can define a meta
 information object and annotate meta data:
 
-
-```r
-entity.colVector <- c("red", "blue")
-names(entity.colVector) <- c("ALL", "AML")
-subtype.colVector <- c("orange", "darkgreen", "blue")
-names(subtype.colVector) <- c("B-cell", "T-cell", "-")
-anno_col <- list(V2 = entity.colVector,
-                 V3 = subtype.colVector)
-heat.anno <- HeatmapAnnotation(df = colData(leukemia.nmf.exp)[, c(2:3)],
-                               col = anno_col)
+``` r
+heat_anno <- HeatmapAnnotation(df = leukemia$annotation[, c("ALL_AML", "Type")],
+                               col = list(ALL_AML = c("ALL" = "grey80", 
+                                                      "AML" = "grey20"),
+                                          Type = c("-" = "white",
+                                                   "B-cell" = "grey80",
+                                                   "T-cell" = "grey20")))
 ```
 
-And now display the matrices `H` with meta data annotation. Bratwurst provides 
-a plotting function to display the matrices `H` with meta data annotation:
+And now display the matrices `H` with meta data annotation:
 
-
-```r
-# Plot Heatmaps for H over all k
-lapply(seq(2, k.max), function(k) {
-  plotHMatrix(leukemia.nmf.exp, k)
-})
+``` r
+for(ki in k_min:k_max) {
+  cat("\n")
+  cat("  \n#### H matrix for k=",  ki, "   \n  ")
+  #plot H matrix
+  tmp_hmatrix <- HMatrix(leukemia_nmf_exp, k = ki)
+  h_heatmap <- Heatmap(tmp_hmatrix,
+                       col = viridis(100),
+                       name = "Exposure",
+                       clustering_distance_columns = 'pearson',
+                       show_column_dend = TRUE,
+                       top_annotation = heat_anno,
+                       show_column_names = FALSE,
+                       show_row_names = FALSE,
+                       cluster_rows = FALSE)
+  print(h_heatmap)
+}
 ```
 
-```
-## [[1]]
-```
+#### H matrix for k= 2
 
-![](README_files/figure-html/unnamed-chunk-21-1.png)
+![](README_files/figure-html/hheatmap-1.png)
 
-```
-## 
-## [[2]]
-```
+#### H matrix for k= 3
 
-![](README_files/figure-html/unnamed-chunk-21-2.png)
+![](README_files/figure-html/hheatmap-2.png)
 
-```
-## 
-## [[3]]
-```
+#### H matrix for k= 4
 
-![](README_files/figure-html/unnamed-chunk-21-3.png)
+![](README_files/figure-html/hheatmap-3.png)
 
-## Feature selection 
+Feature selection
+-----------------
+
 ### Row K-means to determine signature specific features
 
-
-```r
+``` r
 ### Find representative regions.
 # Get W for best K
-leukemia.nmf.exp <- setOptK(leukemia.nmf.exp, 4)
-OptK(leukemia.nmf.exp)
+leukemia_features <- SignatureSpecificFeatures(leukemia_nmf_exp,
+                                               k = 4, 
+                                               return_all_features = TRUE)
+colnames(leukemia_features) <- paste0("Sign.", 1:4)
+kable(head(leukemia_features))
 ```
 
-```
-## [1] 4
-```
-
-```r
-signature.names <- getSignatureNames(leukemia.nmf.exp, OptK(leukemia.nmf.exp))
-signature.names
-```
-
-```
-## [1] "ALL B-cell 0.64\nAML - 0.36" "AML -"                      
-## [3] "ALL T-cell"                  "ALL B-cell"
-```
-
-```r
-FeatureStats(leukemia.nmf.exp)
-```
-
-```
-## DataFrame with 0 rows and 0 columns
-```
-
-```r
-leukemia.nmf.exp <- computeFeatureStats(leukemia.nmf.exp)
-FeatureStats(leukemia.nmf.exp)
-```
-
-```
-## DataFrame with 4951 rows and 7 columns
-##          cluster deltaCenters  deltaMean explainedVar    oddsVar   coefVar
-##      <character>    <numeric>  <numeric>    <numeric>  <numeric> <numeric>
-## 1           1000    0.5598768  40404.983    0.9290739 0.07634068 0.9366928
-## 2           1011    0.3803309   2573.797    0.9388679 0.06511258 0.3902262
-## 3           0101   -0.4294660 -24040.664    0.9588564 0.04290901 0.5927406
-## 4           1000    0.5226433   5657.101    0.9607982 0.04080124 0.8355173
-## 5           1100    0.2919822   3304.288    0.7907449 0.26463040 0.4499437
-## ...          ...          ...        ...          ...        ...       ...
-## 4947        1000    0.3247738  1558.5093    0.9386278 0.06538501 0.4453941
-## 4948        1011    0.3931513 22919.0305    0.8101850 0.23428596 0.4533714
-## 4949        1000    0.4427220 11509.2834    0.8894812 0.12425081 0.6686290
-## 4950        1001    0.2278627   929.7619    0.7930793 0.26090794 0.3449582
-## 4951        1011    0.4895291 13897.9083    0.7588860 0.31772096 0.6473873
-##        meanSil
-##      <numeric>
-## 1    0.5842238
-## 2    0.6015913
-## 3    0.7912017
-## 4    0.6246600
-## 5    0.4495862
-## ...        ...
-## 4947 0.5933313
-## 4948 0.4366444
-## 4949 0.5301540
-## 4950 0.4561943
-## 4951 0.3617552
-```
-
-```r
-# You might want to add additional selection features
-# such as entropy or absolute delta 
-# Entropy
-leukemia.nmf.exp <- computeEntropy4OptK(leukemia.nmf.exp)
-FeatureStats(leukemia.nmf.exp)
-```
-
-```
-## DataFrame with 4951 rows and 8 columns
-##          cluster deltaCenters  deltaMean explainedVar    oddsVar   coefVar
-##      <character>    <numeric>  <numeric>    <numeric>  <numeric> <numeric>
-## 1           1000    0.5598768  40404.983    0.9290739 0.07634068 0.9366928
-## 2           1011    0.3803309   2573.797    0.9388679 0.06511258 0.3902262
-## 3           0101   -0.4294660 -24040.664    0.9588564 0.04290901 0.5927406
-## 4           1000    0.5226433   5657.101    0.9607982 0.04080124 0.8355173
-## 5           1100    0.2919822   3304.288    0.7907449 0.26463040 0.4499437
-## ...          ...          ...        ...          ...        ...       ...
-## 4947        1000    0.3247738  1558.5093    0.9386278 0.06538501 0.4453941
-## 4948        1011    0.3931513 22919.0305    0.8101850 0.23428596 0.4533714
-## 4949        1000    0.4427220 11509.2834    0.8894812 0.12425081 0.6686290
-## 4950        1001    0.2278627   929.7619    0.7930793 0.26090794 0.3449582
-## 4951        1011    0.4895291 13897.9083    0.7588860 0.31772096 0.6473873
-##        meanSil    entropy
-##      <numeric>  <numeric>
-## 1    0.5842238 0.41736287
-## 2    0.6015913 0.09377805
-## 3    0.7912017 0.19862689
-## 4    0.6246600 0.32592530
-## 5    0.4495862 0.10924133
-## ...        ...        ...
-## 4947 0.5933313 0.09745639
-## 4948 0.4366444 0.12369820
-## 4949 0.5301540 0.21847701
-## 4950 0.4561943 0.06351516
-## 4951 0.3617552 0.26069339
-```
-
-```r
-leukemia.nmf.exp <- computeAbsDelta4OptK(leukemia.nmf.exp)
-FeatureStats(leukemia.nmf.exp)
-```
-
-```
-## DataFrame with 4951 rows and 12 columns
-##          cluster deltaCenters  deltaMean explainedVar    oddsVar   coefVar
-##      <character>    <numeric>  <numeric>    <numeric>  <numeric> <numeric>
-## 1           1000    0.5598768  40404.983    0.9290739 0.07634068 0.9366928
-## 2           1011    0.3803309   2573.797    0.9388679 0.06511258 0.3902262
-## 3           0101   -0.4294660 -24040.664    0.9588564 0.04290901 0.5927406
-## 4           1000    0.5226433   5657.101    0.9607982 0.04080124 0.8355173
-## 5           1100    0.2919822   3304.288    0.7907449 0.26463040 0.4499437
-## ...          ...          ...        ...          ...        ...       ...
-## 4947        1000    0.3247738  1558.5093    0.9386278 0.06538501 0.4453941
-## 4948        1011    0.3931513 22919.0305    0.8101850 0.23428596 0.4533714
-## 4949        1000    0.4427220 11509.2834    0.8894812 0.12425081 0.6686290
-## 4950        1001    0.2278627   929.7619    0.7930793 0.26090794 0.3449582
-## 4951        1011    0.4895291 13897.9083    0.7588860 0.31772096 0.6473873
-##        meanSil    entropy absDelta.V1 absDelta.V2 absDelta.V3 absDelta.V4
-##      <numeric>  <numeric>   <numeric>   <numeric>   <numeric>   <numeric>
-## 1    0.5842238 0.41736287   16700.196  -55929.744  -74379.973  -62019.591
-## 2    0.6015913 0.09377805   -4424.995  -10895.600   -6643.628   -6175.400
-## 3    0.7912017 0.19862689  -68083.015  -30868.132  -76178.055  -17230.281
-## 4    0.6246600 0.32592530    1648.302   -8626.609  -10557.755   -9813.338
-## 5    0.4495862 0.10924133   -4115.362   -8767.533  -14313.137  -11786.910
-## ...        ...        ...         ...         ...         ...         ...
-## 4947 0.5933313 0.09745639  -1224.0405   -4621.225   -4470.665   -3931.287
-## 4948 0.4366444 0.12369820 -67440.3287  -93600.108  -39650.117  -36195.695
-## 4949 0.5301540 0.21847701   -472.5316  -23193.018  -27132.367  -20147.910
-## 4950 0.4561943 0.06351516  -3307.7331   -4171.742   -4835.147   -1980.109
-## 4951 0.3617552 0.26069339  -7152.3087  -47534.210  -32293.208  -19769.663
-```
+|       |  Sign.1|  Sign.2|  Sign.3|  Sign.4|
+|:------|-------:|-------:|-------:|-------:|
+| A2M   |       1|       0|       0|       0|
+| AADAC |       0|       0|       0|       1|
+| AARS  |       0|       1|       1|       0|
+| ABAT  |       0|       0|       0|       1|
+| ABCA3 |       1|       0|       0|       1|
+| ABCA4 |       0|       0|       0|       1|
 
 ### Feature visualization
 
+``` r
+# List of signature specific features
+# leukemia_specific <- SignatureSpecificFeatures(leukemia_nmf_exp,
+#                                                k = 4, 
+#                                                return_all_features = FALSE)
 
-```r
-# Plot all possible signature combinations
-plotSignatureFeatures(leukemia.nmf.exp)
+
+leukemia_specific <- rownames(leukemia_features)[rowSums(leukemia_features) == 1]
+leukemia_Wspecific <- WMatrix(leukemia_nmf_exp, k = 4)[leukemia_specific, ]
+colnames(leukemia_Wspecific) <- paste0("Sign.", 1:4)
+
+# normalize exposure score in W matrix across rows
+leukemia_Wspecific <- as.data.frame(leukemia_Wspecific) %>% 
+  rownames_to_column("GeneID") %>% 
+  pivot_longer(-GeneID, names_to = "SignatureID", values_to = "exposure") %>% 
+  group_by(GeneID) %>% 
+  mutate(exposure = exposure/max(exposure)) %>% 
+  pivot_wider(id_cols = GeneID, names_from = "SignatureID", values_from = "exposure") %>% 
+  column_to_rownames("GeneID") %>% 
+  as.matrix()
+  
+
+
+# Display selected features on W matrix
+w_heatmap <- Heatmap(leukemia_Wspecific,
+                     col = inferno(100),
+                     name = "W matrix",
+                     clustering_distance_columns = 'pearson',
+                     show_column_dend = TRUE,
+                     show_column_names = TRUE,
+                     show_row_names = FALSE,
+                     cluster_rows = TRUE,
+                     cluster_columns = FALSE)
+w_heatmap
 ```
 
-```
-## Warning: `legend.margin` must be specified using `margin()`. For the old
-## behavior use legend.spacing
+![](README_files/figure-html/wspecific-1.png)
 
-## Warning: `legend.margin` must be specified using `margin()`. For the old
-## behavior use legend.spacing
-```
 
-```
-## Warning: `panel.margin` is deprecated. Please use `panel.spacing` property
-## instead
-```
+# References
+==========
 
-![](README_files/figure-html/unnamed-chunk-23-1.png)
+Alexandrov, LB, S Nik-Zainal, DC Wedge, SA Aparicio, S Behjati, AV
+Biankin, GR Bignell, et al. 2013. “Signatures of Mutational Processes in
+Cancer.” *Nature*. Nature Publishing Group.
 
-```r
-# Plot only signature combinations
-plotSignatureFeatures(leukemia.nmf.exp, sig.combs = F)
-```
+Brunet, Jean-Philippe, Pablo Tamayo, Todd R. Golub, and Jill P. Mesirov.
+2003. “Metagenes and Molecular Pattern Discovery Using Matrix
+Factorization.” *PNAS*. PNAS.
 
-```
-## Warning: `legend.margin` must be specified using `margin()`. For the old
-## behavior use legend.spacing
-```
+Gaujoux, Renaud, and Cathal Seoighe. 2010. “A Flexible R Package for
+Nonnegative Matrix Factorization.” *BMC Bioinformatics*. BMC.
 
-```
-## Warning: `legend.margin` must be specified using `margin()`. For the old
-## behavior use legend.spacing
-```
+Lee, Daniel D., and Sebastian Seung. 1999. “Learning the Parts of
+Objects by Non-Negative Matrix Factorization.” *Nature*. Nature
+Publishing Group.
 
-```
-## Warning: `panel.margin` is deprecated. Please use `panel.spacing` property
-## instead
-```
-
-![](README_files/figure-html/unnamed-chunk-23-2.png)
-
-```r
-# Try to display selected features on W matrix
-sig.id <- "1000"
-m <- WMatrix(leukemia.nmf.exp, k = OptK(leukemia.nmf.exp))[
-  FeatureStats(leukemia.nmf.exp)[, 1] == sig.id, ]
-m <- m[order(m[, 1]), ]
-c <- getColorMap(m)
-#m <- t(apply(m, 1, function(r) (r - mean(r))/sd(r)))
-
-Heatmap(m, col = c, cluster_rows = F, cluster_columns = F)
-```
-
-![](README_files/figure-html/unnamed-chunk-23-3.png)
-
+Mejia-Roa, Edgardo, Daniel Tabas-Madrid, Javier Setoain, Carlos Garcia,
+Francisco Tirado, and Alberto Pascual-Montano. 2015. “NMF-mGPU:
+Non-Negative Matrix Factorization on Multi-GPU Systems.” *BMC
+Bioinformatics*. BMC.

@@ -7,6 +7,8 @@ vignette: >
   %\VignetteEncoding{UTF-8}  
   %\VignetteEngine{knitr::rmarkdown}
 output:
+  md_document:
+    variant: markdown_github
   BiocStyle::html_document:
     toc: yes
 references:
@@ -478,7 +480,7 @@ These quality measures can be displayed together:
 
 ### Generate plots to estimate optimal k
 
-```{r, warning = FALSE, message = FALSE}
+```{r kstats, warning = FALSE, message = FALSE}
 gg_plotKStats(leukemia_nmf_exp)
 ```
 
@@ -500,7 +502,7 @@ heat_anno <- HeatmapAnnotation(df = leukemia$annotation[, c("ALL_AML", "Type")],
 And now display the matrices `H` with meta data annotation:
 
 
-```{r results='asis'}
+```{r hheatmap, results='asis'}
 
 for(ki in k_min:k_max) {
   cat("\n")
@@ -538,7 +540,7 @@ kable(head(leukemia_features))
 
 ### Feature visualization
 
-```{r}
+```{r wspecific}
 # List of signature specific features
 # leukemia_specific <- SignatureSpecificFeatures(leukemia_nmf_exp,
 #                                                k = 4, 
@@ -574,7 +576,10 @@ w_heatmap <- Heatmap(leukemia_Wspecific,
 w_heatmap
 
 
+
 ```
 
-
+```{r eval=FALSE}
+Sys.sleep(60)
+```
 # References
