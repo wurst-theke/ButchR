@@ -10,12 +10,12 @@ python:
   - "3.7"
 
 before_install:
-  - sudo add-apt-repository ppa:deadsnakes/ppa
-  - sudo apt-get update
-  - sudo apt install python3.7
+  - sudo apt-get install -y python3
   - python -V
-  #- sudo apt-get install -y python3.7
   - pip install numpy tensorflow-cpu==2.2.0
+  # - sudo add-apt-repository ppa:deadsnakes/ppa
+  # - sudo apt-get update
+  # - sudo apt install python3.7
 
   #- pip install --upgrade pip setuptools
 
