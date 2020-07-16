@@ -53,6 +53,11 @@ env:
 r_packages:
    - testthat
    - reticulate
+   - knitr
+   - viridis
+   - tidyverse
+bioc_packages:
+   - BiocStyle
 
 # do not build vignettes...takes too long and times out on travis
 r_build_args: --no-build-vignettes --no-manual
