@@ -17,7 +17,9 @@ Imports:
     nnls,
     riverplot,
     caret,
-    digest
+    digest,
+    circlize,
+    RColorBrewer
 Depends:
     dplyr,
     reticulate

@@ -6,6 +6,9 @@ sudo: required
 dist: xenial
 cache: packages
 
+r:
+  - release
+
 python:
   - "3.7"
 
