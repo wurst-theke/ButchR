@@ -17,6 +17,15 @@ NULL
 #' @export
 #'
 #' @examples
+#' \dontrun{
+#' join_NMF(input_data   = input_data,
+#'          HMatrix      = shared_HMatrix_list,
+#'          WMatrix_vs   = view_specific_WMatrix_list,
+#'          FrobError    = frob_errors,
+#'          OptKStats    = OptKStats,
+#'          OptK         = OptK,
+#'          SignFeatures = SignFeatures)
+#' }
 join_NMF <- setClass(
   Class = "join_NMF",
   slots = list(input_data   = "list",
@@ -64,11 +73,13 @@ setMethod("show",
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' # For join_NMF objects:
 #' HMatrix(jnmf_exp)
 #' HMatrix(jnmf_exp, k = 2)
 #' lapply(HMatrix(jnmf_exp, k = 2), head)
 #' HMatrix(jnmf_exp, k = 2, view_id = "atac")
+#' }
 setMethod("HMatrix",
           "join_NMF",
           function(x, k = NULL, ...) {
@@ -104,12 +115,13 @@ setMethod("HMatrix",
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' # For join_NMF objects:
 #' WMatrix(jnmf_exp)
 #' WMatrix(jnmf_exp, k = 2)
 #' lapply(WMatrix(jnmf_exp, k = 2), head)
 #' WMatrix(jnmf_exp, k = 2, view_id = "atac")
-#'
+#' }
 setMethod("WMatrix",
           "join_NMF",
           function(x, k = NULL, view_id = NULL, ...) {
@@ -158,7 +170,7 @@ setMethod("WMatrix",
 # Return Frobenius Error from all initializations
 
 #' @rdname FrobError-methods
-#' @aliases SignatureSpecificFeatures,ANY-method
+#' @aliases FrobError,ANY-method
 #' @export
 #'
 setMethod("FrobError", "join_NMF", function(x, ...) x@FrobError)
@@ -175,6 +187,7 @@ setMethod("FrobError", "join_NMF", function(x, ...) x@FrobError)
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' # For join_NMF objects:
 #' SignatureSpecificFeatures(jnmf_exp)
 #' SignatureSpecificFeatures(jnmf_exp)
@@ -183,6 +196,7 @@ setMethod("FrobError", "join_NMF", function(x, ...) x@FrobError)
 #' SignatureSpecificFeatures(jnmf_exp, k = 3, return_all_features = TRUE)
 #' SignatureSpecificFeatures(jnmf_exp, k = 3, return_all_features = TRUE, view_id = "atac")
 #' SignatureSpecificFeatures(jnmf_exp, return_all_features = TRUE, view_id = "atac")
+#' }
 setMethod("SignatureSpecificFeatures",
           "join_NMF",
           function(x, k = NULL, return_all_features = FALSE, view_id = NULL, ...){

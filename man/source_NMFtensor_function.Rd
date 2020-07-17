@@ -17,7 +17,8 @@ Python functions to run several NMF implementations on tensorflow
 using the reticulate framework, uses a non-negative matrix as input
 }
 \examples{
-x <- source_NMFtensor_function("NMF")
+\dontrun{
+x <- ButchR:::source_NMFtensor_function("NMF")
 x
-# Bratwurst:::source_NMFtensor_function("NMF")
+}
 }

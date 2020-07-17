@@ -36,6 +36,7 @@ Computes integrative NMF on tensorflow using the reticulate framework,
 uses a list of non-negative matrices as input
 }
 \examples{
+\dontrun{
 inmf_exp <- run_iNMF_tensor(list(a = matrix(1:1000, ncol = 10),
                                     b = matrix(1:1000, ncol = 10)),
                                ranks = 2:5,
@@ -43,4 +44,5 @@ inmf_exp <- run_iNMF_tensor(list(a = matrix(1:1000, ncol = 10),
                                iterations            = 10^4,
                                convergence_threshold = 40)
 inmf_exp
+}
 }

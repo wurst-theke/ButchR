@@ -20,7 +20,13 @@
 #' @export
 #'
 #' @examples
+#' \dontrun{
+#' data("leukemia")
+#' nmf_exp <- runNMFtensor_lite(leukemia$matrix, ranks = 2:10,
+#' method = "NMF",
+#' n_initializations = 2)
 #' gg_plotKStats(nmf_exp)
+#' }
 gg_plotKStats <- function(nmf_exp,
                           plot_vars = c("FrobError", "cv", "sumSilWidth",
                                         "meanSilWidth", "copheneticCoeff",
@@ -54,8 +60,14 @@ gg_plotKStats <- function(nmf_exp,
 #' @export
 #'
 #' @examples
+#' \dontrun{
+#' data("leukemia")
+#' nmf_exp <- runNMFtensor_lite(leukemia$matrix, ranks = 2:10,
+#' method = "NMF",
+#' n_initializations = 2)
 #' plot(generateRiverplot(nmf_exp))
 #' plot(generateRiverplot(nmf_exp, ranks = 2:5))
+#' }
 setMethod("generateRiverplot",
           "nmfExperiment_lite",
           function(nmf_exp, edges.cutoff = 0,

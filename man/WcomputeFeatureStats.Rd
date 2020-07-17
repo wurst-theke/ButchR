@@ -13,5 +13,7 @@ WcomputeFeatureStats(W)
 Computes Signature specific features
 }
 \examples{
+\dontrun{
 WcomputeFeatureStats(W)
+}
 }

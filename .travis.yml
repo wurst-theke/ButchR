@@ -12,6 +12,13 @@ r:
 python:
   - "3.7"
 
+before_install:
+  - sudo apt-get install python3-pip
+  - sudo pip3 install virtualenv
+  - virtualenv -p python3 pt
+  - source pt/bin/activate
+  - pip install numpy tensorflow-cpu==2.2.0
+  #- sudo apt-get install -y python3
 
 env:
  global:

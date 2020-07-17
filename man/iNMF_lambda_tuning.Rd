@@ -73,6 +73,7 @@ The optimal lambda usually is the first lambda in which
 Where c is a constant >= 2.
 }
 \examples{
+\dontrun{
 # Compare the residual across multiple lambdas:
 iNMF_lambda_tuning(matrix_list           = norm_mat_list,
                    lambdas               = seq(0, 1, 0.1),
@@ -94,4 +95,5 @@ inmf_tune <- iNMF_lambda_tuning(matrix_list           = norm_mat_list,
                                 convergence_threshold = 40)
 min(inmf_tune$residuals$lambda[inmf_tune$residuals$best_lambda])
 inmf_tune$iNMF$lambda_0.2
+}
 }

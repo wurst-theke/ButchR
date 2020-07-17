@@ -16,5 +16,11 @@ optimal K Statistics
 Return optimal factorization rank (K) Statistics
 }
 \examples{
+\dontrun{
+data("leukemia")
+nmf_exp <- runNMFtensor_lite(leukemia$matrix, ranks = 2:10,
+method = "NMF",
+n_initializations = 2)
 OptKStats(nmf_exp)
+}
 }

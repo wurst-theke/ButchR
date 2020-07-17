@@ -33,20 +33,27 @@ list of W-Matrices or a W-Matrix for the indicaded rank.
 Return a list of W-Matrices or a W-Matrix for the indicaded rank
 }
 \examples{
+data("leukemia")
+nmf_exp <- runNMFtensor_lite(leukemia$matrix, ranks = 2,
+method = "NMF",
+n_initializations = 2)
 WMatrix(nmf_exp)
 WMatrix(nmf_exp, k = 2)
 # For nmfExperiment_lite objects:
 WMatrix(nmf_exp)
 WMatrix(nmf_exp, k = 2)
+\dontrun{
 # For integrative_NMF objects:
 WMatrix(inmf_exp)
 WMatrix(inmf_exp, k = 2)
 lapply(WMatrix(inmf_exp, k = 2), head)
 WMatrix(inmf_exp, k = 2, view_id = "atac")
+}
+\dontrun{
 # For join_NMF objects:
 WMatrix(jnmf_exp)
 WMatrix(jnmf_exp, k = 2)
 lapply(WMatrix(jnmf_exp, k = 2), head)
 WMatrix(jnmf_exp, k = 2, view_id = "atac")
-
+}
 }

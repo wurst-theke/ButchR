@@ -23,3 +23,14 @@ Join NMF Class
 \item{\code{OptKStats}}{DataFrame.}
 }}
 
+\examples{
+\dontrun{
+join_NMF(input_data   = input_data,
+         HMatrix      = shared_HMatrix_list,
+         WMatrix_vs   = view_specific_WMatrix_list,
+         FrobError    = frob_errors,
+         OptKStats    = OptKStats,
+         OptK         = OptK,
+         SignFeatures = SignFeatures)
+}
+}

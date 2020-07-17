@@ -16,5 +16,11 @@ numeric - optimal K
 Return optimal K
 }
 \examples{
+\dontrun{
+data("leukemia")
+nmf_exp <- runNMFtensor_lite(leukemia$matrix, ranks = 2:10,
+method = "NMF",
+n_initializations = 10)
 OptK(nmf_exp)
+}
 }

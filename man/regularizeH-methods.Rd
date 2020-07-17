@@ -23,5 +23,18 @@ mutiplied with the columns of W in order to keep the matrix product W*H
 constant.
 }
 \examples{
+\dontrun{
+data("leukemia")
+nmf_exp <- runNMFtensor_lite(leukemia$matrix, ranks = 2,
+method = "NMF",
+n_initializations = 2)
 regularizeH(nmf_exp)
+}
+\dontrun{
+data("leukemia")
+nmf_exp <- runNMFtensor_lite(leukemia$matrix, ranks = 2:10,
+method = "NMF",
+n_initializations = 10)
+regularizeH(nmf_exp)
+}
 }

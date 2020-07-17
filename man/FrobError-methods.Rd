@@ -5,7 +5,7 @@
 \name{FrobError}
 \alias{FrobError}
 \alias{FrobError,nmfExperiment_lite-method}
-\alias{SignatureSpecificFeatures,ANY-method}
+\alias{FrobError,ANY-method}
 \alias{FrobError,integrative_NMF-method}
 \alias{FrobError,join_NMF-method}
 \title{Frobenius error for all factorization ranks}
@@ -30,5 +30,16 @@ Returns a data.frame with factorization ranks in the columns,
 and the Frobenius error for every NMF initialization in the rows.
 }
 \examples{
+data("leukemia")
+nmf_exp <- runNMFtensor_lite(leukemia$matrix, ranks = 2,
+method = "NMF",
+n_initializations = 2)
 FrobError(nmf_exp)
+\dontrun{
+data("leukemia")
+nmf_exp <- runNMFtensor_lite(leukemia$matrix, ranks = 2:10,
+method = "NMF",
+n_initializations = 2)
+FrobError(nmf_exp)
+}
 }

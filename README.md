@@ -387,7 +387,7 @@ These quality measures can be displayed together:
 gg_plotKStats(leukemia_nmf_exp)
 ```
 
-![](README_files/figure-html/kstats-1.png)
+![](vignettes/kstats-1.png)
 
 Visualize the matrix H (exposures)
 ----------------------------------
@@ -427,15 +427,15 @@ for(ki in k_min:k_max) {
 
 #### H matrix for k= 2
 
-![](README_files/figure-html/hheatmap-1.png)
+![](vignettes/hheatmap-1.png)
 
 #### H matrix for k= 3
 
-![](README_files/figure-html/hheatmap-2.png)
+![](vignettes/hheatmap-2.png)
 
 #### H matrix for k= 4
 
-![](README_files/figure-html/hheatmap-3.png)
+![](vignettes/hheatmap-3.png)
 
 Feature selection
 -----------------
@@ -499,7 +499,7 @@ w_heatmap <- Heatmap(leukemia_Wspecific,
 w_heatmap
 ```
 
-![](README_files/figure-html/wspecific-1.png)
+![](vignettes/wspecific-1.png)
 
 
 # References

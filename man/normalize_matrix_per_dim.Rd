@@ -18,5 +18,11 @@ matrix normalized by columns, colsum == 1.
 Normalize matrix by columns
 }
 \examples{
+\dontrun{
+data("leukemia")
+nmf_exp <- runNMFtensor_lite(leukemia$matrix, ranks = 2:10,
+method = "NMF",
+n_initializations = 10)
 normalize_matrix_per_dim(WMatrix(nmf_exp, k=2), 2)
+}
 }

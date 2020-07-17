@@ -35,6 +35,7 @@ Computes join NMF on tensorflow using the reticulate framework,
 uses a list of non-negative matrices as input
 }
 \examples{
+\dontrun{
 jnmf_exp <- run_joinNMF_tensor(list(a = matrix(1:1000, ncol = 10),
                                     b = matrix(1:1000, ncol = 10)),
                                ranks = 2:5,
@@ -42,4 +43,5 @@ jnmf_exp <- run_joinNMF_tensor(list(a = matrix(1:1000, ncol = 10),
                                iterations            = 10^4,
                                convergence_threshold = 40)
 jnmf_exp
+}
 }

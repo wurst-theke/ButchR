@@ -12,6 +12,10 @@
 #' @rdname FrobError-methods
 #' @exportMethod FrobError
 #' @examples
+#' data("leukemia")
+#' nmf_exp <- runNMFtensor_lite(leukemia$matrix, ranks = 2,
+#' method = "NMF",
+#' n_initializations = 2)
 #' FrobError(nmf_exp)
 setGeneric("FrobError", function(x, ...) standardGeneric("FrobError"))
 
@@ -52,6 +56,10 @@ setGeneric("setWMatrixList", function(nmfExperiment, WMatrixList)
 #' @rdname HMatrix-methods
 #' @exportMethod HMatrix
 #' @examples
+#' data("leukemia")
+#' nmf_exp <- runNMFtensor_lite(leukemia$matrix, ranks = 2,
+#' method = "NMF",
+#' n_initializations = 2)
 #' HMatrix(nmf_exp)
 #' HMatrix(nmf_exp, k = 2)
 setGeneric("HMatrix", function(x, k = NULL, ...)
@@ -71,6 +79,10 @@ setGeneric("HMatrix", function(x, k = NULL, ...)
 #' @rdname WMatrix-methods
 #' @exportMethod WMatrix
 #' @examples
+#' data("leukemia")
+#' nmf_exp <- runNMFtensor_lite(leukemia$matrix, ranks = 2,
+#' method = "NMF",
+#' n_initializations = 2)
 #' WMatrix(nmf_exp)
 #' WMatrix(nmf_exp, k = 2)
 setGeneric("WMatrix", function(x, k = NULL, ...) standardGeneric("WMatrix"))
@@ -126,9 +138,14 @@ setGeneric("setFeatureStats", function(nmfExperiment, FeatureStats)
 #' @rdname SignatureSpecificFeatures-methods
 #' @exportMethod SignatureSpecificFeatures
 #' @examples
+#' data("leukemia")
+#' nmf_exp <- runNMFtensor_lite(leukemia$matrix, ranks = 3,
+#'                              method = "NMF",
+#'                              n_initializations = 2,
+#'                              extract_features = TRUE)
 #' SignatureSpecificFeatures(nmf_exp)
-#' SignatureSpecificFeatures(nmf_exp, k = 2)
-#' SignatureSpecificFeatures(nmf_exp, k = 2, return_all_features = TRUE)
+#' SignatureSpecificFeatures(nmf_exp, k = 3)
+#' SignatureSpecificFeatures(nmf_exp, k = 3, return_all_features = TRUE)
 setGeneric("SignatureSpecificFeatures",
            function(x, k = NULL, return_all_features = FALSE, ...)
              standardGeneric("SignatureSpecificFeatures"))
@@ -157,6 +174,10 @@ setGeneric("setSignatureSpecificFeatures",
 #' @rdname normalizeW-methods
 #'
 #' @examples
+#' data("leukemia")
+#' nmf_exp <- runNMFtensor_lite(leukemia$matrix, ranks = 2,
+#' method = "NMF",
+#' n_initializations = 2)
 #' normalizeW(nmf_exp)
 setGeneric("normalizeW", function(nmf_exp, ...) standardGeneric("normalizeW"))
 
@@ -174,6 +195,10 @@ setGeneric("normalizeW", function(nmf_exp, ...) standardGeneric("normalizeW"))
 #' @rdname normalizeH-methods
 #'
 #' @examples
+#' data("leukemia")
+#' nmf_exp <- runNMFtensor_lite(leukemia$matrix, ranks = 2,
+#' method = "NMF",
+#' n_initializations = 2)
 #' normalizeH(nmf_exp)
 setGeneric("normalizeH", function(nmf_exp, ...) standardGeneric("normalizeH"))
 
@@ -192,7 +217,13 @@ setGeneric("normalizeH", function(nmf_exp, ...) standardGeneric("normalizeH"))
 #' @rdname regularizeH-methods
 #'
 #' @examples
+#' \dontrun{
+#' data("leukemia")
+#' nmf_exp <- runNMFtensor_lite(leukemia$matrix, ranks = 2,
+#' method = "NMF",
+#' n_initializations = 2)
 #' regularizeH(nmf_exp)
+#' }
 setGeneric("regularizeH", function(nmf_exp, ...) standardGeneric("regularizeH"))
 
 
@@ -216,6 +247,9 @@ setGeneric("regularizeH", function(nmf_exp, ...) standardGeneric("regularizeH"))
 #' @docType methods
 #' @rdname generateRiverplot-methods
 #'
-#' @examples plt <- generateRiverplot(nmf_exp, edges.cutoff = 0.2)
+#' @examples
+#' \dontrun{
+#' plt <- generateRiverplot(nmf_exp, edges.cutoff = 0.2)
 #' plot(plt, plot_area = 1, yscale = 0.6, nodewidth = 0.5)
+#' }
 setGeneric("generateRiverplot", function(nmf_exp, ...) standardGeneric("generateRiverplot"))

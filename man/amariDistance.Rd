@@ -16,6 +16,11 @@ The amari type distance of matrix.A & matrix.B according
 \description{
 Compute amari type distance between two matrices
 }
+\examples{
+\dontrun{
+amariDistance(WMatrix_list_a, WMatrix_list_b)
+}
+}
 \references{
 \url{http://www.pnas.org/content/113/16/4290.long}
 }

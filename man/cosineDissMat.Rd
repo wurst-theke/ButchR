@@ -7,11 +7,16 @@
 cosineDissMat(in.matrix, in.dimension = 2)
 }
 \arguments{
-\item{in.dimension}{}
-}
-\value{
+\item{in.matrix}{concat_matrix a concatenated W matrix across multiple initializations}
 
+\item{in.dimension}{factorization rank}
 }
 \description{
 Create distance matrix with cosine similarity with matrix operations
+}
+\examples{
+\dontrun{
+# concat_matrix a concatenated W matrix across multiple initializations
+cosineDissMat(as.matrix(concat_matrix))
+}
 }

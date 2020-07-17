@@ -17,6 +17,7 @@ NULL
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' nmfExperiment_lite(input_matrix = input_matrix,
 #'                    WMatrix      = lapply(complete_eval, "[[" , "W"),
 #'                    HMatrix      = lapply(complete_eval, "[[" , "H"),
@@ -24,6 +25,7 @@ NULL
 #'                    OptKStats    = OptKStats,
 #'                    OptK         = OptK,
 #'                    SignFeatures = SignFeatures)
+#' }
 nmfExperiment_lite <- setClass(
   Class = "nmfExperiment_lite",
   slots = list(input_matrix = "list",
@@ -65,7 +67,7 @@ setMethod("show",
 
           }
 )
-#nmf_exp
+
 #------------------------------------------------------------------------------#
 #                             H and W matrices                                 #
 #------------------------------------------------------------------------------#
@@ -147,14 +149,21 @@ setMethod("WMatrix",
 # Return Frobenius Error from all initializations
 
 #' @rdname FrobError-methods
-#' @aliases SignatureSpecificFeatures,ANY-method
+#' @aliases FrobError,ANY-method
 #' @export
 #'
+#' @examples
+#' \dontrun{
+#' data("leukemia")
+#' nmf_exp <- runNMFtensor_lite(leukemia$matrix, ranks = 2:10,
+#' method = "NMF",
+#' n_initializations = 2)
+#' FrobError(nmf_exp)
+#' }
 setMethod("FrobError", "nmfExperiment_lite", function(x, ...) x@FrobError)
 
 
 #### Optimal K Statistics
-# Getter
 #' Return optimal factorization rank (K) Statistics
 #'
 #' @param x an nmfExperiment_lite object
@@ -163,11 +172,16 @@ setMethod("FrobError", "nmfExperiment_lite", function(x, ...) x@FrobError)
 #' @export
 #'
 #' @examples
+#' \dontrun{
+#' data("leukemia")
+#' nmf_exp <- runNMFtensor_lite(leukemia$matrix, ranks = 2:10,
+#' method = "NMF",
+#' n_initializations = 2)
 #' OptKStats(nmf_exp)
+#' }
 setMethod("OptKStats", "nmfExperiment_lite", function(x, ...) x@OptKStats)
 
 #### Optimal K
-# Getter
 #' Return optimal K
 #'
 #' @param x an nmfExperiment_lite object
@@ -176,7 +190,13 @@ setMethod("OptKStats", "nmfExperiment_lite", function(x, ...) x@OptKStats)
 #' @export
 #'
 #' @examples
+#' \dontrun{
+#' data("leukemia")
+#' nmf_exp <- runNMFtensor_lite(leukemia$matrix, ranks = 2:10,
+#' method = "NMF",
+#' n_initializations = 10)
 #' OptK(nmf_exp)
+#' }
 setMethod("OptK", "nmfExperiment_lite", function(x, ...) x@OptK)
 
 #------------------------------------------------------------------------------#
@@ -189,7 +209,13 @@ setMethod("OptK", "nmfExperiment_lite", function(x, ...) x@OptK)
 #' @return matrix normalized by columns, colsum == 1.
 #'
 #' @examples
+#' \dontrun{
+#' data("leukemia")
+#' nmf_exp <- runNMFtensor_lite(leukemia$matrix, ranks = 2:10,
+#' method = "NMF",
+#' n_initializations = 10)
 #' normalize_matrix_per_dim(WMatrix(nmf_exp, k=2), 2)
+#' }
 normalize_matrix_per_dim <- function (in_matrix, in_dimension) {
   if (in_dimension == 1) {
     choice_ind <- which(rowSums(in_matrix) > 0)
@@ -217,6 +243,14 @@ normalize_matrix_per_dim <- function (in_matrix, in_dimension) {
 #'
 #' @export
 #'
+#' @examples
+#' \dontrun{
+#' data("leukemia")
+#' nmf_exp <- runNMFtensor_lite(leukemia$matrix, ranks = 2:10,
+#' method = "NMF",
+#' n_initializations = 10)
+#' normalizeW(nmf_exp)
+#' }
 setMethod("normalizeW",
           "nmfExperiment_lite",
           function(nmf_exp){
@@ -246,6 +280,14 @@ setMethod("normalizeW",
 #'
 #' @export
 #'
+#' @examples
+#' \dontrun{
+#' data("leukemia")
+#' nmf_exp <- runNMFtensor_lite(leukemia$matrix, ranks = 2:10,
+#' method = "NMF",
+#' n_initializations = 10)
+#' normalizeH(nmf_exp)
+#' }
 setMethod("normalizeH",
           "nmfExperiment_lite",
           function(nmf_exp){
@@ -275,6 +317,14 @@ setMethod("normalizeH",
 #'
 #' @export
 #'
+#' @examples
+#' \dontrun{
+#' data("leukemia")
+#' nmf_exp <- runNMFtensor_lite(leukemia$matrix, ranks = 2:10,
+#' method = "NMF",
+#' n_initializations = 10)
+#' regularizeH(nmf_exp)
+#' }
 setMethod("regularizeH",
           "nmfExperiment_lite",
           function(nmf_exp){
@@ -308,11 +358,13 @@ setMethod("regularizeH",
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' # For nmfExperiment_lite objects:
 #' SignatureSpecificFeatures(nmf_exp)
 #' lapply(SignatureSpecificFeatures(nmf_exp), function(x) sapply(x, length))
 #' SignatureSpecificFeatures(nmf_exp, k = 3)
 #' SignatureSpecificFeatures(nmf_exp, k = 3, return_all_features = TRUE)
+#' }
 setMethod("SignatureSpecificFeatures",
           "nmfExperiment_lite",
           function(x, k = NULL, return_all_features = FALSE, ...){

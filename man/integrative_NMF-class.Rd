@@ -25,3 +25,10 @@ Integrative NMF Class
 \item{\code{OptKStats}}{DataFrame.}
 }}
 
+\examples{
+\dontrun{
+integrative_NMF(input_data   = input_data,
+HMatrix      = shared_HMatrix_list,
+HMatrix_vs   = view_specific_HMatrix_list,
+}
+}

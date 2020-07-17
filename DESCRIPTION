@@ -19,6 +19,8 @@ Imports:
     caret,
     digest,
     circlize,
+    tidyr,
+    cluster,
     RColorBrewer
 Depends:
     dplyr,
@@ -29,6 +31,7 @@ Description: NMF implementation using tensorflow and helper functions to select 
 License: GPLv3
 RoxygenNote: 7.1.1
 Collate: 
+    'data.R'
     'generics.R'
     'nmfExperiment-class_lite.R'
     'integrativeNMF-class.R'
@@ -37,6 +40,5 @@ Collate:
     'joinNMF-class.R'
     'joinNMF_functions.R'
     'nmf_functions_lite.R'
-    'plot_functions.R'
     'plot_functions_lite.R'
     'preprocessing_functions.R'

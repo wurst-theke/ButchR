@@ -7,10 +7,10 @@ vignette: >
   %\VignetteEncoding{UTF-8}  
   %\VignetteEngine{knitr::rmarkdown}
 output:
-  md_document:
-    variant: markdown_github
   BiocStyle::html_document:
     toc: yes
+  #md_document:
+  #  variant: markdown_github
 references:
 - author:
   - family: Alexandrov

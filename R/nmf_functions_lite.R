@@ -10,8 +10,8 @@ np <- NULL
 
 }
 
-# Copyright © 2015-2020  The Bratwurst package contributors
-# This file is part of the Bratwurst package. The Bratwurst package is licenced
+# Copyright © 2015-2020  The ButchR package contributors
+# This file is part of the ButchR package. The ButchR package is licenced
 # under GPL-3
 
 #------------------------------------------------------------------------------#
@@ -28,9 +28,10 @@ np <- NULL
 #'
 #'
 #' @examples
-#' x <- source_NMFtensor_function("NMF")
+#' \dontrun{
+#' x <- ButchR:::source_NMFtensor_function("NMF")
 #' x
-#' # Bratwurst:::source_NMFtensor_function("NMF")
+#' }
 source_NMFtensor_function <- function(method) {
   NMF_methods_list <- list(NMF      = c("nmf_tensor_lite", "NMF_tensor_py"),
                            GRNMF_SC = c("nmf_tensor_regularized_lite", "NMF_tensor_py"),
@@ -224,7 +225,6 @@ runNMFtensor_lite <- function (X,
 #'
 #' @param complete_eval internal object return after computing NMF with tensorflow
 #'
-#' @examples
 compute_OptKStats_NMF <- function(k_eval, k) {
   #----------------------------------------------------------------------------#
   #                            Frobenius error stats                           #
@@ -307,7 +307,9 @@ compute_OptKStats_NMF <- function(k_eval, k) {
 #' @param W W matrix with more than 2 signatures
 #'
 #' @examples
+#' \dontrun{
 #' WcomputeFeatureStats(W)
+#' }
 WcomputeFeatureStats <- function(W) {
   #----------------------------------------------------------------------------#
   #    find features with no contribution and assign names if not present      #
@@ -344,13 +346,14 @@ WcomputeFeatureStats <- function(W) {
 
 #' Create distance matrix with cosine similarity with matrix operations
 #'
-#' @param in.matrix
-#' @param in.dimension
-#'
-#' @return
-#' @export
+#' @param in.matrix concat_matrix a concatenated W matrix across multiple initializations
+#' @param in.dimension factorization rank
 #'
 #' @examples
+#' \dontrun{
+#' # concat_matrix a concatenated W matrix across multiple initializations
+#' cosineDissMat(as.matrix(concat_matrix))
+#' }
 cosineDissMat <- function(in.matrix, in.dimension=2){
   if(in.dimension == 1) in.matrix <- t(in.matrix)
   squaredVectorSum <- apply(in.matrix, 2, function(m) { sqrt(sum(m * m)) })
@@ -371,9 +374,10 @@ cosineDissMat <- function(in.matrix, in.dimension=2){
 #'
 #' @references \url{http://www.pnas.org/content/113/16/4290.long}
 #'
-#' @export
-#'
 #' @examples
+#' \dontrun{
+#' amariDistance(WMatrix_list_a, WMatrix_list_b)
+#' }
 amariDistance <- function(matrix.A, matrix.B) {
   K <- dim(matrix.A)[2]
   C <- cor(matrix.A, matrix.B)

@@ -24,6 +24,7 @@ NMF Experiment Class lite
 }}
 
 \examples{
+\dontrun{
 nmfExperiment_lite(input_matrix = input_matrix,
                    WMatrix      = lapply(complete_eval, "[[" , "W"),
                    HMatrix      = lapply(complete_eval, "[[" , "H"),
@@ -31,4 +32,5 @@ nmfExperiment_lite(input_matrix = input_matrix,
                    OptKStats    = OptKStats,
                    OptK         = OptK,
                    SignFeatures = SignFeatures)
+}
 }

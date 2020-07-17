@@ -19,6 +19,7 @@ NULL
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' jnmf_exp <- run_joinNMF_tensor(list(a = matrix(1:1000, ncol = 10),
 #'                                     b = matrix(1:1000, ncol = 10)),
 #'                                ranks = 2:5,
@@ -26,6 +27,7 @@ NULL
 #'                                iterations            = 10^4,
 #'                                convergence_threshold = 40)
 #' jnmf_exp
+#' }
 run_joinNMF_tensor <- function (matrix_list,
                                 ranks                 = 2,
                                 n_initializations     = 10,

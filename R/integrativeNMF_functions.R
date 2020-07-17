@@ -19,6 +19,7 @@ NULL
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' inmf_exp <- run_iNMF_tensor(list(a = matrix(1:1000, ncol = 10),
 #'                                     b = matrix(1:1000, ncol = 10)),
 #'                                ranks = 2:5,
@@ -26,6 +27,7 @@ NULL
 #'                                iterations            = 10^4,
 #'                                convergence_threshold = 40)
 #' inmf_exp
+#' }
 run_iNMF_tensor <- function (matrix_list,
                              ranks                 = 2,
                              n_initializations     = 10,
@@ -249,6 +251,7 @@ run_iNMF_tensor <- function (matrix_list,
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' # Compare the residual across multiple lambdas:
 #' iNMF_lambda_tuning(matrix_list           = norm_mat_list,
 #'                    lambdas               = seq(0, 1, 0.1),
@@ -270,6 +273,7 @@ run_iNMF_tensor <- function (matrix_list,
 #'                                 convergence_threshold = 40)
 #' min(inmf_tune$residuals$lambda[inmf_tune$residuals$best_lambda])
 #' inmf_tune$iNMF$lambda_0.2
+#' }
 iNMF_lambda_tuning <- function (matrix_list,
                                 lambdas               = seq(0, 1, 0.1),
                                 Output_type           = "residuals",

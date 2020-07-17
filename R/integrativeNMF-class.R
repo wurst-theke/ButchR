@@ -18,6 +18,16 @@ NULL
 #' @export
 #'
 #' @examples
+#' \dontrun{
+#' integrative_NMF(input_data   = input_data,
+#' HMatrix      = shared_HMatrix_list,
+#' HMatrix_vs   = view_specific_HMatrix_list,
+# WMatrix_vs   = view_specific_WMatrix_list,
+# FrobError    = frob_errors,
+# OptKStats    = OptKStats,
+# OptK         = OptK,
+# SignFeatures = SignFeatures)
+#' }
 integrative_NMF <- setClass(
   Class = "integrative_NMF",
   slots = list(input_data   = "list",
@@ -77,6 +87,7 @@ setMethod("show",
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' # For integrative_NMF objects:
 #' # extract H matrices for all factorization ranks
 #' HMatrix(inmf_exp, type = "shared")
@@ -91,6 +102,7 @@ setMethod("show",
 #' # extract H matrices only for selected view and rank
 #' HMatrix(inmf_exp, k = 2, view_id = "atac", type = "viewspec")
 #' HMatrix(inmf_exp, k = 2, view_id = "atac", type = "total")
+#' }
 #'
 setMethod("HMatrix",
           "integrative_NMF",
@@ -168,11 +180,13 @@ setMethod("HMatrix",
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' # For integrative_NMF objects:
 #' WMatrix(inmf_exp)
 #' WMatrix(inmf_exp, k = 2)
 #' lapply(WMatrix(inmf_exp, k = 2), head)
 #' WMatrix(inmf_exp, k = 2, view_id = "atac")
+#' }
 setMethod("WMatrix",
           "integrative_NMF",
           function(x, k = NULL, view_id = NULL, ...) {
@@ -218,7 +232,7 @@ setMethod("WMatrix",
 # Return Frobenius Error from all initializations
 
 #' @rdname FrobError-methods
-#' @aliases SignatureSpecificFeatures,ANY-method
+#' @aliases FrobError,ANY-method
 #' @export
 #'
 setMethod("FrobError", "integrative_NMF", function(x, ...) x@FrobError)
@@ -238,6 +252,7 @@ setMethod("FrobError", "integrative_NMF", function(x, ...) x@FrobError)
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' # For integrative_NMF objects:
 #' SignatureSpecificFeatures(inmf_exp)
 #' lapply(SignatureSpecificFeatures(inmf_exp), function(view) sapply(view, function(x) sapply(x, length)))
@@ -245,6 +260,7 @@ setMethod("FrobError", "integrative_NMF", function(x, ...) x@FrobError)
 #' SignatureSpecificFeatures(inmf_exp, k = 3, return_all_features = TRUE)
 #' SignatureSpecificFeatures(inmf_exp, k = 3, return_all_features = TRUE, view_id = "atac")
 #' SignatureSpecificFeatures(inmf_exp, return_all_features = TRUE, view_id = "atac")
+#' }
 setMethod("SignatureSpecificFeatures",
           "integrative_NMF",
           function(x, k = NULL, return_all_features = FALSE, view_id = NULL, ...){

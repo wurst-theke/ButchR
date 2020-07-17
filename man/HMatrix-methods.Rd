@@ -42,10 +42,15 @@ list of H-Matrices or an H-Matrix for the indicaded rank.
 Return a list of H-Matrices or an H-Matrix for the indicaded rank
 }
 \examples{
+data("leukemia")
+nmf_exp <- runNMFtensor_lite(leukemia$matrix, ranks = 2,
+method = "NMF",
+n_initializations = 2)
 HMatrix(nmf_exp)
 HMatrix(nmf_exp, k = 2)
 HMatrix(nmf_exp)
 HMatrix(nmf_exp, k = 2)
+\dontrun{
 # For integrative_NMF objects:
 # extract H matrices for all factorization ranks
 HMatrix(inmf_exp, type = "shared")
@@ -60,10 +65,13 @@ HMatrix(inmf_exp, k = 2, type = "all")
 # extract H matrices only for selected view and rank
 HMatrix(inmf_exp, k = 2, view_id = "atac", type = "viewspec")
 HMatrix(inmf_exp, k = 2, view_id = "atac", type = "total")
+}
 
+\dontrun{
 # For join_NMF objects:
 HMatrix(jnmf_exp)
 HMatrix(jnmf_exp, k = 2)
 lapply(HMatrix(jnmf_exp, k = 2), head)
 HMatrix(jnmf_exp, k = 2, view_id = "atac")
+}
 }
