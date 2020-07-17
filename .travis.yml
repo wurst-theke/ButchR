@@ -38,7 +38,7 @@ addons:
       python3-virtualenv
       python3-venv
 
-before_install:
+before_script:
   - python3 -m pip install --upgrade --ignore-installed --user travis virtualenv
   - R -e 'tensorflow::install_tensorflow(version = "2.2.0-cpu")'
   - R -e 'tensorflow::tf_config()'
