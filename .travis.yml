@@ -18,7 +18,7 @@ env:
    - R_BUILD_ARGS="--no-build-vignettes --no-manual"
    - R_CHECK_ARGS="--no-build-vignettes --no-manual --timings"  ## do not build vignettes or manual
    - _R_CHECK_TIMINGS_="0"  ## get the timing information for the examples for all of your functions
-   - RETICULATE_PYTHON=/usr/bin/python3
+   #- RETICULATE_PYTHON=/usr/bin/python3
 #- BIOC_USE_DEVEL="FALSE"  ## Use the current release version
 
 r_packages:
@@ -31,28 +31,40 @@ r_build_args: --no-build-vignettes --no-manual
 r_check_args: --no-build-vignettes --no-manual --timings
 
 
-addons:
-  apt:
-    packages:
-      python3-dev
-      python3-pip
-      python3-virtualenv
-      python3-venv
+
+before_install:
+  - sudo apt-get install python3-pip
+  - sudo pip3 install virtualenv
+  - virtualenv -p python3 pt
+  - source pt/bin/activate
 
 before_script:
-  - python3 -m pip install --upgrade --ignore-installed --user travis virtualenv
   - R -e 'reticulate::py_config()'
   - R -e 'tensorflow::install_tensorflow(version = "2.2.0-cpu")'
   - R -e 'tensorflow::tf_config()'
 
-
-
-# before_install:
-#   - sudo apt-get install python3-pip
-#   - sudo pip3 install virtualenv
-#   - virtualenv -p python3 pt
-#   - source pt/bin/activate
-#   - pip install numpy tensorflow-cpu==2.2.0
+# addons:
+#   apt:
+#     packages:
+#       python3-dev
+#       python3-pip
+#       python3-virtualenv
+#       python3-venv
+#
+# before_script:
+#   - python3 -m pip install --upgrade --ignore-installed --user travis virtualenv
+#   - R -e 'reticulate::py_config()'
+#   - R -e 'tensorflow::install_tensorflow(version = "2.2.0-cpu")'
+#   - R -e 'tensorflow::tf_config()'
+#
+#
+#
+# # before_install:
+# #   - sudo apt-get install python3-pip
+# #   - sudo pip3 install virtualenv
+# #   - virtualenv -p python3 pt
+# #   - source pt/bin/activate
+# #   - pip install numpy tensorflow-cpu==2.2.0
 
 
 
