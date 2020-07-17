@@ -18,7 +18,7 @@ env:
    - R_BUILD_ARGS="--no-build-vignettes --no-manual"
    - R_CHECK_ARGS="--no-build-vignettes --no-manual --timings"  ## do not build vignettes or manual
    - _R_CHECK_TIMINGS_="0"  ## get the timing information for the examples for all of your functions
-   - RETICULATE_PYTHON=/usr/bin/python3.7
+   - RETICULATE_PYTHON=/usr/bin/python3.8
 #- BIOC_USE_DEVEL="FALSE"  ## Use the current release version
 
 r_packages:
@@ -37,7 +37,8 @@ before_install:
   - ls /usr/bin/python*
   - python --version
   - sudo apt-get update
-  - sudo apt-get install python3.7
+  - apt-cache search python
+  - sudo apt-get install python3.8
   - sudo apt-get install python3-pip
   - sudo apt-get install python3-setuptools
   - sudo pip3 install numpy tensorflow-cpu==2.2.0
