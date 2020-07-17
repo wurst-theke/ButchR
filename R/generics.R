@@ -89,8 +89,23 @@ setGeneric("WMatrix", function(x, k = NULL, ...) standardGeneric("WMatrix"))
 
 
 
-#### Optimal K Statistics
-# Getter
+#' Return optimal factorization rank (K) Statistics
+#'
+#' @param x an nmfExperiment_lite object
+#'
+#' @return optimal K Statistics
+#' @docType methods
+#' @rdname OptKStats-methods
+#' @exportMethod OptKStats
+#'
+#' @examples
+#' \dontrun{
+#' data("leukemia")
+#' nmf_exp <- runNMFtensor_lite(leukemia$matrix, ranks = 2:10,
+#' method = "NMF",
+#' n_initializations = 2)
+#' OptKStats(nmf_exp)
+#' }
 setGeneric("OptKStats", function(x, ...) standardGeneric("OptKStats"))
 
 # Setter
@@ -98,9 +113,24 @@ setGeneric("setOptKStats", function(nmfExperiment, OptKStats)
   standardGeneric("setOptKStats"))
 
 
-
 #### Optimal K
-# Getter
+#' Return optimal K
+#'
+#' @param x an nmfExperiment_lite object
+#'
+#' @return numeric - optimal K
+#' @docType methods
+#' @rdname OptK-methods
+#' @exportMethod OptK
+#'
+#' @examples
+#' \dontrun{
+#' data("leukemia")
+#' nmf_exp <- runNMFtensor_lite(leukemia$matrix, ranks = 2:10,
+#' method = "NMF",
+#' n_initializations = 10)
+#' OptK(nmf_exp)
+#' }
 setGeneric("OptK", function(x, ...) standardGeneric("OptK"))
 
 # Setter
@@ -208,7 +238,7 @@ setGeneric("normalizeH", function(nmf_exp, ...) standardGeneric("normalizeH"))
 #' mutiplied with the columns of W in order to keep the matrix product W*H
 #' constant.
 #'
-#' @param nmf_exp
+#' @param nmf_exp an nmfExperiment or a nmfExperiment_lite object
 #'
 #' @return an nmfExperiment or a nmfExperiment_lite object normalized by W
 #'

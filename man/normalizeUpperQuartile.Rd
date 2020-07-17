@@ -2,16 +2,22 @@
 % Please edit documentation in R/preprocessing_functions.R
 \name{normalizeUpperQuartile}
 \alias{normalizeUpperQuartile}
-\title{Title}
+\title{Function to normalizeUpperQuartile on a matrix}
 \usage{
 normalizeUpperQuartile(matrix)
 }
 \arguments{
-\item{matrix}{}
+\item{matrix}{input matrix}
 }
 \value{
 
 }
 \description{
-Title
+Function to normalizeUpperQuartile on a matrix
+}
+\examples{
+\dontrun{
+h <- HMatrix(nmf_exp, k = 5)
+normalizeUpperQuartile(h)
+}
 }

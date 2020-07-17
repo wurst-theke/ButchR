@@ -17,23 +17,3 @@
 #'
 "leukemia"
 
-#'
-#'
-#' #' Compute NMF on the test dataset
-#' #'
-#' #'
-#' #' @return NMF object
-#' #'
-#' #'
-#' #' @examples
-#' #' \dontrun{
-#' #' NMF_leukemia()
-#' #' }
-#' NMF_leukemia <- function() {
-#'   data("leukemia")
-#'   leukemia
-#'   runNMFtensor_lite(leukemia$matrix, ranks = 2:10,
-#'                     method = "NMF",
-#'                     n_initializations = 10,
-#'                     extract_features = TRUE)
-#' }

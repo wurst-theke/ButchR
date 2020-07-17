@@ -2,16 +2,29 @@
 % Please edit documentation in R/preprocessing_functions.R
 \name{sigmoidTransform2}
 \alias{sigmoidTransform2}
-\title{Title}
+\title{Function to used to perform a k-means k=2 on a W matrix - vversion 2}
 \usage{
 sigmoidTransform2(col.vector, q = 0.95)
 }
 \arguments{
-\item{q}{}
+\item{col.vector}{vector taken from a matrix columns}
+
+\item{q}{quantile}
 }
 \value{
 
 }
 \description{
-Title
+Function to used to perform a k-means k=2 on a W matrix - vversion 2
+}
+\examples{
+\dontrun{
+Wf <- HMatrix(nmf_exp, k = 5)
+ssf <- apply(Wf, 1, function(x){
+x <- sigmoidTransform2(x)
+k <- kmeans(x, 2)
+max_idx <- which.max(k$centers)
+paste(if_else(k$cluster == max_idx, "1", "0"), collapse = "")
+})
+}
 }

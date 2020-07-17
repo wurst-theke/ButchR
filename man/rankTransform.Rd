@@ -2,16 +2,22 @@
 % Please edit documentation in R/preprocessing_functions.R
 \name{rankTransform}
 \alias{rankTransform}
-\title{Title}
+\title{Function to rankTransforma matrix}
 \usage{
 rankTransform(matrix)
 }
 \arguments{
-\item{matrix}{}
+\item{matrix}{input matrix}
 }
 \value{
 
 }
 \description{
-Title
+Function to rankTransforma matrix
+}
+\examples{
+\dontrun{
+h <- HMatrix(nmf_exp, k = 5)
+rankTransform(h)
+}
 }

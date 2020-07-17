@@ -40,11 +40,9 @@ source_NMFtensor_function <- function(method) {
   module = NMF_methods_list[[method]]
 
   # Source NMF tensorflow python script
-  #path <- file.path(system.file(package = "Bratwurst"), "python/tensorBratwurst")
   path <- file.path(system.file(package = "ButchR"), "python/")
-  tensorBratwurst <- import_from_path("tensorBratwurst", path = path)
-  #return(tensorBratwurst[module[1]][module[2]])
-  return(tensorBratwurst[[module[1]]][[module[2]]])
+  tensorTheCleaver <- import_from_path("tensorTheCleaver", path = path)
+  return(tensorTheCleaver[[module[1]]][[module[2]]])
 }
 
 
@@ -117,7 +115,6 @@ runNMFtensor_lite <- function (X,
   #----------------------------------------------------------------------------#
   # Source NMF tensorflow python function
   NMF_tensor_py <- source_NMFtensor_function(method)
-  #source_python(file.path(system.file(package = "Bratwurst"), "python/nmf_tensor_lite.py"))
 
   # Run NMF
   complete_eval <- lapply(nmf_params$ranks, function(k) {

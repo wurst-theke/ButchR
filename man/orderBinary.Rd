@@ -7,11 +7,16 @@
 orderBinary(matrix)
 }
 \arguments{
-\item{matrix}{}
+\item{matrix}{input matrix}
 }
 \value{
 
 }
 \description{
 Function to order binary data matrix
+}
+\examples{
+\dontrun{
+orderBinary(bin_matrix)
+}
 }

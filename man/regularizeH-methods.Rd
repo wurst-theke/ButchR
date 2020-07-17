@@ -12,7 +12,7 @@ regularizeH(nmf_exp, ...)
 \S4method{regularizeH}{nmfExperiment_lite}(nmf_exp)
 }
 \arguments{
-\item{nmf_exp}{}
+\item{nmf_exp}{an nmfExperiment or a nmfExperiment_lite object}
 }
 \value{
 an nmfExperiment or a nmfExperiment_lite object normalized by W

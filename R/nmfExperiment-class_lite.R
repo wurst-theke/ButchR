@@ -1,8 +1,8 @@
 #' @include generics.R
 NULL
 
-# Copyright © 2015-2020  The Bratwurst package contributors
-# This file is part of the Bratwurst package. The Bratwurst package is licenced
+# Copyright © 2015-2020  The ButchR package contributors
+# This file is part of the ButchR package. The ButchR package is licenced
 # under GPL-3
 
 #' NMF Experiment Class lite

@@ -184,33 +184,3 @@ run_joinNMF_tensor <- function (matrix_list,
            SignFeatures = SignFeatures)
 }
 
-
-
-# environment(run_joinNMF_tensor) <- asNamespace("Bratwurst")
-# jnmf_exp <- run_joinNMF_tensor(norm_mat_list,
-#                                ranks  = 2:4,
-#                                n_initializations     = 3,
-#                                iterations            = 10^4,
-#                                convergence_threshold = 2,
-#                                Sp = 0,
-#                                extract_features = TRUE)
-# jnmf_exp@SignFeatures
-# gg_plotKStats(jnmf_exp)
-# HMatrix(jnmf_exp)
-
-#
-# jnmf_exp
-# FrobError(jnmf_exp)
-# HMatrix(jnmf_exp)
-# lapply(WMatrix(jnmf_exp)[[1]], head)
-# jnmf_exp@OptKStats
-# jnmf_exp@OptK
-#
-# all.equal(lapply(norm_mat_list, colnames))
-# matrix_list
-#
-# x <- list(a = matrix(1:1000, ncol = 10),
-#           b = matrix(1:1000, ncol = 10))
-#
-# x <- try(aa, silent = TRUE)
-# inherits(x, "try-error")
