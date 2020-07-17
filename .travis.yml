@@ -37,15 +37,18 @@ addons:
     - deadsnakes
     packages:
     - python3.7
+    - python3-pip
 
 
 before_install:
   - pyenv versions
   - ls /usr/bin/python*
   - python --version
-  - sudo apt-get install python3-pip
-  - sudo apt-get install python3-setuptools
-  - sudo pip3 install numpy tensorflow-cpu==2.2.0
+  - python3.7 -m pip install pip
+  - python3.7 -m pip install numpy tensorflow-cpu==2.2.0
+  #- sudo apt-get install python3-pip
+  #- sudo apt-get install python3-setuptools
+  # - sudo pip3 install numpy tensorflow-cpu==2.2.0
   #- apt-cache search python
   #- sudo apt-get update
   #- sudo apt-get install python3.8
