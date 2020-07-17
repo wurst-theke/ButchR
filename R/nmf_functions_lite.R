@@ -26,7 +26,7 @@ np <- NULL
 #'
 #' @return python function to carry out the factorization on tensorflow
 #'
-#'
+#' @import reticulate
 #' @examples
 #' \dontrun{
 #' x <- ButchR:::source_NMFtensor_function("NMF")
@@ -71,7 +71,7 @@ source_NMFtensor_function <- function(method) {
 #'
 #'
 #' @return A nmfExperiment_lite object, containg the factorized matrices W and H, along with factorization metrics
-#'
+#' @import reticulate
 #' @export
 #'
 #' @examples
@@ -302,7 +302,6 @@ compute_OptKStats_NMF <- function(k_eval, k) {
 #' Computes Signature specific features
 #'
 #' @param W W matrix with more than 2 signatures
-#'
 #' @examples
 #' \dontrun{
 #' WcomputeFeatureStats(W)
@@ -328,7 +327,8 @@ WcomputeFeatureStats <- function(W) {
     x <- sigmoidTransform(x)
     k <- kmeans(x, 2)
     max_idx <- which.max(k$centers)
-    paste(if_else(k$cluster == max_idx, "1", "0"), collapse = "")
+    #paste(if_else(k$cluster == max_idx, "1", "0"), collapse = "")
+    paste(ifelse(k$cluster == max_idx, "1", "0"), collapse = "")
   })
 
   # Combine with features with no contribution and sort

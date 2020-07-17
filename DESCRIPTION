@@ -19,10 +19,10 @@ Imports:
     digest,
     circlize,
     tidyr,
-    cluster
-Depends:
     dplyr,
-    reticulate
+    cluster,
+    reticulate,
+    methods
 Suggests: knitr, rmarkdown
 VignetteBuilder: knitr
 Description: NMF implementation using tensorflow and helper functions to select optimal factorization rank and graphic representation of the matrix decomposition.
