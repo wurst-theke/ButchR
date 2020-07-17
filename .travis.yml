@@ -22,9 +22,9 @@ env:
 #- BIOC_USE_DEVEL="FALSE"  ## Use the current release version
 
 r_packages:
-   - testthat
    - reticulate
    - tensorflow
+   #- testthat
 
 # do not build vignettes...takes too long and times out on travis
 r_build_args: --no-build-vignettes --no-manual
@@ -33,10 +33,12 @@ r_check_args: --no-build-vignettes --no-manual --timings
 
 
 before_install:
-  - sudo apt-get install python3-pip
-  - sudo pip3 install virtualenv
-  - virtualenv -p python3 pt
-  - source pt/bin/activate
+  - sudo apt-get update
+  - sudo apt-get install python3
+  # - sudo apt-get install python3-pip
+  # - sudo pip3 install virtualenv
+  # - virtualenv -p python3 pt
+  # - source pt/bin/activate
 
 before_script:
   - R -e 'reticulate::py_config()'
