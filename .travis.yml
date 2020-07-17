@@ -34,12 +34,15 @@ r_check_args: --no-build-vignettes --no-manual --timings
 
 before_install:
   - pyenv versions
+  - ls /usr/bin/python*
   - python --version
   - sudo apt-get update
   - sudo apt-get install python3
-  - pyenv global 3.5.1
   - python --version
-  - pip install numpy tensorflow-cpu==2.2.0
+  - alias python='/usr/bin/python3.5'
+  - which pip
+  - which pip3
+  - pip3 install numpy tensorflow-cpu==2.2.0
   # - sudo apt-get install python3-pip
   # - sudo pip3 install virtualenv
   # - virtualenv -p python3 pt
