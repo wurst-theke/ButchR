@@ -20,11 +20,16 @@ generateRiverplot(nmf_exp, ...)
 \arguments{
 \item{nmf_exp}{an nmfExperiment or a nmfExperiment_lite object}
 
+\item{...}{additional parameters.}
+
 \item{edges.cutoff}{cutoff until which similarities are displayed}
 
 \item{useH}{whether to relate signatures (FALSE) or exposures (TRUE)}
 
 \item{color}{whether to colorize the nodes based on PCA of the signatures}
+
+\item{ranks}{numeric vector of the selected factorization ranks to generate
+a riverplot.}
 }
 \value{
 ret riverplot object

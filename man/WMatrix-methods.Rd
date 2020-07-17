@@ -24,6 +24,8 @@ integrative_NMF.}
 
 \item{k}{numeric - factorization rank.}
 
+\item{...}{additional parameters.}
+
 \item{view_id}{character vector with views from which to extract W matrices}
 }
 \value{

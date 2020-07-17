@@ -7,7 +7,9 @@
 compute_OptKStats_NMF(k_eval, k)
 }
 \arguments{
-\item{complete_eval}{internal object return after computing NMF with tensorflow}
+\item{k_eval}{internal object return after computing NMF with tensorflow}
+
+\item{k}{factorization rank}
 }
 \description{
 Computes factorization optimal K stats

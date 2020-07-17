@@ -52,7 +52,8 @@ source_NMFtensor_function <- function(method) {
 
 #' Single view NMF
 #'
-#' Computes NMF on tensorflow using the reticulate framework, uses a non-negative matrix as input
+#' Computes NMF on tensorflow using the reticulate framework, uses a
+#' non-negative matrix as input
 #'
 #' @param X Input matrix, should be a non-negative matrix
 #' @param n_initializations Number of initializations to evaluate
@@ -60,17 +61,21 @@ source_NMFtensor_function <- function(method) {
 #' @param method method to use in the factorization, available:
 #' "NMF", "GRNMF_SC"
 #' @param iterations Maximum number of iterations to run for every initialization
-#' @param convergence_threshold The factorization stops, if the convergence test is constant for this number of iterations
-#' @param n_neighbors for method "GRNMF_SC", the number of neighbors to take into account when building the graph G
+#' @param convergence_threshold The factorization stops, if the convergence test
+#'  constant for this number of iterations
+#' @param n_neighbors for method "GRNMF_SC", the number of neighbors to take
+#' into account when building the graph G
 #' @param alpha for method "GRNMF_SC", regularization parameter alpha
 #' @param lamb for method "GRNMF_SC", regularization parameter lambda
 #' @param graph for method "GRNMF_SC", square matrix representing a graph
 #' between columns of the input matrix, values correspond to edge weight,
 #' if NULL will compute own graph.
-#' @param extract_features if TRUE performs feature extraction for all factorization ranks > 2
+#' @param extract_features if TRUE performs feature extraction for all f
+#' actorization ranks > 2.
 #'
 #'
-#' @return A nmfExperiment_lite object, containg the factorized matrices W and H, along with factorization metrics
+#' @return A nmfExperiment_lite object, containg the factorized matrices W and
+#'  H, along with factorization metrics
 #' @import reticulate
 #' @export
 #'
@@ -220,7 +225,8 @@ runNMFtensor_lite <- function (X,
 
 #' Computes factorization optimal K stats
 #'
-#' @param complete_eval internal object return after computing NMF with tensorflow
+#' @param k_eval internal object return after computing NMF with tensorflow
+#' @param k factorization rank
 #'
 compute_OptKStats_NMF <- function(k_eval, k) {
   #----------------------------------------------------------------------------#

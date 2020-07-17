@@ -25,6 +25,11 @@ run_joinNMF_tensor(
 
 \item{convergence_threshold}{The factorization stops,
 if the convergence test is constant for this number of iterations}
+
+\item{Sp}{Sparsity,}
+
+\item{extract_features}{if TRUE performs feature extraction for all
+factorization ranks > 2.}
 }
 \value{
 A join_NMF object,

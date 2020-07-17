@@ -21,6 +21,8 @@ FrobError(x, ...)
 \arguments{
 \item{x}{an R object of type nmfExperiment, nmfExperiment_lite, join_NMF or
 integrative_NMF.}
+
+\item{...}{additional parameters.}
 }
 \value{
 data.frame with Frobenius errors

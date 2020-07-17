@@ -26,6 +26,14 @@ run_iNMF_tensor(
 
 \item{convergence_threshold}{The factorization stops,
 if the convergence test is constant for this number of iterations}
+
+\item{Sp}{Sparsity,}
+
+\item{lamb}{Free parameter lambda bigger values shift the decomposition
+towards finding the common effect between niews.}
+
+\item{extract_features}{if TRUE performs feature extraction for all
+factorization ranks > 2.}
 }
 \value{
 A integrative_NMF object,

@@ -13,6 +13,8 @@ regularizeH(nmf_exp, ...)
 }
 \arguments{
 \item{nmf_exp}{an nmfExperiment or a nmfExperiment_lite object}
+
+\item{...}{additional parameters.}
 }
 \value{
 an nmfExperiment or a nmfExperiment_lite object normalized by W

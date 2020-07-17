@@ -34,7 +34,6 @@ Collate:
     'nmfExperiment-class_lite.R'
     'integrativeNMF-class.R'
     'integrativeNMF_functions.R'
-    'interact_functions.R'
     'joinNMF-class.R'
     'joinNMF_functions.R'
     'nmf_functions_lite.R'

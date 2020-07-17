@@ -35,6 +35,13 @@ SignatureSpecificFeatures(x, k = NULL, return_all_features = FALSE, ...)
 
 \item{k}{numeric  - factorization rank}
 
+\item{return_all_features}{logical indicating whether to return a binary
+matrix with the same dimension as the selected factorization rank.
+Were a 1 is assigned to those features contributing towards a signature and
+a 0 to those that do not show a siganificant contribution.}
+
+\item{...}{additional parameters.}
+
 \item{view_id}{character vector with views from which sigature specific
 features will be extracted.}
 }

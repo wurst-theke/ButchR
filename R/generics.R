@@ -6,6 +6,7 @@
 #'
 #' @param x an R object of type nmfExperiment, nmfExperiment_lite, join_NMF or
 #' integrative_NMF.
+#' @param ... additional parameters.
 #'
 #' @return data.frame with Frobenius errors
 #' @docType methods
@@ -50,6 +51,7 @@ setGeneric("setWMatrixList", function(nmfExperiment, WMatrixList)
 #' @param x an R object of type nmfExperiment, nmfExperiment_lite, join_NMF or
 #' integrative_NMF.
 #' @param k numeric - factorization rank.
+#' @param ... additional parameters.
 #'
 #' @return list of H-Matrices or an H-Matrix for the indicaded rank.
 #' @docType methods
@@ -73,6 +75,7 @@ setGeneric("HMatrix", function(x, k = NULL, ...)
 #' @param x an R object of type nmfExperiment, nmfExperiment_lite, join_NMF or
 #' integrative_NMF.
 #' @param k numeric - factorization rank.
+#' @param ... additional parameters.
 #'
 #' @return list of W-Matrices or a W-Matrix for the indicaded rank.
 #' @docType methods
@@ -92,6 +95,7 @@ setGeneric("WMatrix", function(x, k = NULL, ...) standardGeneric("WMatrix"))
 #' Return optimal factorization rank (K) Statistics
 #'
 #' @param x an nmfExperiment_lite object
+#' @param ... additional parameters.
 #'
 #' @return optimal K Statistics
 #' @docType methods
@@ -117,6 +121,7 @@ setGeneric("setOptKStats", function(nmfExperiment, OptKStats)
 #' Return optimal K
 #'
 #' @param x an nmfExperiment_lite object
+#' @param ... additional parameters.
 #'
 #' @return numeric - optimal K
 #' @docType methods
@@ -162,6 +167,11 @@ setGeneric("setFeatureStats", function(nmfExperiment, FeatureStats)
 #'
 #' @param x an nmfExperiment or a nmfExperiment_lite object
 #' @param k numeric  - factorization rank
+#' @param return_all_features logical indicating whether to return a binary
+#' matrix with the same dimension as the selected factorization rank.
+#' Were a 1 is assigned to those features contributing towards a signature and
+#' a 0 to those that do not show a siganificant contribution.
+#' @param ... additional parameters.
 #'
 #' @return list of signature specific fatures or binary matrices for all features
 #' @docType methods
@@ -197,6 +207,7 @@ setGeneric("setSignatureSpecificFeatures",
 #' constant.
 #'
 #' @param nmf_exp an nmfExperiment or a nmfExperiment_lite object
+#' @param ... additional parameters.
 #'
 #' @return an nmfExperiment or a nmfExperiment_lite object normalized by W
 #' @export
@@ -218,6 +229,7 @@ setGeneric("normalizeW", function(nmf_exp, ...) standardGeneric("normalizeW"))
 #' constant.
 #'
 #' @param nmf_exp an nmfExperiment or a nmfExperiment_lite object
+#' @param ... additional parameters.
 #'
 #' @return an nmfExperiment or a nmfExperiment_lite object normalized by W
 #' @export
@@ -239,6 +251,7 @@ setGeneric("normalizeH", function(nmf_exp, ...) standardGeneric("normalizeH"))
 #' constant.
 #'
 #' @param nmf_exp an nmfExperiment or a nmfExperiment_lite object
+#' @param ... additional parameters.
 #'
 #' @return an nmfExperiment or a nmfExperiment_lite object normalized by W
 #'
@@ -265,9 +278,12 @@ setGeneric("regularizeH", function(nmf_exp, ...) standardGeneric("regularizeH"))
 #' signatures at different factorization ranks
 #'
 #' @param nmf_exp an nmfExperiment or a nmfExperiment_lite object
+#' @param ranks numeric vector of the selected factorization ranks to generate
+#' a riverplot.
 #' @param edges.cutoff cutoff until which similarities are displayed
 #' @param useH whether to relate signatures (FALSE) or exposures (TRUE)
 #' @param color whether to colorize the nodes based on PCA of the signatures
+#' @param ... additional parameters.
 #'
 #' @return ret riverplot object
 #'

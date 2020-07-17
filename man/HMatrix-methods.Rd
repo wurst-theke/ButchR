@@ -24,6 +24,8 @@ integrative_NMF.}
 
 \item{k}{numeric - factorization rank.}
 
+\item{...}{additional parameters.}
+
 \item{view_id}{for integrative NMF; character vector with views
 from which to extract H matrices}
 

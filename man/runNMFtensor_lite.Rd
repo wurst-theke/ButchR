@@ -30,9 +30,11 @@ runNMFtensor_lite(
 
 \item{iterations}{Maximum number of iterations to run for every initialization}
 
-\item{convergence_threshold}{The factorization stops, if the convergence test is constant for this number of iterations}
+\item{convergence_threshold}{The factorization stops, if the convergence test
+constant for this number of iterations}
 
-\item{n_neighbors}{for method "GRNMF_SC", the number of neighbors to take into account when building the graph G}
+\item{n_neighbors}{for method "GRNMF_SC", the number of neighbors to take
+into account when building the graph G}
 
 \item{alpha}{for method "GRNMF_SC", regularization parameter alpha}
 
@@ -42,13 +44,16 @@ runNMFtensor_lite(
 between columns of the input matrix, values correspond to edge weight,
 if NULL will compute own graph.}
 
-\item{extract_features}{if TRUE performs feature extraction for all factorization ranks > 2}
+\item{extract_features}{if TRUE performs feature extraction for all f
+actorization ranks > 2.}
 }
 \value{
-A nmfExperiment_lite object, containg the factorized matrices W and H, along with factorization metrics
+A nmfExperiment_lite object, containg the factorized matrices W and
+ H, along with factorization metrics
 }
 \description{
-Computes NMF on tensorflow using the reticulate framework, uses a non-negative matrix as input
+Computes NMF on tensorflow using the reticulate framework, uses a
+non-negative matrix as input
 }
 \examples{
 nmf_exp <- runNMFtensor_lite(matrix(1:1000, ncol = 10),

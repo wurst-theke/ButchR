@@ -7,15 +7,20 @@ NULL
 #' uses a list of non-negative matrices as input
 #'
 #' @param matrix_list List of non-negative matrices
-#' @param n_initializations Number of initializations to evaluate
 #' @param ranks numeric vector with ranks to factorize
+#' @param n_initializations Number of initializations to evaluate
 #' @param iterations Maximum number of iterations to run for every initialization
 #' @param convergence_threshold The factorization stops,
 #' if the convergence test is constant for this number of iterations
+#' @param Sp Sparsity,
+#' @param lamb Free parameter lambda bigger values shift the decomposition
+#' towards finding the common effect between niews.
+#' @param extract_features if TRUE performs feature extraction for all
+#' factorization ranks > 2.
 #'
 #' @return A integrative_NMF object,
 #' containing a integrative H matrix and one W matrix for each input matrix
-#'
+#' @import reticulate
 #' @export
 #'
 #' @examples

@@ -170,6 +170,7 @@ setMethod("FrobError", "nmfExperiment_lite", function(x, ...) x@FrobError)
 #' Return optimal factorization rank (K) Statistics
 #'
 #' @param x an nmfExperiment_lite object
+#' @param ... additional parameters.
 #'
 #' @return optimal K Statistics
 #' @export
@@ -188,6 +189,7 @@ setMethod("OptKStats", "nmfExperiment_lite", function(x, ...) x@OptKStats)
 #' Return optimal K
 #'
 #' @param x an nmfExperiment_lite object
+#' @param ... additional parameters.
 #'
 #' @return numeric - optimal K
 #' @export

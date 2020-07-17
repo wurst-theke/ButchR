@@ -8,6 +8,8 @@
 }
 \arguments{
 \item{x}{an nmfExperiment_lite object}
+
+\item{...}{additional parameters.}
 }
 \value{
 optimal K Statistics

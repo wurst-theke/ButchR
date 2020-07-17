@@ -12,10 +12,14 @@ NULL
 #' @param iterations Maximum number of iterations to run for every initialization
 #' @param convergence_threshold The factorization stops,
 #' if the convergence test is constant for this number of iterations
+#' @param Sp Sparsity,
+#' @param extract_features if TRUE performs feature extraction for all
+#' factorization ranks > 2.
 #'
 #' @return A join_NMF object,
 #' containing a join H matrix and one W matrix for each input matrix
 #'
+#' @import reticulate
 #' @export
 #'
 #' @examples
