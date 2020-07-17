@@ -308,6 +308,7 @@ compute_OptKStats_NMF <- function(k_eval, k) {
 #' Computes Signature specific features
 #'
 #' @param W W matrix with more than 2 signatures
+#' @import stats
 #' @examples
 #' \dontrun{
 #' WcomputeFeatureStats(W)
@@ -376,7 +377,7 @@ cosineDissMat <- function(in.matrix, in.dimension=2){
 #'        to [Wu et. al, PNAS 2016]
 #'
 #' @references \url{http://www.pnas.org/content/113/16/4290.long}
-#'
+#' @import stats
 #' @examples
 #' \dontrun{
 #' amariDistance(WMatrix_list_a, WMatrix_list_b)

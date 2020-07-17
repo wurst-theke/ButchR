@@ -16,7 +16,7 @@ NULL
 #' @slot SignFeatures DataFrame or list
 #'
 #' @return An object of NMF Experiment Class lite
-#'
+#' @import methods
 #' @export
 #'
 #' @examples

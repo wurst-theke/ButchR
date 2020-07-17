@@ -15,6 +15,7 @@ NULL
 #' @slot SignFeatures DataFrame or list
 #'
 #' @return An object of join_NMF Experiment Class
+#' @import methods
 #' @export
 #'
 #' @examples

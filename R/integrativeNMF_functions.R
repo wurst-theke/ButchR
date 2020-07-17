@@ -252,7 +252,8 @@ run_iNMF_tensor <- function (matrix_list,
 #'
 #' @return A integrative_NMF object,
 #' containing a integrative H matrix and one W matrix for each input matrix
-#'
+#' @import ggplot2 dplyr
+#' @importFrom rlang .data
 #' @export
 #'
 #' @examples
@@ -410,19 +411,23 @@ iNMF_lambda_tuning <- function (matrix_list,
                              lambda    = lambdas,
                              stringsAsFactors = FALSE)
   residuals_df <- residuals_df %>%
-    mutate(diff_iNMF_jNMF = norm_inmf - norm_jnmf) %>%
-    mutate(diff_iNMF_sNMF = abs(thr_cons*(norm_jnmf - norm_snmf))) %>%
-    #mutate(diff_iNMF_sNMF = thr_cons*(norm_jnmf - norm_snmf)) %>%
-    arrange(-lambda) %>%
-    mutate(best_lambda = cumsum(diff_iNMF_jNMF > diff_iNMF_sNMF) == 1) %>%
-    mutate(best_lambda = c(best_lambda[-1], best_lambda[1]))
+    dplyr::mutate(diff_iNMF_jNMF = norm_inmf - norm_jnmf) %>%
+    dplyr::mutate(diff_iNMF_sNMF = abs(thr_cons*(norm_jnmf - norm_snmf))) %>%
+    #dplyr::mutate(diff_iNMF_sNMF = thr_cons*(norm_jnmf - norm_snmf)) %>%
+    dplyr::arrange(-.data$lambda) %>%
+    dplyr::mutate(best_lambda = cumsum(.data$diff_iNMF_jNMF > .data$diff_iNMF_sNMF) == 1) %>%
+    dplyr::mutate(best_lambda = c(.data$best_lambda[-1], .data$best_lambda[1]))
 
   if (Output_type %in% c("plot", "all") | show_plot) {
     residuals_gg <- residuals_df %>%
-      select(lambda, diff_iNMF_jNMF, diff_iNMF_sNMF, best_lambda) %>%
-      tidyr::pivot_longer(-c("lambda", "best_lambda"), names_to = "norm", values_to = "unsquared_residual_quantities") %>%
-      ggplot(aes(x = lambda, y = unsquared_residual_quantities, color = norm)) +
-      geom_vline(data = function(x){x %>% filter(best_lambda)}, aes(xintercept = lambda)) +
+      dplyr::select(.data$lambda, .data$diff_iNMF_jNMF,
+                    .data$diff_iNMF_sNMF, .data$best_lambda) %>%
+      tidyr::pivot_longer(-c("lambda", "best_lambda"),
+                          names_to = "norm",
+                          values_to = "unsquared_residual_quantities") %>%
+      ggplot(aes(x = .data$lambda, y = .data$unsquared_residual_quantities, color = norm)) +
+      geom_vline(data = function(x){x %>% dplyr::filter(.data$best_lambda)},
+                 aes(xintercept = .data$lambda)) +
       geom_line() +
       theme_bw()
     if (show_plot & !Output_type == "plot") print(residuals_gg)
