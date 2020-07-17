@@ -37,7 +37,8 @@ before_install:
   - ls /usr/bin/python*
   - python --version
   - sudo apt-get install python3-pip
-  - python3 -m pip install numpy tensorflow-cpu==2.2.0
+  - sudo pip3 install numpy tensorflow-cpu==2.2.0
+  #- python3 -m pip install numpy tensorflow-cpu==2.2.0
   #- sudo apt-get update
   #- sudo apt-get install python3
   #- pip install numpy tensorflow-cpu==2.2.0
