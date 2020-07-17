@@ -6,7 +6,7 @@
 \alias{join_NMF}
 \title{Join NMF Class}
 \value{
-
+An object of join_NMF Experiment Class
 }
 \description{
 Join NMF Class
@@ -14,6 +14,8 @@ Join NMF Class
 \section{Slots}{
 
 \describe{
+\item{\code{input_data}}{lsit of matrices}
+
 \item{\code{HMatrix}}{list.}
 
 \item{\code{WMatrix_vs}}{list.}
@@ -21,6 +23,10 @@ Join NMF Class
 \item{\code{FrobError}}{DataFrame.}
 
 \item{\code{OptKStats}}{DataFrame.}
+
+\item{\code{OptK}}{numeric}
+
+\item{\code{SignFeatures}}{DataFrame or list}
 }}
 
 \examples{

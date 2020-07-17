@@ -6,14 +6,15 @@ NULL
 #------------------------------------------------------------------------------#
 
 #' Join NMF Class
-#'
+#' @slot input_data lsit of matrices
 #' @slot HMatrix list.
 #' @slot WMatrix_vs list.
 #' @slot FrobError DataFrame.
 #' @slot OptKStats DataFrame.
+#' @slot OptK numeric
+#' @slot SignFeatures DataFrame or list
 #'
-#' @return
-#'
+#' @return An object of join_NMF Experiment Class
 #' @export
 #'
 #' @examples
@@ -191,11 +192,19 @@ setMethod("FrobError", "join_NMF", function(x, ...) x@FrobError)
 #' # For join_NMF objects:
 #' SignatureSpecificFeatures(jnmf_exp)
 #' SignatureSpecificFeatures(jnmf_exp)
-#' lapply(SignatureSpecificFeatures(jnmf_exp), function(view) sapply(view, function(x) sapply(x, length)))
-#' lapply(SignatureSpecificFeatures(jnmf_exp, k = 3), function(view) sapply(view, length))
+#' lapply(SignatureSpecificFeatures(jnmf_exp), function(view){
+#'   sapply(view, function(x) sapply(x, length))
+#' })
+#' lapply(SignatureSpecificFeatures(jnmf_exp, k = 3), function(view){
+#'   sapply(view, length)
+#' })
 #' SignatureSpecificFeatures(jnmf_exp, k = 3, return_all_features = TRUE)
-#' SignatureSpecificFeatures(jnmf_exp, k = 3, return_all_features = TRUE, view_id = "atac")
-#' SignatureSpecificFeatures(jnmf_exp, return_all_features = TRUE, view_id = "atac")
+#' SignatureSpecificFeatures(jnmf_exp, k = 3,
+#'                           return_all_features = TRUE,
+#'                           view_id = "atac")
+#' SignatureSpecificFeatures(jnmf_exp,
+#'                           return_all_features = TRUE,
+#'                           view_id = "atac")
 #' }
 setMethod("SignatureSpecificFeatures",
           "join_NMF",

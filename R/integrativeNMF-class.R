@@ -7,13 +7,16 @@ NULL
 
 #' Integrative NMF Class
 #'
+#' @slot input_data lsit of matrices
 #' @slot HMatrix list.
 #' @slot HMatrix_vs list.
 #' @slot WMatrix_vs list.
 #' @slot FrobError DataFrame.
 #' @slot OptKStats DataFrame.
+#' @slot OptK numeric
+#' @slot SignFeatures DataFrame or list
 #'
-#' @return
+#' @return An object of integrative_NMF Experiment Class
 #'
 #' @export
 #'
@@ -255,12 +258,21 @@ setMethod("FrobError", "integrative_NMF", function(x, ...) x@FrobError)
 #' \dontrun{
 #' # For integrative_NMF objects:
 #' SignatureSpecificFeatures(inmf_exp)
-#' lapply(SignatureSpecificFeatures(inmf_exp), function(view) sapply(view, function(x) sapply(x, length)))
-#' lapply(SignatureSpecificFeatures(inmf_exp, k = 3), function(view) sapply(view, length))
+#' lapply(SignatureSpecificFeatures(inmf_exp), function(view){
+#'   sapply(view, function(x) sapply(x, length))
+#' } )
+#' lapply(SignatureSpecificFeatures(inmf_exp, k = 3), function(view){
+#'   sapply(view, length)
+#' })
 #' SignatureSpecificFeatures(inmf_exp, k = 3, return_all_features = TRUE)
-#' SignatureSpecificFeatures(inmf_exp, k = 3, return_all_features = TRUE, view_id = "atac")
-#' SignatureSpecificFeatures(inmf_exp, return_all_features = TRUE, view_id = "atac")
+#' SignatureSpecificFeatures(inmf_exp, k = 3,
+#'                           return_all_features = TRUE,
+#'                           view_id = "atac")
+#' SignatureSpecificFeatures(inmf_exp,
+#'                           return_all_features = TRUE,
+#'                           view_id = "atac")
 #' }
+#'
 setMethod("SignatureSpecificFeatures",
           "integrative_NMF",
           function(x, k = NULL, return_all_features = FALSE, view_id = NULL, ...){

@@ -7,10 +7,13 @@ NULL
 
 #' NMF Experiment Class lite
 #'
-#' @slot HMatrix list.
+#' @slot input_matrix lsit of matrices
 #' @slot WMatrix list.
+#' @slot HMatrix list.
 #' @slot FrobError DataFrame.
 #' @slot OptKStats DataFrame.
+#' @slot OptK numeric
+#' @slot SignFeatures DataFrame or list
 #'
 #' @return An object of NMF Experiment Class lite
 #'

@@ -25,8 +25,8 @@ Depends:
     reticulate
 Suggests: knitr, rmarkdown
 VignetteBuilder: knitr
-Description: NMF implementation using tensorflow and helper functions to select optimal factorization rank and graphic representation of the matrix decomposition
-License: GPLv3
+Description: NMF implementation using tensorflow and helper functions to select optimal factorization rank and graphic representation of the matrix decomposition.
+License: GPL-3 + file LICENSE
 RoxygenNote: 7.1.1
 Collate: 
     'data.R'

@@ -10,7 +10,7 @@ orderBinary(matrix)
 \item{matrix}{input matrix}
 }
 \value{
-
+matrix
 }
 \description{
 Function to order binary data matrix

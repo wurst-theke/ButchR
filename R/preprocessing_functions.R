@@ -6,7 +6,7 @@
 #'
 #' @param matrix input matrix
 #'
-#' @return
+#' @return matrix
 #' @export
 #'
 #' @examples
@@ -28,7 +28,7 @@ normalizeUpperQuartile <- function(matrix) {
 #' @param col.vector vector taken from a matrix columns
 #' @param q quantile
 #'
-#' @return
+#' @return vector
 #'
 #' @examples
 #' \dontrun{
@@ -51,7 +51,7 @@ sigmoidTransform <- function(col.vector, q = 0.95) {
 #' @param col.vector vector taken from a matrix columns
 #' @param q quantile
 #'
-#' @return
+#' @return vector
 #'
 #' @examples
 #' \dontrun{
@@ -73,7 +73,7 @@ sigmoidTransform2 <- function(col.vector, q = 0.95) {
 #'
 #' @param matrix input matrix
 #'
-#' @return
+#' @return matrix
 #' @export
 #'
 #' @examples
@@ -93,7 +93,7 @@ rankTransform  <- function(matrix) {
 #'
 #' @param matrix input matrix
 #'
-#' @return
+#' @return matrix
 #' @export
 #'
 #' @examples

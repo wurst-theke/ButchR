@@ -10,7 +10,7 @@ rankTransform(matrix)
 \item{matrix}{input matrix}
 }
 \value{
-
+matrix
 }
 \description{
 Function to rankTransforma matrix

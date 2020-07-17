@@ -6,7 +6,7 @@
 \alias{integrative_NMF}
 \title{Integrative NMF Class}
 \value{
-
+An object of integrative_NMF Experiment Class
 }
 \description{
 Integrative NMF Class
@@ -14,6 +14,8 @@ Integrative NMF Class
 \section{Slots}{
 
 \describe{
+\item{\code{input_data}}{lsit of matrices}
+
 \item{\code{HMatrix}}{list.}
 
 \item{\code{HMatrix_vs}}{list.}
@@ -23,6 +25,10 @@ Integrative NMF Class
 \item{\code{FrobError}}{DataFrame.}
 
 \item{\code{OptKStats}}{DataFrame.}
+
+\item{\code{OptK}}{numeric}
+
+\item{\code{SignFeatures}}{DataFrame or list}
 }}
 
 \examples{

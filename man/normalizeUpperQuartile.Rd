@@ -10,7 +10,7 @@ normalizeUpperQuartile(matrix)
 \item{matrix}{input matrix}
 }
 \value{
-
+matrix
 }
 \description{
 Function to normalizeUpperQuartile on a matrix

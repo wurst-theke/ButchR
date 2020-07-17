@@ -14,13 +14,19 @@ NMF Experiment Class lite
 \section{Slots}{
 
 \describe{
-\item{\code{HMatrix}}{list.}
+\item{\code{input_matrix}}{lsit of matrices}
 
 \item{\code{WMatrix}}{list.}
+
+\item{\code{HMatrix}}{list.}
 
 \item{\code{FrobError}}{DataFrame.}
 
 \item{\code{OptKStats}}{DataFrame.}
+
+\item{\code{OptK}}{numeric}
+
+\item{\code{SignFeatures}}{DataFrame or list}
 }}
 
 \examples{

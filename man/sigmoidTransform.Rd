@@ -12,7 +12,7 @@ sigmoidTransform(col.vector, q = 0.95)
 \item{q}{quantile}
 }
 \value{
-
+vector
 }
 \description{
 Function to used to perform a k-means k=2 on a W matrix
