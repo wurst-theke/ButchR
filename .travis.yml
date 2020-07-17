@@ -33,8 +33,11 @@ r_check_args: --no-build-vignettes --no-manual --timings
 
 
 before_install:
+  - pyenv versions
+  - python --version
   - sudo apt-get update
   - sudo apt-get install python3
+  - pip install numpy tensorflow-cpu==2.2.0
   # - sudo apt-get install python3-pip
   # - sudo pip3 install virtualenv
   # - virtualenv -p python3 pt
@@ -42,8 +45,8 @@ before_install:
 
 before_script:
   - R -e 'reticulate::py_config()'
-  - R -e 'tensorflow::install_tensorflow(version = "2.2.0-cpu")'
-  - R -e 'tensorflow::tf_config()'
+  #- R -e 'tensorflow::install_tensorflow(version = "2.2.0-cpu")'
+  #- R -e 'tensorflow::tf_config()'
 
 # addons:
 #   apt:

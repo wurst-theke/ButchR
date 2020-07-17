@@ -12,7 +12,6 @@ Imports:
     reshape2,
     ggplot2,
     cowplot,
-    ComplexHeatmap,
     RcppCNPy,
     nnls,
     riverplot,
@@ -20,8 +19,7 @@ Imports:
     digest,
     circlize,
     tidyr,
-    cluster,
-    RColorBrewer
+    cluster
 Depends:
     dplyr,
     reticulate
