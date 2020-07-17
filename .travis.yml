@@ -37,6 +37,8 @@ before_install:
   - python --version
   - sudo apt-get update
   - sudo apt-get install python3
+  - pyenv global 3.5.1
+  - python --version
   - pip install numpy tensorflow-cpu==2.2.0
   # - sudo apt-get install python3-pip
   # - sudo pip3 install virtualenv
