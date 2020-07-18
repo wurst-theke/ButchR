@@ -338,7 +338,7 @@ setMethod("regularizeH",
             all_list <- lapply(seq_along(nmf_exp@WMatrix), function(k_ind){
               tempW <- nmf_exp@WMatrix[[k_ind]]
               tempH <- nmf_exp@HMatrix[[k_ind]]
-              normFactor <- rowMax(tempH)
+              normFactor <- matrixStats::rowQuantiles(tempH, probs = 1)
               newExpo    <- tempH / normFactor
               newSigs    <- tempW * normFactor
               return(list(W = newSigs,

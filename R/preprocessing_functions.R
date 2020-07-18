@@ -17,7 +17,7 @@
 normalizeUpperQuartile <- function(matrix) {
   matrix.norm <- apply(matrix, 2, function(c) {
     nf <- c[c != 0]
-    c <- c / quantile(nf, 0.75)
+    c <- c / stats::quantile(nf, 0.75)
     return(c)
   })
   return(matrix.norm)
@@ -41,7 +41,7 @@ normalizeUpperQuartile <- function(matrix) {
 #' })
 #' }
 sigmoidTransform <- function(col.vector, q = 0.95) {
-  q <- as.numeric(quantile(col.vector, q))
+  q <- as.numeric(stats::quantile(col.vector, q))
   x <- 2 / (1 + exp((-2) * col.vector / q)) - 1
   return(x)
 }
@@ -64,7 +64,7 @@ sigmoidTransform <- function(col.vector, q = 0.95) {
 #' })
 #' }
 sigmoidTransform2 <- function(col.vector, q = 0.95) {
-  q <- as.numeric(quantile(col.vector, q))
+  q <- as.numeric(stats::quantile(col.vector, q))
   x <- 1 / (1 + exp((-2) * col.vector / q))
   return(x)
 }

@@ -17,16 +17,18 @@ Imports:
     riverplot,
     caret,
     digest,
-    circlize,
     tidyr,
     dplyr,
     cluster,
     reticulate,
-    methods,
     rlang,
     grDevices,
-    stats
-Suggests: knitr, rmarkdown
+    matrixStats,
+    methods
+Suggests: 
+    circlize,
+    knitr, 
+    rmarkdown
 VignetteBuilder: knitr
 Description: NMF implementation using tensorflow and helper functions to select optimal factorization rank and graphic representation of the matrix decomposition.
 License: GPL-3 + file LICENSE

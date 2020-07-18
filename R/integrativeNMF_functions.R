@@ -70,7 +70,7 @@ run_iNMF_tensor <- function (matrix_list,
                             convergence_threshold = convergence_threshold),
                        as.integer)
   names(nmf_params$ranks) <- paste0("k", nmf_params$ranks)
-  viewsIDs <- setNames(names(matrix_list), names(matrix_list))
+  viewsIDs <- stats::setNames(names(matrix_list), names(matrix_list))
   #----------------------------------------------------------------------------#
   #    Run integrative NMF - returns list with all ks and all iterations       #
   #----------------------------------------------------------------------------#
@@ -332,7 +332,7 @@ iNMF_lambda_tuning <- function (matrix_list,
                             convergence_threshold = convergence_threshold),
                        as.integer)
   names(nmf_params$rank) <- paste0("k", nmf_params$rank)
-  viewsIDs <- setNames(names(matrix_list), names(matrix_list))
+  viewsIDs <- stats::setNames(names(matrix_list), names(matrix_list))
   #----------------------------------------------------------------------------#
   #                                    Join NMF                                #
   #----------------------------------------------------------------------------#

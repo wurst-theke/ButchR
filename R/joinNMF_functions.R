@@ -68,7 +68,7 @@ run_joinNMF_tensor <- function (matrix_list,
                             convergence_threshold = convergence_threshold),
                        as.integer)
   names(nmf_params$ranks) <- paste0("k", nmf_params$ranks)
-  viewsIDs <- setNames(names(matrix_list), names(matrix_list))
+  viewsIDs <- stats::setNames(names(matrix_list), names(matrix_list))
   #----------------------------------------------------------------------------#
   #          Run join NMF - returns list with all ks and all iterations        #
   #----------------------------------------------------------------------------#

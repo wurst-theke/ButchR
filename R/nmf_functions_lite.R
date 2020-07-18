@@ -234,7 +234,7 @@ compute_OptKStats_NMF <- function(k_eval, k) {
   #----------------------------------------------------------------------------#
   frob_errors <- k_eval[["Frob_error"]]
   min_frobError  <- min(frob_errors, na.rm = TRUE)
-  sd_frobError   <- sd(frob_errors, na.rm = TRUE)
+  sd_frobError   <- stats::sd(frob_errors, na.rm = TRUE)
   mean_frobError <- mean(frob_errors, na.rm = TRUE)
   cv_frobError   <- sd_frobError / mean_frobError
 
@@ -258,14 +258,14 @@ compute_OptKStats_NMF <- function(k_eval, k) {
     #                         compute Cophenetic Coeff                       #
     #------------------------------------------------------------------------#
     # compute Cophenetic Coeff
-    my_hclust <- hclust(as.dist(dist_matrix))
-    dist_cophenetic <- as.matrix(cophenetic(my_hclust))
+    my_hclust <- stats::hclust(stats::as.dist(dist_matrix))
+    dist_cophenetic <- as.matrix(stats::cophenetic(my_hclust))
     # take distance matrices without diagonal elements
     diag(dist_matrix) <- NA
     dist_matrix <- dist_matrix[which(!is.na(dist_matrix))]
     diag(dist_cophenetic) <- NA
     dist_cophenetic <- dist_cophenetic[which(!is.na(dist_cophenetic))]
-    copheneticCoeff = unlist(cor(cbind(dist_cophenetic, dist_matrix))[1, 2])
+    copheneticCoeff = unlist(stats::cor(cbind(dist_cophenetic, dist_matrix))[1, 2])
 
     #------------------------------------------------------------------------#
     #                         compute Amari Distances                        #
@@ -308,7 +308,6 @@ compute_OptKStats_NMF <- function(k_eval, k) {
 #' Computes Signature specific features
 #'
 #' @param W W matrix with more than 2 signatures
-#' @import stats
 #' @examples
 #' \dontrun{
 #' WcomputeFeatureStats(W)
@@ -325,14 +324,15 @@ WcomputeFeatureStats <- function(W) {
   # Features that contribute towards one or more signatures
   Wf <- W[!idx,]
   # Non-signature features - features with 0 contribution to all signatures
-  nsf <- setNames(rep(paste(rep("0", k), collapse = ""), sum(idx)), rownames(W)[idx])
+  nsf <- stats::setNames(rep(paste(rep("0", k), collapse = ""),
+                             sum(idx)), rownames(W)[idx])
 
   #----------------------------------------------------------------------------#
   #      Run k means over all rows and assign features to the clusters         #
   #----------------------------------------------------------------------------#
   ssf <- apply(Wf, 1, function(x){
     x <- sigmoidTransform(x)
-    k <- kmeans(x, 2)
+    k <- stats::kmeans(x, 2)
     max_idx <- which.max(k$centers)
     #paste(if_else(k$cluster == max_idx, "1", "0"), collapse = "")
     paste(ifelse(k$cluster == max_idx, "1", "0"), collapse = "")
@@ -377,14 +377,13 @@ cosineDissMat <- function(in.matrix, in.dimension=2){
 #'        to [Wu et. al, PNAS 2016]
 #'
 #' @references \url{http://www.pnas.org/content/113/16/4290.long}
-#' @import stats
 #' @examples
 #' \dontrun{
 #' amariDistance(WMatrix_list_a, WMatrix_list_b)
 #' }
 amariDistance <- function(matrix.A, matrix.B) {
   K <- dim(matrix.A)[2]
-  C <- cor(matrix.A, matrix.B)
+  C <- stats::cor(matrix.A, matrix.B)
   return(1 - (sum(apply(C, 1, max)) + sum(apply(C, 2, max))) / (2 * K))
 }
 

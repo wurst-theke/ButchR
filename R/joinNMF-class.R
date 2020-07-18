@@ -15,7 +15,6 @@ NULL
 #' @slot SignFeatures DataFrame or list
 #'
 #' @return An object of join_NMF Experiment Class
-#' @import methods
 #' @export
 #'
 #' @examples
@@ -130,9 +129,9 @@ setMethod("WMatrix",
             # Check if view id is indeed one of the views
             if (is.null(view_id)) {
               view_id <- as.character(x@input_data$dim$view_ids)
-              view_id <- setNames(view_id, view_id)
+              view_id <- stats::setNames(view_id, view_id)
             } else if (all(view_id %in% x@input_data$dim$view_ids)) {
-              view_id <- setNames(view_id, view_id)
+              view_id <- stats::setNames(view_id, view_id)
             } else {
               view_id <- view_id[!view_id %in% x@input_data$dim$view_ids]
               stop("View: ", paste0(view_id, collapse = ","),
@@ -212,9 +211,9 @@ setMethod("SignatureSpecificFeatures",
           function(x, k = NULL, return_all_features = FALSE, view_id = NULL, ...){
             # Check if view id is indeed one of the views
             if (is.null(view_id)) {
-              view_id <- setNames(names(x@SignFeatures), names(x@SignFeatures))
+              view_id <- stats::setNames(names(x@SignFeatures), names(x@SignFeatures))
             } else if (all(view_id %in% names(x@SignFeatures))) {
-              view_id <- setNames(view_id, view_id)
+              view_id <- stats::setNames(view_id, view_id)
             } else {
               view_id <- view_id[!view_id %in% names(x@SignFeatures)]
               stop("View: ", paste0(view_id, collapse = ","),

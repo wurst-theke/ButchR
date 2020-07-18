@@ -130,7 +130,7 @@ setMethod("generateRiverplot",
                                    scale_fun = function(x){return(x^(1 / 3))})
             edges <- reorderEdges(nodes, edges)
             if (color){
-              pca <- prcomp(t(do.call(cbind, W_list)))
+              pca <- stats::prcomp(t(do.call(cbind, W_list)))
               pca <- apply(pca$x, 2, function(r) {
                 r <- r - min(r)
                 return(r / max(r))
@@ -159,7 +159,7 @@ setMethod("generateRiverplot",
 nnls_sol <- function(B, A) {
   X <- matrix(0, nrow = ncol(B), ncol = ncol(A))
   for(i in 1:ncol(B))
-    X[i, ] <- coef(nnls(A, B[, i]))
+    X[i, ] <- stats::coef(nnls(A, B[, i]))
   X
 }
 
