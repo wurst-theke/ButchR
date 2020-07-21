@@ -91,3 +91,22 @@ test_that("NMF regularize H", {
   expect_equal(dim(w_hreg %*% h_hreg), dim(w %*% h)) # Culsums equal to 1
 })
 
+
+test_that("NMF Plots", {
+  gstat <- gg_plotKStats(nmf_exp)
+  log <- capture.output({
+    res <- plot(generateRiverplot(nmf_exp))
+  })
+  # factorization metrix
+  expect_is(gstat, "ggplot")
+  expect_length(unique(gstat$data$k), length(ranks)) # for all k
+  # FrobError cv sumSilWidth meanSilWidth copheneticCoeff meanAmariDist
+  expect_length(unique(gstat$data$Metric), 6)
+  # riverplot
+  expect_is(log, "character")
+  expect_error(generateRiverplot(nmf_exp, ranks = 4:7))
+  expect_error(generateRiverplot(nmf_exp, ranks = 2))
+})
+
+
+

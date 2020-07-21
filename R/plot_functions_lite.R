@@ -74,6 +74,24 @@ setMethod("generateRiverplot",
           function(nmf_exp, edges.cutoff = 0,
                    useH=FALSE, color=TRUE,
                    ranks=NULL) {
+
+            #------------------------------------------------------------------#
+            #                      Check if ranks exists                       #
+            #------------------------------------------------------------------#
+            if (!is.null(ranks)) {
+              if (!is.numeric(ranks) | !length(ranks) >=2) {
+                stop("Expecting a numeric vector with two or more values",
+                     "\nPlease select from ranks = ",
+                     paste0(nmf_exp@OptKStats$k, collapse = ","))
+              }
+              if (!all(ranks %in% nmf_exp@OptKStats$k)) {
+                stop("No factorization present for all k in the range k =",
+                     paste0(ranks, collapse = ","),
+                     "\nPlease select from ranks = ",
+                     paste0(nmf_exp@OptKStats$k, collapse = ","))
+              }
+            }
+
             #------------------------------------------------------------------#
             #                      Retrieve list of matrices                   #
             #------------------------------------------------------------------#
