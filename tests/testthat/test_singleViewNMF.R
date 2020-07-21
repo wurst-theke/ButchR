@@ -38,8 +38,28 @@ test_that("Feature extraction", {
   expect_error(SignatureSpecificFeatures(nmf_exp, k = 2))
   expect_length(SignatureSpecificFeatures(nmf_exp), length(ranks)-1) # All K
   expect_length(SignatureSpecificFeatures(nmf_exp, k = 3), 3) # select k
-  SignatureSpecificFeatures(nmf_exp, k = 3, return_all_features = TRUE)
   expect_is(ssf3m, "matrix")
   expect_equal(dim(ssf3m), c(nrow(X), 3)) # dim
 })
+
+
+test_that("W NMF normalization", {
+  nmf_exp_wnorm <- normalizeW(nmf_exp)
+  h_wnorm <- HMatrix(nmf_exp_wnorm, k = 2)
+  w_wnorm <- WMatrix(nmf_exp_wnorm, k = 2)
+  expect_is(nmf_exp_wnorm, "nmfExperiment_lite")
+  expect_equal(sum(colSums(w_wnorm)), 2) # Culsums equal to 1
+  expect_equal(dim(w_wnorm %*% h_wnorm), dim(w %*% h)) # Culsums equal to 1
+})
+
+test_that("H NMF normalization", {
+  nmf_exp_hnorm <- normalizeH(nmf_exp)
+  h_hnorm <- HMatrix(nmf_exp_hnorm, k = 2)
+  w_hnorm <- WMatrix(nmf_exp_hnorm, k = 2)
+  expect_is(nmf_exp_hnorm, "nmfExperiment_lite")
+  expect_equal(sum(rowSums(h_hnorm)), 2) # Culsums equal to 1
+  expect_equal(dim(w_hnorm %*% h_hnorm), dim(w %*% h)) # Culsums equal to 1
+})
+
+
 
