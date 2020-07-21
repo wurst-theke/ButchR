@@ -3,7 +3,11 @@ library(ButchR)
 
 ranks <- 2:4
 X <- matrix(1:1000, ncol = 10)
-nmf_exp <- runNMFtensor_lite(X, ranks = ranks, n_initializations = 5,
+colnames(X) <- paste0("Sample", 1:10)
+n_inits <- 5
+nmf_exp <- runNMFtensor_lite(X,
+                             ranks = ranks,
+                             n_initializations = n_inits,
                              extract_features = TRUE)
 h <- HMatrix(nmf_exp, k=2)
 w <- WMatrix(nmf_exp, k=2)
@@ -15,6 +19,22 @@ test_that("A matrix with negative values return error", {
   expect_warning(runNMFtensor_lite(as.data.frame(X),
                                    ranks = 2, n_initializations = 1))
 })
+
+
+test_that("Factozation metrics", {
+  expect_output(show(nmf_exp)) # deafault print
+
+
+  # data.frame with Frob error for each init
+  expect_is(FrobError(nmf_exp), "data.frame")
+  expect_equal(dim(FrobError(nmf_exp)), c(n_inits, length(ranks)))
+  # data.frame with OptKStats for each init
+  expect_is(OptKStats(nmf_exp), "data.frame")
+  expect_equal(dim(OptKStats(nmf_exp)), c(length(ranks), 10))
+  # OptK
+  expect_is(OptK(nmf_exp), "integer")
+})
+
 
 
 test_that("Results of runNMFtensor are matrices", {
@@ -36,6 +56,7 @@ test_that("Feature extraction", {
 
   # feature extraction only for K>2
   expect_error(SignatureSpecificFeatures(nmf_exp, k = 2))
+  expect_error(SignatureSpecificFeatures(nmf_exp, k = 5))
   expect_length(SignatureSpecificFeatures(nmf_exp), length(ranks)-1) # All K
   expect_length(SignatureSpecificFeatures(nmf_exp, k = 3), 3) # select k
   expect_is(ssf3m, "matrix")
@@ -61,5 +82,12 @@ test_that("H NMF normalization", {
   expect_equal(dim(w_hnorm %*% h_hnorm), dim(w %*% h)) # Culsums equal to 1
 })
 
-
+test_that("NMF regularize H", {
+  nmf_exp_hreg <- regularizeH(nmf_exp)
+  h_hreg <- HMatrix(nmf_exp_hreg, k = 2)
+  w_hreg <- WMatrix(nmf_exp_hreg, k = 2)
+  expect_is(nmf_exp_hreg, "nmfExperiment_lite")
+  expect_equal(sum(matrixStats::rowMaxs(h_hreg)), 2) # Max fo each row 1
+  expect_equal(dim(w_hreg %*% h_hreg), dim(w %*% h)) # Culsums equal to 1
+})
 
