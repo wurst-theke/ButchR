@@ -24,6 +24,7 @@ env:
 r_packages:
    - reticulate
    - tensorflow
+   - covr
    #- testthat
 
 # do not build vignettes...takes too long and times out on travis
@@ -95,7 +96,9 @@ before_script:
 # #   - source pt/bin/activate
 # #   - pip install numpy tensorflow-cpu==2.2.0
 
-
+# only report coverage for the release version
+after_success:
+  - test $TRAVIS_R_VERSION_STRING = 'release' && Rscript -e 'covr::codecov()'
 
 
 notifications:

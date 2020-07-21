@@ -94,6 +94,11 @@ setMethod("HMatrix",
                 })
               }
             } else {
+              if (length(k) > 1 ) {
+                stop("k:", paste0(k, collapse = ","), " expecting single value",
+                     "\nPlease select from ranks = ", paste0(x@OptKStats$k, collapse = ","),
+                     "\nOr NULL to retur a list of H matrices for all Ks")
+              }
               idx <- as.character(x@OptKStats$rank_id[x@OptKStats$k == k])
               if (length(idx) == 0 ) {
                 stop("No H matrix present for k = ", k,
@@ -131,6 +136,11 @@ setMethod("WMatrix",
                 })
               }
             } else {
+              if (length(k) > 1 ) {
+                stop("k:", paste0(k, collapse = ","), " expecting single value",
+                     "\nPlease select from ranks = ", paste0(x@OptKStats$k, collapse = ","),
+                     "\nOr NULL to retur a list of W matrices for all Ks")
+              }
               idx <- as.character(x@OptKStats$rank_id[x@OptKStats$k == k])
               if (length(idx) == 0 ) {
                 stop("No W matrix present for k = ", k,
@@ -377,7 +387,9 @@ setMethod("SignatureSpecificFeatures",
             # String of 0 and 1 to matrix
             bin_str_tu_mat <- function(binstr, return_all_features){
               names(binstr) <- rownames(x@SignFeatures)
-              sig_feats <- do.call(rbind, lapply(strsplit(binstr, split = ""), as.numeric))
+              sig_feats <- as.matrix(do.call(rbind,
+                                             lapply(strsplit(binstr, split = ""),
+                                                    as.numeric)))
               if (return_all_features) {
                 return(sig_feats)
               } else {

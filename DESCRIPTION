@@ -27,8 +27,9 @@ Imports:
     methods
 Suggests: 
     circlize,
-    knitr, 
-    rmarkdown
+    knitr,
+    rmarkdown,
+    testthat
 VignetteBuilder: knitr
 Description: NMF implementation using tensorflow and helper functions to select optimal factorization rank and graphic representation of the matrix decomposition.
 License: GPL-3 + file LICENSE

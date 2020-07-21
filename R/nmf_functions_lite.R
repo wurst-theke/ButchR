@@ -106,6 +106,12 @@ runNMFtensor_lite <- function (X,
     stop("\nNegative values present in input matrix\n
          only non-negative matrices supported\n")
   }
+  if(is.data.frame(X)) {
+    warning("Provided input is a data frame, coercing into matrix.")
+    X = as.matrix(X)
+  }
+
+
   # Convert params to integer
   nmf_params <- lapply(list(ranks                 = ranks,
                             n_initializations     = n_initializations,
