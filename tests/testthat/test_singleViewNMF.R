@@ -92,20 +92,28 @@ test_that("NMF regularize H", {
 })
 
 
-test_that("NMF Plots", {
+
+test_that("NMF metric Plots", {
   gstat <- gg_plotKStats(nmf_exp)
-  log <- capture.output({
-    res <- plot(generateRiverplot(nmf_exp))
-  })
   # factorization metrix
   expect_is(gstat, "ggplot")
   expect_length(unique(gstat$data$k), length(ranks)) # for all k
   # FrobError cv sumSilWidth meanSilWidth copheneticCoeff meanAmariDist
   expect_length(unique(gstat$data$Metric), 6)
+})
+
+test_that("NMF metric riverplot", {
+  log <- capture.output({
+    res <- plot(generateRiverplot(nmf_exp))
+  })
+  log2 <- capture.output({
+    res <- plot(generateRiverplot(nmf_exp, useH = TRUE, ranks = 2:3))
+  })
   # riverplot
-  expect_is(log, "character")
-  expect_error(generateRiverplot(nmf_exp, ranks = 4:7))
-  expect_error(generateRiverplot(nmf_exp, ranks = 2))
+  expect_is(log, "character") # all Ks
+  expect_is(log2, "character") # selected Ks
+  expect_error(generateRiverplot(nmf_exp, ranks = 4:7)) # K not in original decomp
+  expect_error(generateRiverplot(nmf_exp, ranks = 2)) # expect a range
 })
 
 
