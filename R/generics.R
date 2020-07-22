@@ -20,29 +20,6 @@
 #' FrobError(nmf_exp)
 setGeneric("FrobError", function(x, ...) standardGeneric("FrobError"))
 
-# Setter
-setGeneric("setFrobError", function(nmfExperiment, FrobError)
-  standardGeneric("setFrobError"))
-
-#### H-Matrix List
-# Getter
-setGeneric("HMatrixList", function(x, k = NULL, ...)
-  standardGeneric("HMatrixList"))
-
-# Setter
-setGeneric("setHMatrixList", function(nmfExperiment, HMatrixList)
-  standardGeneric("setHMatrixList"))
-
-
-#### W-Matrix
-# Getter
-setGeneric("WMatrixList", function(x, k = NULL, ...)
-  standardGeneric("WMatrixList"))
-
-# Setter
-setGeneric("setWMatrixList", function(nmfExperiment, WMatrixList)
-  standardGeneric("setWMatrixList"))
-
 
 #' H-Matrix (H-Matrix with smallest frobError)
 #'
@@ -112,11 +89,6 @@ setGeneric("WMatrix", function(x, k = NULL, ...) standardGeneric("WMatrix"))
 #' }
 setGeneric("OptKStats", function(x, ...) standardGeneric("OptKStats"))
 
-# Setter
-setGeneric("setOptKStats", function(nmfExperiment, OptKStats)
-  standardGeneric("setOptKStats"))
-
-
 #### Optimal K
 #' Return optimal K
 #'
@@ -138,19 +110,11 @@ setGeneric("setOptKStats", function(nmfExperiment, OptKStats)
 #' }
 setGeneric("OptK", function(x, ...) standardGeneric("OptK"))
 
-# Setter
-setGeneric("setOptK", function(nmfExperiment, OptK) standardGeneric("setOptK"))
-
-
-
 
 #### Feature Statistics
 # Getter
 setGeneric("FeatureStats", function(x, ...) standardGeneric("FeatureStats"))
 
-# Setter
-setGeneric("setFeatureStats", function(nmfExperiment, FeatureStats)
-  standardGeneric("setFeatureStats"))
 
 
 #### Signature specific features
