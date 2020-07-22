@@ -16,6 +16,63 @@ Intermediate results for the analysis on hematopoietic cells are available on
 zenodo: https://doi.org/10.5281/zenodo.800049.  
 
 
+## How to install ButchR
+
+### Install TensorFlow  
+
+All the matrix decomposition algorithms implemented in ButchR run using 
+TensorFlow > 2.0.0. Thus, a working installation of TensorFlow is needed to use 
+the package.
+
+There are several ways to install TensorFlow, for example using the R package 
+`tensorflow`:
+
+``` r
+install.packages("tensorflow")
+library(tensorflow)
+install_tensorflow(version = "2.2.0")
+```
+
+Or, if there is a conda environment with TensorFlow installed, it can be 
+activated before loading `ButchR`:
+
+``` r
+# It is important to set the environment before loading reticulate
+reticulate::use_condaenv("tensorflow2env", required = TRUE)
+library(reticulate)
+py_config()
+```
+
+### Install ButchR   
+
+ButchR can be installed by: 
+
+``` r
+remotes::install_github('wurst-theke/ButchR')
+# same as devtools::install_github('wurst-theke/ButchR')
+library(ButchR)
+```
+
+And a pre-build image to run ButchR inside RStudio can be pulled from Docker:
+https://hub.docker.com/r/hdsu/butchr
+
+`docker run --rm -p 8787:8787 -e USER=hdsu -e PASSWORD=pass hdsu/butchr`
+
+
+## ShinyButchR
+
+We also provide an interactive R/Shiny app `ShinyButchR` to perform NMF and 
+explore the results interactively.
+The live version can be used here: 
+https://hdsu-bioquant.shinyapps.io/shinyButchR/
+
+Or a pre-build image can be pulled from Docker:
+https://hub.docker.com/r/hdsu/shinybutchr
+
+`docker run --rm  -p 3838:3838 hdsu/shinybutchr`
+
+
+
 ## How to use ButchR
 
 
