@@ -1,9 +1,10 @@
 norm_mat_list <- list(a = matrix(abs(rnorm(1000)), ncol = 10),
                       b = matrix(abs(rnorm(1000)), ncol = 10))
 ranks <- 2:3
+n_inits <- 2
 inmf_exp <- run_iNMF_tensor(norm_mat_list,
                             ranks = ranks,
-                            n_initializations     = 2,
+                            n_initializations     = n_inits,
                             iterations            = 10^4,
                             convergence_threshold = 10,
                             extract_features = FALSE)
@@ -13,6 +14,9 @@ test_that("iNMF print", {
   expect_output(show(inmf_exp)) # default print
   inmf_exp@OptK <- 3 # fake optK to test
   expect_output(show(inmf_exp)) # default print
+  # FrobError(inmf_exp)
+  expect_is(FrobError(inmf_exp), "data.frame")
+  expect_equal(dim(FrobError(inmf_exp)), c(n_inits, length(ranks)))
 })
 
 
@@ -31,8 +35,25 @@ test_that("H matrix", {
   # extract H matrices only for selected view and rank
   expect_is(HMatrix(inmf_exp, k = 2, view_id = "a", type = "viewspec"), "matrix")
   expect_is(HMatrix(inmf_exp, k = 2, view_id = "a", type = "total"), "matrix")
+  # errors
+  expect_error(HMatrix(inmf_exp, k = 2, view_id = "c"))
+  expect_error(HMatrix(inmf_exp, k = 2, type = "any"))
+  expect_error(HMatrix(inmf_exp, k = 7))
 })
 
+
+
+test_that("W matrix", {
+  expect_is(WMatrix(inmf_exp), "list")
+  # extract W matrices only for selected rank
+  expect_is(WMatrix(inmf_exp, k = 2), "list")
+  expect_is(WMatrix(inmf_exp, k = 2)[[1]], "matrix")
+  # extract W matrices only for selected view and rank
+  expect_is(WMatrix(inmf_exp, k = 2, view_id = "a"), "matrix")
+  # errors
+  expect_error(WMatrix(inmf_exp, k = 2, view_id = "c"))
+  expect_error(HMatrix(inmf_exp, k = 7))
+})
 
 
 test_that("iNMF feature extraction", {
@@ -46,6 +67,9 @@ test_that("iNMF feature extraction", {
   expect_is(SignatureSpecificFeatures(inmf_exp, view_id = "a", k = 3,
                                       return_all_features = TRUE)[[1]],
             "matrix") # specific view, all features
+  # errors
+  expect_error(SignatureSpecificFeatures(inmf_exp, k = 2))
+  expect_error(SignatureSpecificFeatures(inmf_exp, k = 7))
 })
 
 test_that("iNMF feature extraction error K == 2", {
