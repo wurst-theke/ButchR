@@ -383,6 +383,11 @@ setMethod("regularizeH",
 setMethod("SignatureSpecificFeatures",
           "nmfExperiment_lite",
           function(x, k = NULL, return_all_features = FALSE, ...){
+            # if no feature extraction was performed
+            if (nrow(x@SignFeatures) == 0) {
+              stop("No feature extraction has been performed, please run: \n",
+                   "`compute_SignatureFeatures`")
+            }
 
             # String of 0 and 1 to matrix
             bin_str_tu_mat <- function(binstr, return_all_features){
@@ -421,3 +426,53 @@ setMethod("SignatureSpecificFeatures",
             return(ssf)
           }
 )
+
+
+#' @rdname compute_SignatureFeatures-methods
+#' @aliases compute_SignatureFeatures,ANY-method
+#'
+#' @param x an nmfExperiment, nmfExperiment_lite objects
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' data("leukemia")
+#' nmf_exp <- runNMFtensor_lite(leukemia$matrix, ranks = 3,
+#'                              method = "NMF",
+#'                              n_initializations = 2,
+#'                              extract_features = FALSE)
+#' nmf_exp <- compute_SignatureFeatures(nmf_exp)
+#' SignatureSpecificFeatures(nmf_exp, k = 3)
+#' SignatureSpecificFeatures(nmf_exp, k = 3, return_all_features = TRUE)
+#' }
+setMethod("compute_SignatureFeatures",
+          "nmfExperiment_lite",
+          function(x){
+            k <- x@OptKStats$k
+            if (length(k) == 1 & 2 %in% k) {
+              stop("Signature Specific Features extraction is not supported for K = 2")
+            }
+
+            #------------------------------------------------------------------#
+            #             Compute signatures specific features                 #
+            #------------------------------------------------------------------#
+            SignFeatures <- lapply(x@WMatrix, function(W){
+              if (ncol(W) == 2) {
+                return(NULL)
+              } else {
+                rownames(W) <- x@input_matrix$rownames
+                return(WcomputeFeatureStats(W))
+              }
+            })
+            SignFeatures <- data.frame(do.call(cbind, SignFeatures),
+                                       stringsAsFactors = FALSE)
+            #------------------------------------------------------------------#
+            #               Return nmfExperiment_lite object                   #
+            #------------------------------------------------------------------#
+            x@SignFeatures <- SignFeatures
+            return(x)
+          }
+)
+
+
+

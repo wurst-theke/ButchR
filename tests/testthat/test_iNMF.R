@@ -14,17 +14,27 @@ inmf_exp <- run_iNMF_tensor(norm_mat_list,
 test_that("iNMF feature extraction", {
   # iNMF
   expect_output(show(inmf_exp)) # deafault print
-
   expect_error(SignatureSpecificFeatures(inmf_exp)) # if no feature extraction
-  inmf_exp <- compute_SignatureFeatures(inmf_exp) # compute featrures
+  inmf_exp <- compute_SignatureFeatures(inmf_exp) # compute features
   inmf_exp_ssf <- SignatureSpecificFeatures(inmf_exp)
   expect_length(inmf_exp_ssf, length(norm_mat_list)) # one iNMF for each lambda
   expect_length(inmf_exp_ssf[[1]][[1]], k) # for each K
-
-  SignatureSpecificFeatures(inmf_exp)
-
-
 })
+
+test_that("iNMF feature extraction error K == 2", {
+  # iNMF
+  inmf_exp <- run_iNMF_tensor(norm_mat_list,
+                              ranks = 2,
+                              n_initializations     = 2,
+                              iterations            = 10^4,
+                              convergence_threshold = 10,
+                              extract_features = FALSE)
+
+
+  expect_error(SignatureSpecificFeatures(inmf_exp)) # if no feature extraction
+  expect_error(compute_SignatureFeatures(inmf_exp)) # K =2 not supported
+})
+
 
 
 

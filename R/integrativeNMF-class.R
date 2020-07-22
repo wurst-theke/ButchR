@@ -348,14 +348,17 @@ setMethod("SignatureSpecificFeatures",
 #'
 #' @examples
 #' \dontrun{
-#' data("leukemia")
-#' nmf_exp <- runNMFtensor_lite(leukemia$matrix, ranks = 3,
-#'                              method = "NMF",
-#'                              n_initializations = 2,
-#'                              extract_features = FALSE)
-#' nmf_exp <- compute_SignatureFeatures(nmf_exp)
-#' SignatureSpecificFeatures(nmf_exp, k = 3)
-#' SignatureSpecificFeatures(nmf_exp, k = 3, return_all_features = TRUE)
+#' norm_mat_list <- list(a = matrix(abs(rnorm(1000)), ncol = 10),
+#'                       b = matrix(abs(rnorm(1000)), ncol = 10))
+#' inmf_exp <- run_iNMF_tensor(norm_mat_list,
+#'                             ranks = 2:5,
+#'                             n_initializations     = 10,
+#'                             iterations            = 10^4,
+#'                             convergence_threshold = 40,
+#'                             extract_features = FALSE)
+#' inmf_exp <- compute_SignatureFeatures(inmf_exp)
+#' SignatureSpecificFeatures(inmf_exp, k = 3)
+#' SignatureSpecificFeatures(inmf_exp, k = 3, return_all_features = TRUE)
 #' }
 setMethod("compute_SignatureFeatures",
           "integrative_NMF",

@@ -2,7 +2,7 @@ context("Signle view NMF")
 library(ButchR)
 
 ranks <- 2:4
-X <- matrix(1:1000, ncol = 10)
+X <- matrix(abs(rnorm(1000)), ncol = 10)
 colnames(X) <- paste0("Sample", 1:10)
 n_inits <- 5
 nmf_exp <- runNMFtensor_lite(X,
@@ -14,7 +14,7 @@ w <- WMatrix(nmf_exp, k=2)
 
 
 test_that("A matrix with negative values return error", {
-  expect_error(runNMFtensor_lite(matrix(-9:990, ncol = 10),
+  expect_error(runNMFtensor_lite(matrix(rnorm(1000), ncol = 10),
                                  ranks = 2, n_initializations = 1))
   expect_warning(runNMFtensor_lite(as.data.frame(X),
                                    ranks = 2, n_initializations = 1))
@@ -53,7 +53,6 @@ test_that("Results of runNMFtensor are matrices", {
 
 test_that("Feature extraction", {
   ssf3m <- SignatureSpecificFeatures(nmf_exp, k = 3, return_all_features = TRUE)
-
   # feature extraction only for K>2
   expect_error(SignatureSpecificFeatures(nmf_exp, k = 2))
   expect_error(SignatureSpecificFeatures(nmf_exp, k = 5))
@@ -62,6 +61,31 @@ test_that("Feature extraction", {
   expect_is(ssf3m, "matrix")
   expect_equal(dim(ssf3m), c(nrow(X), 3)) # dim
 })
+
+
+test_that("Feature extraction after decomposition", {
+  nmf_exp_nf <- runNMFtensor_lite(X,
+                                  ranks = ranks,
+                                  n_initializations = n_inits,
+                                  extract_features = FALSE)
+  expect_error(SignatureSpecificFeatures(nmf_exp_nf)) # if no feature extraction
+  nmf_exp_nf <- compute_SignatureFeatures(nmf_exp_nf) # compute features
+  nmf_exp_nf_ssf <- SignatureSpecificFeatures(nmf_exp_nf, k = 3, return_all_features = TRUE)
+  expect_is(nmf_exp_nf_ssf, "matrix")
+})
+
+test_that("Feature extraction after decomposition error K == 2", {
+  nmf_exp_nf <- runNMFtensor_lite(X,
+                                  ranks = 2,
+                                  n_initializations = n_inits,
+                                  extract_features = FALSE)
+  expect_error(SignatureSpecificFeatures(nmf_exp_nf)) # if no feature extraction
+  expect_error(compute_SignatureFeatures(inmf_exp)) # K =2 not supported
+})
+
+
+
+
 
 
 test_that("W NMF normalization", {
