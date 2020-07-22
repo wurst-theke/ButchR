@@ -342,7 +342,7 @@ iNMF_lambda_tuning <- function (matrix_list,
                                  iterations            = nmf_params$iterations,
                                  convergence_threshold = nmf_params$convergence_threshold,
                                  Sp                    = Sp,
-                                 extract_features = FALSE)
+                                 extract_features      = extract_features)
   # Estimate Frob. norm
   norm_jnmf <- lapply(viewsIDs, function(viewID){
     #xn <- norm(matrix_list[[viewID]], type = "F")
@@ -365,7 +365,7 @@ iNMF_lambda_tuning <- function (matrix_list,
                       n_initializations     = nmf_params$n_initializations,
                       iterations            = nmf_params$iterations,
                       convergence_threshold = nmf_params$convergence_threshold,
-                      extract_features = FALSE)
+                      extract_features      = extract_features)
   })
   # Estimate Frob. norm
   norm_snmf <- lapply(viewsIDs, function(viewID){
@@ -391,7 +391,7 @@ iNMF_lambda_tuning <- function (matrix_list,
                                 convergence_threshold = nmf_params$convergence_threshold,
                                 Sp                    = Sp,
                                 lamb                  = lamb,
-                                extract_features = FALSE)
+                                extract_features      = extract_features)
   })
   # Estimate Frob. norm
   norm_inmf <- sapply(inmf_obj_list, function(inmf_obj){
@@ -441,7 +441,7 @@ iNMF_lambda_tuning <- function (matrix_list,
     idx <- which(lambdas == min(residuals_df$lambda[residuals_df$best_lambda]))
     return(inmf_obj_list[[idx]])
   } else if (Output_type == "all_iNMF") {
-    return(snmf_obj_list)
+    return(inmf_obj_list)
   } else if (Output_type == "all") {
     return(list(iNMF      = inmf_obj_list,
                 jNMF      = jnmf_obj,
