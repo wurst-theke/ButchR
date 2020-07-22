@@ -108,7 +108,7 @@ setMethod("show",
 #'
 setMethod("HMatrix",
           "integrative_NMF",
-          function(x, k = NULL, view_id = NULL, type, ...) {
+          function(x, k = NULL, view_id = NULL, type = "all", ...) {
             # Check if view id is indeed one of the views
             if (is.null(view_id)) {
               view_id <- as.character(x@input_data$dim$view_ids)

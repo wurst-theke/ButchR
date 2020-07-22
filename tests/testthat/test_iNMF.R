@@ -1,81 +1,61 @@
 norm_mat_list <- list(a = matrix(abs(rnorm(1000)), ncol = 10),
                       b = matrix(abs(rnorm(1000)), ncol = 10))
-lambdas <- c(0, 0.6)
-k <- 3
-
+ranks <- 2:3
 inmf_exp <- run_iNMF_tensor(norm_mat_list,
-                            ranks = k,
+                            ranks = ranks,
                             n_initializations     = 2,
                             iterations            = 10^4,
                             convergence_threshold = 10,
                             extract_features = FALSE)
 
 
+test_that("iNMF print", {
+  expect_output(show(inmf_exp)) # default print
+  inmf_exp@OptK <- 3 # fake optK to test
+  expect_output(show(inmf_exp)) # default print
+})
+
+
+test_that("H matrix", {
+  expect_output(show(inmf_exp)) # default print
+  expect_is(HMatrix(inmf_exp), "list")
+  expect_is(HMatrix(inmf_exp, type = "shared"), "list")
+  expect_length(HMatrix(inmf_exp, type = "shared"), length(ranks)) # for each K
+  expect_length(HMatrix(inmf_exp, type = "viewspec"), length(ranks)) # for each K
+  expect_length(HMatrix(inmf_exp, type = "total"), length(ranks)) # for each K
+  # extract H matrices only for selected rank
+  expect_is(HMatrix(inmf_exp, k = 2, type = "shared"), "matrix")
+  expect_is(HMatrix(inmf_exp, k = 2, type = "viewspec"), "list")
+  expect_is(HMatrix(inmf_exp, k = 2, type = "total"), "list")
+  expect_is(HMatrix(inmf_exp, k = 2, type = "all"), "list")
+  # extract H matrices only for selected view and rank
+  expect_is(HMatrix(inmf_exp, k = 2, view_id = "a", type = "viewspec"), "matrix")
+  expect_is(HMatrix(inmf_exp, k = 2, view_id = "a", type = "total"), "matrix")
+})
+
+
+
 test_that("iNMF feature extraction", {
-  # iNMF
-  expect_output(show(inmf_exp)) # deafault print
   expect_error(SignatureSpecificFeatures(inmf_exp)) # if no feature extraction
   inmf_exp <- compute_SignatureFeatures(inmf_exp) # compute features
   inmf_exp_ssf <- SignatureSpecificFeatures(inmf_exp)
-  expect_length(inmf_exp_ssf, length(norm_mat_list)) # one iNMF for each lambda
-  expect_length(inmf_exp_ssf[[1]][[1]], k) # for each K
+  expect_length(inmf_exp_ssf, length(norm_mat_list))
+  expect_length(inmf_exp_ssf[[1]][[1]], 3) # for each K
+  expect_error(SignatureSpecificFeatures(inmf_exp, view_id = "c")) # no view
+
+  expect_is(SignatureSpecificFeatures(inmf_exp, view_id = "a", k = 3,
+                                      return_all_features = TRUE)[[1]],
+            "matrix") # specific view, all features
 })
 
 test_that("iNMF feature extraction error K == 2", {
-  # iNMF
   inmf_exp <- run_iNMF_tensor(norm_mat_list,
                               ranks = 2,
                               n_initializations     = 2,
                               iterations            = 10^4,
                               convergence_threshold = 10,
                               extract_features = FALSE)
-
-
   expect_error(SignatureSpecificFeatures(inmf_exp)) # if no feature extraction
   expect_error(compute_SignatureFeatures(inmf_exp)) # K =2 not supported
 })
 
-
-
-
-#
-# run_iNMF_tensor(norm_mat_list,
-#                 ranks = 2:5,
-#                 n_initializations     = 0,
-#                 iterations            = 10^4,
-#                 convergence_threshold = 40)@OptKStats
-#
-#
-# inmf_exp <- run_iNMF_tensor(norm_mat_list,
-#                                ranks = 2:5,
-#                                n_initializations     = 2,
-#                                iterations            = 10^4,
-#                                convergence_threshold = 40)
-# inmf_exp
-#
-# #
-# #
-# #
-# iNMF_lambda_tuning(matrix_list           = norm_mat_list,
-#                    lambdas               = 0,
-#                    Output_type           = "residuals",
-#                    rank                  = 3,
-#                    n_initializations     = 5,
-#                    iterations            = 10^4,
-#                    convergence_threshold = 40,
-#                    Sp                    = 0,
-#                    extract_features      = FALSE)
-#
-#
-#
-# # Retrieve all the objects and extract the iNMF for the best lambda:
-# inmf_tune <- iNMF_lambda_tuning(matrix_list           = norm_mat_list,
-#                                 lambdas               = seq(0, 1, 0.1),
-#                                 thr_cons              = 4,
-#                                 Output_type           = "all",
-#                                 rank                  = 9,
-#                                 n_initializations     = 5,
-#                                 iterations            = 10^4,
-#                                 convergence_threshold = 40)
-# min(inmf_tune$residuals$lambda[inmf_tune$residuals$best_lambda])
-# inmf_tune$iNMF$lambda_0.2
