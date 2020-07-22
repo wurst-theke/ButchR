@@ -2,60 +2,50 @@ norm_mat_list <- list(a = matrix(abs(rnorm(1000)), ncol = 10),
                       b = matrix(abs(rnorm(1000)), ncol = 10))
 lambdas <- c(0, 0.6)
 k <- 3
-atune_outtypes <- c("plot", "residuals", "iNMF", "all_iNMF", "all")
-inmf_atune <- lapply(setNames(atune_outtypes, atune_outtypes), function(atune_outtype){
-  iNMF_lambda_tuning(matrix_list           = norm_mat_list,
-                     lambdas               = lambdas,
-                     Output_type           = atune_outtype,
-                     rank                  = k,
-                     n_initializations     = 2,
-                     iterations            = 10^4,
-                     convergence_threshold = 10,
-                     Sp                    = 0,
-                     show_plot             = FALSE,
-                     extract_features      = TRUE)
-})
+
+inmf_exp <- run_iNMF_tensor(norm_mat_list,
+                            ranks = k,
+                            n_initializations     = 2,
+                            iterations            = 10^4,
+                            convergence_threshold = 10,
+                            extract_features = FALSE)
 
 
-inmf_exp <- inmf_atune$iNMF
-inmf_exp_ssf <- SignatureSpecificFeatures(inmf_exp)
-
-test_that("iNMF alpha tuning", {
+test_that("iNMF feature extraction", {
   # iNMF
-  expect_is(inmf_exp, "integrative_NMF")
-  expect_is(inmf_exp_ssf, "list")
+  expect_output(show(inmf_exp)) # deafault print
+
+  expect_error(SignatureSpecificFeatures(inmf_exp)) # if no feature extraction
+  inmf_exp <- compute_SignatureFeatures(inmf_exp) # compute featrures
+  inmf_exp_ssf <- SignatureSpecificFeatures(inmf_exp)
   expect_length(inmf_exp_ssf, length(norm_mat_list)) # one iNMF for each lambda
   expect_length(inmf_exp_ssf[[1]][[1]], k) # for each K
-  # Plot
-  expect_length(unique(inmf_atune$plot$data$lambda), length(lambdas))
-  expect_is(inmf_atune$plot, "ggplot")
-  # Residuals
-  expect_equal(dim(inmf_atune$residuals), c(length(lambdas), 7)) # dim
-  expect_is(inmf_atune$residuals, "data.frame")
-  # all_iNMF
-  expect_length(inmf_atune$all_iNMF, length(lambdas)) # one iNMF for each lambda
-  expect_is(inmf_atune$all_iNMF, "list")
-  expect_is(inmf_atune$all_iNMF[[1]], "integrative_NMF")
-  # ALL: list with iNMF jNMF NMF plot and residuals
-  expect_length(inmf_atune$all, 5)
-  expect_is(inmf_atune$all, "list")
+
+  SignatureSpecificFeatures(inmf_exp)
+
+
 })
 
 
 
-
-
-
+#
+# run_iNMF_tensor(norm_mat_list,
+#                 ranks = 2:5,
+#                 n_initializations     = 0,
+#                 iterations            = 10^4,
+#                 convergence_threshold = 40)@OptKStats
+#
+#
 # inmf_exp <- run_iNMF_tensor(norm_mat_list,
 #                                ranks = 2:5,
 #                                n_initializations     = 2,
 #                                iterations            = 10^4,
 #                                convergence_threshold = 40)
 # inmf_exp
-
 #
-#
-#
+# #
+# #
+# #
 # iNMF_lambda_tuning(matrix_list           = norm_mat_list,
 #                    lambdas               = 0,
 #                    Output_type           = "residuals",

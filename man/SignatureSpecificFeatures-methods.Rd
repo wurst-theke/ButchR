@@ -38,7 +38,7 @@ SignatureSpecificFeatures(x, k = NULL, return_all_features = FALSE, ...)
 \item{return_all_features}{logical indicating whether to return a binary
 matrix with the same dimension as the selected factorization rank.
 Were a 1 is assigned to those features contributing towards a signature and
-a 0 to those that do not show a siganificant contribution.}
+a 0 to those that do not show a significant contribution.}
 
 \item{...}{additional parameters.}
 
@@ -46,11 +46,11 @@ a 0 to those that do not show a siganificant contribution.}
 features will be extracted.}
 }
 \value{
-list of signature specific fatures or binary matrices for all features
+list of signature specific features or binary matrices for all features
 }
 \description{
 Returns the list of signatures specific features
-for all factorization ranks or for the indicaded rank,
+for all factorization ranks or for the indicated rank,
 if return_all_features = TRUE
 returns a binary matrix for every factorization rank,
 with features in the rows and samples in the columns,

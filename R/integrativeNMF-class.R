@@ -275,6 +275,11 @@ setMethod("FrobError", "integrative_NMF", function(x, ...) x@FrobError)
 setMethod("SignatureSpecificFeatures",
           "integrative_NMF",
           function(x, k = NULL, return_all_features = FALSE, view_id = NULL, ...){
+            # if no feature extraction was performed
+            if (length(x@SignFeatures) == 0) {
+              stop("No feature extraction has been performed, please run: \n",
+                   "`compute_SignatureFeatures`")
+            }
             # Check if view id is indeed one of the views
             if (is.null(view_id)) {
               view_id <- stats::setNames(names(x@SignFeatures), names(x@SignFeatures))
@@ -330,6 +335,61 @@ setMethod("SignatureSpecificFeatures",
               })
             }
             return(ssf)
+          }
+)
+
+
+
+#' @rdname compute_SignatureFeatures-methods
+#' @aliases compute_SignatureFeatures,ANY-method
+#'
+#' @param x an nmfExperiment, integrative_NMF objects
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' data("leukemia")
+#' nmf_exp <- runNMFtensor_lite(leukemia$matrix, ranks = 3,
+#'                              method = "NMF",
+#'                              n_initializations = 2,
+#'                              extract_features = FALSE)
+#' nmf_exp <- compute_SignatureFeatures(nmf_exp)
+#' SignatureSpecificFeatures(nmf_exp, k = 3)
+#' SignatureSpecificFeatures(nmf_exp, k = 3, return_all_features = TRUE)
+#' }
+setMethod("compute_SignatureFeatures",
+          "integrative_NMF",
+          function(x){
+            k <- x@OptKStats$k
+            if (length(k) == 1 & 2 %in% k) {
+              stop("Signature Specific Features extraction is not supported for K = 2")
+            }
+
+            viewsIDs <- x@input_data$dim$view_ids
+            view_specific_WMatrix_list <- x@WMatrix_vs
+            #------------------------------------------------------------------#
+            #             Compute signatures specific features                 #
+            #------------------------------------------------------------------#
+            SignFeatures <- lapply(stats::setNames(viewsIDs, viewsIDs), function(viewsID){
+              SignFeatures_eval <- lapply(view_specific_WMatrix_list, function(k_eval){
+                W <- k_eval[[viewsID]]
+                if (ncol(W) == 2) {
+                  return(NULL)
+                } else {
+                  rownames(W) <- x@input_data$rownames[[viewsID]]
+                  return(WcomputeFeatureStats(W))
+                }
+              })
+              data.frame(do.call(cbind, SignFeatures_eval),
+                         stringsAsFactors = FALSE)
+            })
+
+
+            #------------------------------------------------------------------#
+            #                  Return integrative_NMF object                   #
+            #------------------------------------------------------------------#
+            x@SignFeatures <- SignFeatures
+            return(x)
           }
 )
 

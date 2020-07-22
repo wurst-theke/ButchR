@@ -153,11 +153,11 @@ setGeneric("setFeatureStats", function(nmfExperiment, FeatureStats)
   standardGeneric("setFeatureStats"))
 
 
-#### Signature specfific features
+#### Signature specific features
 #' Signature Specific Features
 #'
 #' Returns the list of signatures specific features
-#' for all factorization ranks or for the indicaded rank,
+#' for all factorization ranks or for the indicated rank,
 #' if return_all_features = TRUE
 #' returns a binary matrix for every factorization rank,
 #' with features in the rows and samples in the columns,
@@ -170,10 +170,10 @@ setGeneric("setFeatureStats", function(nmfExperiment, FeatureStats)
 #' @param return_all_features logical indicating whether to return a binary
 #' matrix with the same dimension as the selected factorization rank.
 #' Were a 1 is assigned to those features contributing towards a signature and
-#' a 0 to those that do not show a siganificant contribution.
+#' a 0 to those that do not show a significant contribution.
 #' @param ... additional parameters.
 #'
-#' @return list of signature specific fatures or binary matrices for all features
+#' @return list of signature specific features or binary matrices for all features
 #' @docType methods
 #' @rdname SignatureSpecificFeatures-methods
 #' @exportMethod SignatureSpecificFeatures
@@ -189,6 +189,40 @@ setGeneric("setFeatureStats", function(nmfExperiment, FeatureStats)
 setGeneric("SignatureSpecificFeatures",
            function(x, k = NULL, return_all_features = FALSE, ...)
              standardGeneric("SignatureSpecificFeatures"))
+
+
+#' Compute Signature Features
+#' Performs feature extraction for all
+#' factorization ranks > 2.
+#' Returns an nmfExperiment object with computed signature features
+#'
+#' A K-means with k=2 is run over all rows of the W matrices.
+#' Resulting in a binary matrix for every factorization rank,
+#' with features in the rows and samples in the columns,
+#' in which 1 means that the features is contributing to the signature,
+#' and 0 it does not.
+#' The extraction of Signature Specific Features is not supported for k = 2
+#'
+#' @param x an nmfExperiment, integrative_NMF objects
+#' @return the same type of input object with computed signature features.
+#' @docType methods
+#' @rdname compute_SignatureFeatures-methods
+#' @exportMethod compute_SignatureFeatures
+#' @examples
+#' \dontrun{
+#' data("leukemia")
+#' nmf_exp <- runNMFtensor_lite(leukemia$matrix, ranks = 3,
+#'                              method = "NMF",
+#'                              n_initializations = 2,
+#'                              extract_features = FALSE)
+#' nmf_exp <- compute_SignatureFeatures(nmf_exp)
+#' SignatureSpecificFeatures(nmf_exp, k = 3)
+#' SignatureSpecificFeatures(nmf_exp, k = 3, return_all_features = TRUE)
+#' }
+setGeneric("compute_SignatureFeatures",
+           function(x)
+             standardGeneric("compute_SignatureFeatures"))
+
 
 # Setter
 setGeneric("setSignatureSpecificFeatures",
