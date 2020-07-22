@@ -1,3 +1,6 @@
+context("Integrative NMF alpha tune")
+library(ButchR)
+
 norm_mat_list <- list(a = matrix(abs(rnorm(1000)), ncol = 10),
                       b = matrix(abs(rnorm(1000)), ncol = 10))
 lambdas <- c(0, 0.6)

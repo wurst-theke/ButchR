@@ -41,8 +41,9 @@ uses a list of non-negative matrices as input
 }
 \examples{
 \dontrun{
-jnmf_exp <- run_joinNMF_tensor(list(a = matrix(1:1000, ncol = 10),
-                                    b = matrix(1:1000, ncol = 10)),
+norm_mat_list <- list(a = matrix(abs(rnorm(1000)), ncol = 10),
+                      b = matrix(abs(rnorm(1000)), ncol = 10))
+jnmf_exp <- run_joinNMF_tensor(norm_mat_list,
                                ranks = 2:5,
                                n_initializations     = 10,
                                iterations            = 10^4,

@@ -1,4 +1,4 @@
-context("Signle view NMF")
+context("Single view NMF")
 library(ButchR)
 
 ranks <- 2:4

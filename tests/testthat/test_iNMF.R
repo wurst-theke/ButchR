@@ -1,3 +1,7 @@
+context("Integrative NMF")
+library(ButchR)
+
+
 norm_mat_list <- list(a = matrix(abs(rnorm(1000)), ncol = 10),
                       b = matrix(abs(rnorm(1000)), ncol = 10))
 ranks <- 2:3
@@ -21,7 +25,6 @@ test_that("iNMF print", {
 
 
 test_that("H matrix", {
-  expect_output(show(inmf_exp)) # default print
   expect_is(HMatrix(inmf_exp), "list")
   expect_is(HMatrix(inmf_exp, type = "shared"), "list")
   expect_length(HMatrix(inmf_exp, type = "shared"), length(ranks)) # for each K
@@ -52,7 +55,7 @@ test_that("W matrix", {
   expect_is(WMatrix(inmf_exp, k = 2, view_id = "a"), "matrix")
   # errors
   expect_error(WMatrix(inmf_exp, k = 2, view_id = "c"))
-  expect_error(HMatrix(inmf_exp, k = 7))
+  expect_error(WMatrix(inmf_exp, k = 7))
 })
 
 
@@ -62,12 +65,11 @@ test_that("iNMF feature extraction", {
   inmf_exp_ssf <- SignatureSpecificFeatures(inmf_exp)
   expect_length(inmf_exp_ssf, length(norm_mat_list))
   expect_length(inmf_exp_ssf[[1]][[1]], 3) # for each K
-  expect_error(SignatureSpecificFeatures(inmf_exp, view_id = "c")) # no view
-
   expect_is(SignatureSpecificFeatures(inmf_exp, view_id = "a", k = 3,
                                       return_all_features = TRUE)[[1]],
             "matrix") # specific view, all features
   # errors
+  expect_error(SignatureSpecificFeatures(inmf_exp, view_id = "c")) # no view
   expect_error(SignatureSpecificFeatures(inmf_exp, k = 2))
   expect_error(SignatureSpecificFeatures(inmf_exp, k = 7))
 })
