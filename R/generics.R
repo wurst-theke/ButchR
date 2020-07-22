@@ -188,13 +188,6 @@ setGeneric("compute_SignatureFeatures",
              standardGeneric("compute_SignatureFeatures"))
 
 
-# Setter
-setGeneric("setSignatureSpecificFeatures",
-           function(nmfExperiment, SignatureSpecificFeatures){
-             standardGeneric("setSignatureSpecificFeatures")
-           })
-
-
 #==============================================================================#
 #                               NMF Normalization                              #
 #==============================================================================#
