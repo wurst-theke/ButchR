@@ -4,7 +4,7 @@
 #' Returns a data.frame with factorization ranks in the columns,
 #' and the Frobenius error for every NMF initialization in the rows.
 #'
-#' @param x an R object of type ButchR_NMF, ButchR_JoinNMF, or
+#' @param x an object of type ButchR_NMF, ButchR_JoinNMF, or
 #' ButchR_IntegrativeNMF.
 #' @param ... additional parameters.
 #'
@@ -25,7 +25,7 @@ setGeneric("FrobError", function(x, ...) standardGeneric("FrobError"))
 #'
 #' Return a list of H-Matrices or an H-Matrix for the indicaded rank
 #'
-#' @param x an R object of type ButchR_NMF, ButchR_JoinNMF, or
+#' @param x an object of type ButchR_NMF, ButchR_JoinNMF, or
 #' ButchR_IntegrativeNMF.
 #' @param k numeric - factorization rank.
 #' @param ... additional parameters.
@@ -49,7 +49,7 @@ setGeneric("HMatrix", function(x, k = NULL, ...)
 #'
 #' Return a list of W-Matrices or a W-Matrix for the indicaded rank
 #'
-#' @param x an R object of type ButchR_NMF, ButchR_JoinNMF, or
+#' @param x an object of type ButchR_NMF, ButchR_JoinNMF, or
 #' ButchR_IntegrativeNMF.
 #' @param k numeric - factorization rank.
 #' @param ... additional parameters.
@@ -71,7 +71,7 @@ setGeneric("WMatrix", function(x, k = NULL, ...) standardGeneric("WMatrix"))
 
 #' Return optimal factorization rank (K) Statistics
 #'
-#' @param x an R object of type ButchR_NMF.
+#' @param x an object of type ButchR_NMF.
 #' @param ... additional parameters.
 #'
 #' @return optimal K Statistics
@@ -92,7 +92,7 @@ setGeneric("OptKStats", function(x, ...) standardGeneric("OptKStats"))
 #### Optimal K
 #' Return optimal K
 #'
-#' @param x an R object of type ButchR_NMF.
+#' @param x an object of type ButchR_NMF.
 #' @param ... additional parameters.
 #'
 #' @return numeric - optimal K
@@ -129,7 +129,7 @@ setGeneric("FeatureStats", function(x, ...) standardGeneric("FeatureStats"))
 #' and 0 it does not.
 #' The extraction of Signature Specific Features is not supported for k = 2
 #'
-#' @param x an R object of type ButchR_NMF, ButchR_JoinNMF, or
+#' @param x an object of type ButchR_NMF, ButchR_JoinNMF, or
 #' ButchR_IntegrativeNMF.
 #' @param k numeric  - factorization rank
 #' @param return_all_features logical indicating whether to return a binary
@@ -168,7 +168,7 @@ setGeneric("SignatureSpecificFeatures",
 #' and 0 it does not.
 #' The extraction of Signature Specific Features is not supported for k = 2
 #'
-#' @param x an R object of type ButchR_NMF, ButchR_JoinNMF, or
+#' @param x an object of type ButchR_NMF, ButchR_JoinNMF, or
 #' ButchR_IntegrativeNMF.
 #' @return the same type of input object with computed signature features.
 #' @docType methods
@@ -199,7 +199,7 @@ setGeneric("compute_SignatureFeatures",
 #' mutiplied with the rows of H in order to keep the matrix product W*H
 #' constant.
 #'
-#' @param nmf_exp an R object of type ButchR_NMF.
+#' @param nmf_exp an object of type ButchR_NMF.
 #' @param ... additional parameters.
 #'
 #' @return a ButchR_NMF object normalized by W.
@@ -221,7 +221,7 @@ setGeneric("normalizeW", function(nmf_exp, ...) standardGeneric("normalizeW"))
 #' mutiplied with the columns of W in order to keep the matrix product W*H
 #' constant.
 #'
-#' @param nmf_exp an R object of type ButchR_NMF.
+#' @param nmf_exp an object of type ButchR_NMF.
 #' @param ... additional parameters.
 #'
 #' @return a ButchR_NMF object normalized by H.
@@ -243,7 +243,7 @@ setGeneric("normalizeH", function(nmf_exp, ...) standardGeneric("normalizeH"))
 #' mutiplied with the columns of W in order to keep the matrix product W*H
 #' constant.
 #'
-#' @param nmf_exp an R object of type ButchR_NMF.
+#' @param nmf_exp an object of type ButchR_NMF.
 #' @param ... additional parameters.
 #'
 #' @return a ButchR_NMF object regularized by H.
@@ -270,7 +270,7 @@ setGeneric("regularizeH", function(nmf_exp, ...) standardGeneric("regularizeH"))
 #' Generate a riverplot object that displays the similarities between
 #' signatures at different factorization ranks
 #'
-#' @param nmf_exp an R object of type ButchR_NMF.
+#' @param nmf_exp an object of type ButchR_NMF.
 #' @param ranks numeric vector of the selected factorization ranks to generate
 #' a riverplot.
 #' @param edges.cutoff cutoff until which similarities are displayed

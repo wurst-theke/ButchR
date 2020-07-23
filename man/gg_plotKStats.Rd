@@ -11,7 +11,7 @@ gg_plotKStats(
 )
 }
 \arguments{
-\item{nmf_exp}{A nmfExperiment_lite object}
+\item{nmf_exp}{an object of class ButchR_NMF.}
 
 \item{plot_vars}{character - ids of the metrics to display}
 }
@@ -19,8 +19,8 @@ gg_plotKStats(
 a ggplot figure with the values for the six factorization metrics
 }
 \description{
-For every factorization rank the Frobinius error,
-coefficient variation of Frobinius error,
+For every factorization rank the Frobenius error,
+coefficient variation of Frobenius error,
 sum Silhouette Width, mean Silhouette width,
 cophenetic coefficient and mean Amari distance is shown
 }

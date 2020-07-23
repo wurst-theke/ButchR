@@ -7,12 +7,12 @@
 #------------------------------------------------------------------------------#
 #' Plots optimal K metrics
 #'
-#' For every factorization rank the Frobinius error,
-#' coefficient variation of Frobinius error,
+#' For every factorization rank the Frobenius error,
+#' coefficient variation of Frobenius error,
 #' sum Silhouette Width, mean Silhouette width,
 #' cophenetic coefficient and mean Amari distance is shown
 #'
-#' @param nmf_exp A nmfExperiment_lite object
+#' @param nmf_exp an object of class ButchR_NMF.
 #' @param plot_vars character - ids of the metrics to display
 #'
 #' @return a ggplot figure with the values for the six factorization metrics
@@ -70,7 +70,7 @@ gg_plotKStats <- function(nmf_exp,
 #' plot(generateRiverplot(nmf_exp, ranks = 2:5))
 #' }
 setMethod("generateRiverplot",
-          "nmfExperiment_lite",
+          "ButchR_NMF",
           function(nmf_exp, edges.cutoff = 0,
                    useH=FALSE, color=TRUE,
                    ranks=NULL) {

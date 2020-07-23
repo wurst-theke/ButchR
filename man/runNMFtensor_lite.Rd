@@ -48,7 +48,7 @@ if NULL will compute own graph.}
 actorization ranks > 2.}
 }
 \value{
-A nmfExperiment_lite object, containg the factorized matrices W and
+A ButchR_NMF object, containg the factorized matrices W and
  H, along with factorization metrics
 }
 \description{

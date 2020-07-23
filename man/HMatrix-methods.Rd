@@ -4,7 +4,7 @@
 \docType{methods}
 \name{HMatrix}
 \alias{HMatrix}
-\alias{HMatrix,nmfExperiment_lite-method}
+\alias{HMatrix,ButchR_NMF-method}
 \alias{HMatrix,ANY-method}
 \alias{HMatrix,integrative_NMF-method}
 \alias{HMatrix,join_NMF-method}
@@ -12,14 +12,14 @@
 \usage{
 HMatrix(x, k = NULL, ...)
 
-\S4method{HMatrix}{nmfExperiment_lite}(x, k = NULL, ...)
+\S4method{HMatrix}{ButchR_NMF}(x, k = NULL, ...)
 
 \S4method{HMatrix}{integrative_NMF}(x, k = NULL, view_id = NULL, type = "all", ...)
 
 \S4method{HMatrix}{join_NMF}(x, k = NULL, ...)
 }
 \arguments{
-\item{x}{an R object of type ButchR_NMF, ButchR_JoinNMF, or
+\item{x}{an object of type ButchR_NMF, ButchR_JoinNMF, or
 ButchR_IntegrativeNMF.}
 
 \item{k}{numeric - factorization rank.}

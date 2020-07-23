@@ -5,32 +5,32 @@ NULL
 # This file is part of the ButchR package. The ButchR package is licenced
 # under GPL-3
 
-#' NMF Experiment Class lite
+#' The ButchR_NMF class
 #'
-#' @slot input_matrix lsit of matrices
+#' @slot input_matrix list of matrices
 #' @slot WMatrix list.
 #' @slot HMatrix list.
 #' @slot FrobError DataFrame.
 #' @slot OptKStats DataFrame.
-#' @slot OptK numeric
-#' @slot SignFeatures DataFrame or list
+#' @slot OptK numeric.
+#' @slot SignFeatures DataFrame or list.
 #'
-#' @return An object of NMF Experiment Class lite
+#' @return An object of class ButchR_NMF.
 #' @import methods
 #' @export
 #'
 #' @examples
 #' \dontrun{
-#' nmfExperiment_lite(input_matrix = input_matrix,
-#'                    WMatrix      = lapply(complete_eval, "[[" , "W"),
-#'                    HMatrix      = lapply(complete_eval, "[[" , "H"),
-#'                    FrobError    = frob_errors,
-#'                    OptKStats    = OptKStats,
-#'                    OptK         = OptK,
-#'                    SignFeatures = SignFeatures)
+#' ButchR_NMF(input_matrix = input_matrix,
+#'            WMatrix      = lapply(complete_eval, "[[" , "W"),
+#'            HMatrix      = lapply(complete_eval, "[[" , "H"),
+#'            FrobError    = frob_errors,
+#'            OptKStats    = OptKStats,
+#'            OptK         = OptK,
+#'            SignFeatures = SignFeatures)
 #' }
-nmfExperiment_lite <- setClass(
-  Class = "nmfExperiment_lite",
+ButchR_NMF <- setClass(
+  Class = "ButchR_NMF",
   slots = list(input_matrix = "list",
                HMatrix      = "list",
                WMatrix      = "list",
@@ -42,9 +42,9 @@ nmfExperiment_lite <- setClass(
 )
 
 setMethod("show",
-          "nmfExperiment_lite",
+          "ButchR_NMF",
           function(object) {
-            cat("class: NMF object lite \n")
+            cat("class: ButchR_NMF \n")
             #cat("Best factorization index: ", object@best_factorization_idx, "\n")
             cat("Original matrix dimension: ", object@input_matrix$dim, "\n")
             cat("Factorization performed for ranks: ", object@OptKStats$k, "\n")
@@ -83,7 +83,7 @@ setMethod("show",
 #' HMatrix(nmf_exp)
 #' HMatrix(nmf_exp, k = 2)
 setMethod("HMatrix",
-          "nmfExperiment_lite",
+          "ButchR_NMF",
           function(x, k = NULL, ...) {
             if(is.null(k)) {
               H <- x@HMatrix
@@ -121,11 +121,11 @@ setMethod("HMatrix",
 #' @export
 #'
 #' @examples
-#' # For nmfExperiment_lite objects:
+#' # For ButchR_NMF objects:
 #' WMatrix(nmf_exp)
 #' WMatrix(nmf_exp, k = 2)
 setMethod("WMatrix",
-          "nmfExperiment_lite",
+          "ButchR_NMF",
           function(x, k = NULL, ...) {
             if(is.null(k)) {
               W <- x@WMatrix
@@ -173,13 +173,13 @@ setMethod("WMatrix",
 #' n_initializations = 2)
 #' FrobError(nmf_exp)
 #' }
-setMethod("FrobError", "nmfExperiment_lite", function(x, ...) x@FrobError)
+setMethod("FrobError", "ButchR_NMF", function(x, ...) x@FrobError)
 
 
 #### Optimal K Statistics
 #' Return optimal factorization rank (K) Statistics
 #'
-#' @param x an nmfExperiment_lite object
+#' @param x an object of class ButchR_NMF.
 #' @param ... additional parameters.
 #'
 #' @return optimal K Statistics
@@ -193,12 +193,12 @@ setMethod("FrobError", "nmfExperiment_lite", function(x, ...) x@FrobError)
 #' n_initializations = 2)
 #' OptKStats(nmf_exp)
 #' }
-setMethod("OptKStats", "nmfExperiment_lite", function(x, ...) x@OptKStats)
+setMethod("OptKStats", "ButchR_NMF", function(x, ...) x@OptKStats)
 
 #### Optimal K
 #' Return optimal K
 #'
-#' @param x an nmfExperiment_lite object
+#' @param x an object of class ButchR_NMF.
 #' @param ... additional parameters.
 #'
 #' @return numeric - optimal K
@@ -212,7 +212,7 @@ setMethod("OptKStats", "nmfExperiment_lite", function(x, ...) x@OptKStats)
 #' n_initializations = 10)
 #' OptK(nmf_exp)
 #' }
-setMethod("OptK", "nmfExperiment_lite", function(x, ...) x@OptK)
+setMethod("OptK", "ButchR_NMF", function(x, ...) x@OptK)
 
 #------------------------------------------------------------------------------#
 #                               NMF Normalization                              #
@@ -267,7 +267,7 @@ normalize_matrix_per_dim <- function (in_matrix, in_dimension) {
 #' normalizeW(nmf_exp)
 #' }
 setMethod("normalizeW",
-          "nmfExperiment_lite",
+          "ButchR_NMF",
           function(nmf_exp){
             # account for WMatrixList and HMatrixList
             #nmf_exp@WMatrix
@@ -304,7 +304,7 @@ setMethod("normalizeW",
 #' normalizeH(nmf_exp)
 #' }
 setMethod("normalizeH",
-          "nmfExperiment_lite",
+          "ButchR_NMF",
           function(nmf_exp){
             # account for WMatrixList and HMatrixList
             #nmf_exp@WMatrix
@@ -341,7 +341,7 @@ setMethod("normalizeH",
 #' regularizeH(nmf_exp)
 #' }
 setMethod("regularizeH",
-          "nmfExperiment_lite",
+          "ButchR_NMF",
           function(nmf_exp){
             # account for WMatrixList and HMatrixList
             nmf_exp@WMatrix
@@ -374,14 +374,14 @@ setMethod("regularizeH",
 #'
 #' @examples
 #' \dontrun{
-#' # For nmfExperiment_lite objects:
+#' # For ButchR_NMF objects:
 #' SignatureSpecificFeatures(nmf_exp)
 #' lapply(SignatureSpecificFeatures(nmf_exp), function(x) sapply(x, length))
 #' SignatureSpecificFeatures(nmf_exp, k = 3)
 #' SignatureSpecificFeatures(nmf_exp, k = 3, return_all_features = TRUE)
 #' }
 setMethod("SignatureSpecificFeatures",
-          "nmfExperiment_lite",
+          "ButchR_NMF",
           function(x, k = NULL, return_all_features = FALSE, ...){
             # if no feature extraction was performed
             if (nrow(x@SignFeatures) == 0) {
@@ -431,7 +431,7 @@ setMethod("SignatureSpecificFeatures",
 #' @rdname compute_SignatureFeatures-methods
 #' @aliases compute_SignatureFeatures,ANY-method
 #'
-#' @param x an nmfExperiment, nmfExperiment_lite objects
+#' #' @param x an object of class ButchR_NMF.
 #' @export
 #'
 #' @examples
@@ -446,7 +446,7 @@ setMethod("SignatureSpecificFeatures",
 #' SignatureSpecificFeatures(nmf_exp, k = 3, return_all_features = TRUE)
 #' }
 setMethod("compute_SignatureFeatures",
-          "nmfExperiment_lite",
+          "ButchR_NMF",
           function(x){
             k <- x@OptKStats$k
             if (length(k) == 1 & 2 %in% k) {
@@ -467,7 +467,7 @@ setMethod("compute_SignatureFeatures",
             SignFeatures <- data.frame(do.call(cbind, SignFeatures),
                                        stringsAsFactors = FALSE)
             #------------------------------------------------------------------#
-            #               Return nmfExperiment_lite object                   #
+            #                     Return ButchR_NMF object                     #
             #------------------------------------------------------------------#
             x@SignFeatures <- SignFeatures
             return(x)

@@ -4,7 +4,7 @@
 \docType{methods}
 \name{WMatrix}
 \alias{WMatrix}
-\alias{WMatrix,nmfExperiment_lite-method}
+\alias{WMatrix,ButchR_NMF-method}
 \alias{WMatrix,ANY-method}
 \alias{WMatrix,integrative_NMF-method}
 \alias{WMatrix,join_NMF-method}
@@ -12,14 +12,14 @@
 \usage{
 WMatrix(x, k = NULL, ...)
 
-\S4method{WMatrix}{nmfExperiment_lite}(x, k = NULL, ...)
+\S4method{WMatrix}{ButchR_NMF}(x, k = NULL, ...)
 
 \S4method{WMatrix}{integrative_NMF}(x, k = NULL, view_id = NULL, ...)
 
 \S4method{WMatrix}{join_NMF}(x, k = NULL, view_id = NULL, ...)
 }
 \arguments{
-\item{x}{an R object of type ButchR_NMF, ButchR_JoinNMF, or
+\item{x}{an object of type ButchR_NMF, ButchR_JoinNMF, or
 ButchR_IntegrativeNMF.}
 
 \item{k}{numeric - factorization rank.}
@@ -41,7 +41,7 @@ method = "NMF",
 n_initializations = 2)
 WMatrix(nmf_exp)
 WMatrix(nmf_exp, k = 2)
-# For nmfExperiment_lite objects:
+# For ButchR_NMF objects:
 WMatrix(nmf_exp)
 WMatrix(nmf_exp, k = 2)
 \dontrun{

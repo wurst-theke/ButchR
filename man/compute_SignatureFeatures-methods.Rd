@@ -4,8 +4,16 @@
 \docType{methods}
 \name{compute_SignatureFeatures}
 \alias{compute_SignatureFeatures}
-\alias{compute_SignatureFeatures,nmfExperiment_lite-method}
+\alias{compute_SignatureFeatures,ButchR_NMF-method}
 \alias{compute_SignatureFeatures,ANY-method}
+\alias{#'}
+\alias{@param}
+\alias{x}
+\alias{an}
+\alias{object}
+\alias{of}
+\alias{class}
+\alias{ButchR_NMF.}
 \alias{compute_SignatureFeatures,integrative_NMF-method}
 \alias{compute_SignatureFeatures,join_NMF-method}
 \title{Compute Signature Features
@@ -15,7 +23,7 @@ Returns an nmfExperiment object with computed signature features}
 \usage{
 compute_SignatureFeatures(x)
 
-\S4method{compute_SignatureFeatures}{nmfExperiment_lite}(x)
+\S4method{compute_SignatureFeatures}{ButchR_NMF}(x)
 
 \S4method{compute_SignatureFeatures}{integrative_NMF}(x)
 

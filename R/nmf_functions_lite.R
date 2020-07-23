@@ -74,7 +74,7 @@ source_NMFtensor_function <- function(method) {
 #' actorization ranks > 2.
 #'
 #'
-#' @return A nmfExperiment_lite object, containg the factorized matrices W and
+#' @return A ButchR_NMF object, containg the factorized matrices W and
 #'  H, along with factorization metrics
 #' @import reticulate
 #' @export
@@ -214,15 +214,15 @@ runNMFtensor_lite <- function (X,
 
 
   #----------------------------------------------------------------------------#
-  #                       Return nmfExperiment_lite object                     #
+  #                         Return ButchR_NMF object                           #
   #----------------------------------------------------------------------------#
-  nmfExperiment_lite(input_matrix = input_matrix,
-                     WMatrix      = lapply(complete_eval, "[[" , "W"),
-                     HMatrix      = lapply(complete_eval, "[[" , "H"),
-                     FrobError    = frob_errors,
-                     OptKStats    = OptKStats,
-                     OptK         = OptK,
-                     SignFeatures = SignFeatures)
+  ButchR_NMF(input_matrix = input_matrix,
+             WMatrix      = lapply(complete_eval, "[[" , "W"),
+             HMatrix      = lapply(complete_eval, "[[" , "H"),
+             FrobError    = frob_errors,
+             OptKStats    = OptKStats,
+             OptK         = OptK,
+             SignFeatures = SignFeatures)
 }
 
 #------------------------------------------------------------------------------#

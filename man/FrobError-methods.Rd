@@ -4,7 +4,7 @@
 \docType{methods}
 \name{FrobError}
 \alias{FrobError}
-\alias{FrobError,nmfExperiment_lite-method}
+\alias{FrobError,ButchR_NMF-method}
 \alias{FrobError,ANY-method}
 \alias{FrobError,integrative_NMF-method}
 \alias{FrobError,join_NMF-method}
@@ -12,14 +12,14 @@
 \usage{
 FrobError(x, ...)
 
-\S4method{FrobError}{nmfExperiment_lite}(x, ...)
+\S4method{FrobError}{ButchR_NMF}(x, ...)
 
 \S4method{FrobError}{integrative_NMF}(x, ...)
 
 \S4method{FrobError}{join_NMF}(x, ...)
 }
 \arguments{
-\item{x}{an R object of type ButchR_NMF, ButchR_JoinNMF, or
+\item{x}{an object of type ButchR_NMF, ButchR_JoinNMF, or
 ButchR_IntegrativeNMF.}
 
 \item{...}{additional parameters.}

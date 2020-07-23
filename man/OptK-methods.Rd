@@ -8,7 +8,7 @@
 OptK(x, ...)
 }
 \arguments{
-\item{x}{an R object of type ButchR_NMF.}
+\item{x}{an object of type ButchR_NMF.}
 
 \item{...}{additional parameters.}
 }

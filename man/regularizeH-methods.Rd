@@ -3,16 +3,16 @@
 \docType{methods}
 \name{regularizeH}
 \alias{regularizeH}
-\alias{regularizeH,nmfExperiment_lite-method}
+\alias{regularizeH,ButchR_NMF-method}
 \alias{regularizeH,ANY,ANY-method}
 \title{Regularize the signatures matrix (H)}
 \usage{
 regularizeH(nmf_exp, ...)
 
-\S4method{regularizeH}{nmfExperiment_lite}(nmf_exp)
+\S4method{regularizeH}{ButchR_NMF}(nmf_exp)
 }
 \arguments{
-\item{nmf_exp}{an R object of type ButchR_NMF.}
+\item{nmf_exp}{an object of type ButchR_NMF.}
 
 \item{...}{additional parameters.}
 }

@@ -4,7 +4,7 @@
 \docType{methods}
 \name{SignatureSpecificFeatures}
 \alias{SignatureSpecificFeatures}
-\alias{SignatureSpecificFeatures,nmfExperiment_lite-method}
+\alias{SignatureSpecificFeatures,ButchR_NMF-method}
 \alias{SignatureSpecificFeatures,ANY-method}
 \alias{SignatureSpecificFeatures,integrative_NMF-method}
 \alias{SignatureSpecificFeatures,join_NMF-method}
@@ -12,7 +12,7 @@
 \usage{
 SignatureSpecificFeatures(x, k = NULL, return_all_features = FALSE, ...)
 
-\S4method{SignatureSpecificFeatures}{nmfExperiment_lite}(x, k = NULL, return_all_features = FALSE, ...)
+\S4method{SignatureSpecificFeatures}{ButchR_NMF}(x, k = NULL, return_all_features = FALSE, ...)
 
 \S4method{SignatureSpecificFeatures}{integrative_NMF}(
   x,
@@ -31,7 +31,7 @@ SignatureSpecificFeatures(x, k = NULL, return_all_features = FALSE, ...)
 )
 }
 \arguments{
-\item{x}{an R object of type ButchR_NMF, ButchR_JoinNMF, or
+\item{x}{an object of type ButchR_NMF, ButchR_JoinNMF, or
 ButchR_IntegrativeNMF.}
 
 \item{k}{numeric  - factorization rank}
@@ -69,7 +69,7 @@ SignatureSpecificFeatures(nmf_exp)
 SignatureSpecificFeatures(nmf_exp, k = 3)
 SignatureSpecificFeatures(nmf_exp, k = 3, return_all_features = TRUE)
 \dontrun{
-# For nmfExperiment_lite objects:
+# For ButchR_NMF objects:
 SignatureSpecificFeatures(nmf_exp)
 lapply(SignatureSpecificFeatures(nmf_exp), function(x) sapply(x, length))
 SignatureSpecificFeatures(nmf_exp, k = 3)

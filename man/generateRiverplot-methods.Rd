@@ -3,13 +3,13 @@
 \docType{methods}
 \name{generateRiverplot}
 \alias{generateRiverplot}
-\alias{generateRiverplot,nmfExperiment_lite-method}
+\alias{generateRiverplot,ButchR_NMF-method}
 \alias{generateRiverplot,ANY,ANY-method}
 \title{NMF riverplot}
 \usage{
 generateRiverplot(nmf_exp, ...)
 
-\S4method{generateRiverplot}{nmfExperiment_lite}(
+\S4method{generateRiverplot}{ButchR_NMF}(
   nmf_exp,
   edges.cutoff = 0,
   useH = FALSE,
@@ -18,7 +18,7 @@ generateRiverplot(nmf_exp, ...)
 )
 }
 \arguments{
-\item{nmf_exp}{an R object of type ButchR_NMF.}
+\item{nmf_exp}{an object of type ButchR_NMF.}
 
 \item{...}{additional parameters.}
 
