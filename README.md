@@ -125,7 +125,7 @@ feature selection are provided.
 
 
 The matrix decomposition results are stored in an S4 object called
-`nmfExperiment_lite`. `ButchR` provides functions to access the best
+`ButchR_NMF`. `ButchR` provides functions to access the best
 factorzation after *n* initailization *W* and *H* matrices for a given
 factorzation rank.
 
