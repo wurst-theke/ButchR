@@ -25,7 +25,7 @@ inmf_exp_ssf <- SignatureSpecificFeatures(inmf_exp)
 
 test_that("iNMF alpha tuning", {
   # iNMF
-  expect_is(inmf_exp, "integrative_NMF")
+  expect_is(inmf_exp, "ButchR_integrativeNMF")
   expect_is(inmf_exp_ssf, "list")
   expect_length(inmf_exp_ssf, length(norm_mat_list)) # one iNMF for each lambda
   expect_length(inmf_exp_ssf[[1]][[1]], k) # for each K
@@ -38,7 +38,7 @@ test_that("iNMF alpha tuning", {
   # all_iNMF
   expect_length(inmf_atune$all_iNMF, length(lambdas)) # one iNMF for each lambda
   expect_is(inmf_atune$all_iNMF, "list")
-  expect_is(inmf_atune$all_iNMF[[1]], "integrative_NMF")
+  expect_is(inmf_atune$all_iNMF[[1]], "ButchR_integrativeNMF")
   # ALL: list with iNMF jNMF NMF plot and residuals
   expect_length(inmf_atune$all, 5)
   expect_is(inmf_atune$all, "list")

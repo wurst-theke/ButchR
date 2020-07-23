@@ -6,7 +6,7 @@
 \alias{HMatrix}
 \alias{HMatrix,ButchR_NMF-method}
 \alias{HMatrix,ANY-method}
-\alias{HMatrix,integrative_NMF-method}
+\alias{HMatrix,ButchR_integrativeNMF-method}
 \alias{HMatrix,ButchR_joinNMF-method}
 \title{H-Matrix (H-Matrix with smallest frobError)}
 \usage{
@@ -14,7 +14,7 @@ HMatrix(x, k = NULL, ...)
 
 \S4method{HMatrix}{ButchR_NMF}(x, k = NULL, ...)
 
-\S4method{HMatrix}{integrative_NMF}(x, k = NULL, view_id = NULL, type = "all", ...)
+\S4method{HMatrix}{ButchR_integrativeNMF}(x, k = NULL, view_id = NULL, type = "all", ...)
 
 \S4method{HMatrix}{ButchR_joinNMF}(x, k = NULL, ...)
 }
@@ -53,7 +53,7 @@ HMatrix(nmf_exp, k = 2)
 HMatrix(nmf_exp)
 HMatrix(nmf_exp, k = 2)
 \dontrun{
-# For integrative_NMF objects:
+# For ButchR_integrativeNMF objects:
 # extract H matrices for all factorization ranks
 HMatrix(inmf_exp, type = "shared")
 HMatrix(inmf_exp, type = "viewspec")

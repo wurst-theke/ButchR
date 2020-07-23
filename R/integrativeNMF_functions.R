@@ -18,7 +18,7 @@ NULL
 #' @param extract_features if TRUE performs feature extraction for all
 #' factorization ranks > 2.
 #'
-#' @return A integrative_NMF object,
+#' @return An object of class ButchR_integrativeNMF.
 #' containing a integrative H matrix and one W matrix for each input matrix
 #' @import reticulate
 #' @export
@@ -190,17 +190,16 @@ run_iNMF_tensor <- function (matrix_list,
   }
 
   #----------------------------------------------------------------------------#
-  #                       Return integrative_NMF object                        #
+  #                   Return ButchR_integrativeNMF object                      #
   #----------------------------------------------------------------------------#
-
-  integrative_NMF(input_data   = input_data,
-                  HMatrix      = shared_HMatrix_list,
-                  HMatrix_vs   = view_specific_HMatrix_list,
-                  WMatrix_vs   = view_specific_WMatrix_list,
-                  FrobError    = frob_errors,
-                  OptKStats    = OptKStats,
-                  OptK         = OptK,
-                  SignFeatures = SignFeatures)
+  ButchR_integrativeNMF(input_data   = input_data,
+                        HMatrix      = shared_HMatrix_list,
+                        HMatrix_vs   = view_specific_HMatrix_list,
+                        WMatrix_vs   = view_specific_WMatrix_list,
+                        FrobError    = frob_errors,
+                        OptKStats    = OptKStats,
+                        OptK         = OptK,
+                        SignFeatures = SignFeatures)
 }
 
 
@@ -250,8 +249,9 @@ run_iNMF_tensor <- function (matrix_list,
 #' @param extract_features \code{TRUE} Extract signature specific features.
 #'
 #'
-#' @return A integrative_NMF object,
-#' containing a integrative H matrix and one W matrix for each input matrix
+#' @return There are five different types of possible outputs, depending on the
+#' selected option on `Output_type`. The default output is a data.frame with
+#' the residual resulting from tuning lambdas across multiple lambdas.
 #' @import ggplot2 dplyr
 #' @importFrom rlang .data
 #' @export

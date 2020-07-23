@@ -36,7 +36,7 @@ towards finding the common effect between niews.}
 factorization ranks > 2.}
 }
 \value{
-A integrative_NMF object,
+An object of class ButchR_integrativeNMF.
 containing a integrative H matrix and one W matrix for each input matrix
 }
 \description{

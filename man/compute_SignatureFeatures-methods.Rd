@@ -14,7 +14,7 @@
 \alias{of}
 \alias{class}
 \alias{ButchR_NMF.}
-\alias{compute_SignatureFeatures,integrative_NMF-method}
+\alias{compute_SignatureFeatures,ButchR_integrativeNMF-method}
 \alias{compute_SignatureFeatures,ButchR_joinNMF-method}
 \title{Compute Signature Features
 Performs feature extraction for all
@@ -25,7 +25,7 @@ compute_SignatureFeatures(x)
 
 \S4method{compute_SignatureFeatures}{ButchR_NMF}(x)
 
-\S4method{compute_SignatureFeatures}{integrative_NMF}(x)
+\S4method{compute_SignatureFeatures}{ButchR_integrativeNMF}(x)
 
 \S4method{compute_SignatureFeatures}{ButchR_joinNMF}(x)
 }

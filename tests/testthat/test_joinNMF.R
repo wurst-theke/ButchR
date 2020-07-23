@@ -18,6 +18,7 @@ jnmf_exp <- run_joinNMF_tensor(norm_mat_list,
 
 
 test_that("jNMF print", {
+  expect_is(jnmf_exp, "ButchR_joinNMF")
   expect_output(show(jnmf_exp)) # default print
   jnmf_exp@OptK <- 3 # fake optK to test
   expect_output(show(jnmf_exp)) # default print

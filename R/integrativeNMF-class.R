@@ -16,22 +16,22 @@ NULL
 #' @slot OptK numeric
 #' @slot SignFeatures DataFrame or list
 #'
-#' @return An object of integrative_NMF Experiment Class
+#' @return An object of class ButchR_integrativeNMF.
 #' @export
 #'
 #' @examples
 #' \dontrun{
-#' integrative_NMF(input_data   = input_data,
-#' HMatrix      = shared_HMatrix_list,
-#' HMatrix_vs   = view_specific_HMatrix_list,
-# WMatrix_vs   = view_specific_WMatrix_list,
-# FrobError    = frob_errors,
-# OptKStats    = OptKStats,
-# OptK         = OptK,
-# SignFeatures = SignFeatures)
+#' ButchR_integrativeNMF(input_data   = input_data,
+#'                       HMatrix      = shared_HMatrix_list,
+#'                       HMatrix_vs   = view_specific_HMatrix_list,
+#'                       WMatrix_vs   = view_specific_WMatrix_list,
+#'                       FrobError    = frob_errors,
+#'                       OptKStats    = OptKStats,
+#'                       OptK         = OptK,
+#'                       SignFeatures = SignFeatures)
 #' }
-integrative_NMF <- setClass(
-  Class = "integrative_NMF",
+ButchR_integrativeNMF <- setClass(
+  Class = "ButchR_integrativeNMF",
   slots = list(input_data   = "list",
                HMatrix      = "list",
                HMatrix_vs   = "list",
@@ -43,7 +43,7 @@ integrative_NMF <- setClass(
 )
 
 setMethod("show",
-          "integrative_NMF",
+          "ButchR_integrativeNMF",
           function(object) {
             #cat("class: integrative NMF object \n")
             #cat("Best factorization index: ", object@best_factorization_idx, "\n")
@@ -90,7 +90,7 @@ setMethod("show",
 #'
 #' @examples
 #' \dontrun{
-#' # For integrative_NMF objects:
+#' # For ButchR_integrativeNMF objects:
 #' # extract H matrices for all factorization ranks
 #' HMatrix(inmf_exp, type = "shared")
 #' HMatrix(inmf_exp, type = "viewspec")
@@ -107,7 +107,7 @@ setMethod("show",
 #' }
 #'
 setMethod("HMatrix",
-          "integrative_NMF",
+          "ButchR_integrativeNMF",
           function(x, k = NULL, view_id = NULL, type = "all", ...) {
             # Check if view id is indeed one of the views
             if (is.null(view_id)) {
@@ -183,14 +183,14 @@ setMethod("HMatrix",
 #'
 #' @examples
 #' \dontrun{
-#' # For integrative_NMF objects:
+#' # For ButchR_integrativeNMF objects:
 #' WMatrix(inmf_exp)
 #' WMatrix(inmf_exp, k = 2)
 #' lapply(WMatrix(inmf_exp, k = 2), head)
 #' WMatrix(inmf_exp, k = 2, view_id = "atac")
 #' }
 setMethod("WMatrix",
-          "integrative_NMF",
+          "ButchR_integrativeNMF",
           function(x, k = NULL, view_id = NULL, ...) {
             # Check if view id is indeed one of the views
             if (is.null(view_id)) {
@@ -237,7 +237,7 @@ setMethod("WMatrix",
 #' @aliases FrobError,ANY-method
 #' @export
 #'
-setMethod("FrobError", "integrative_NMF", function(x, ...) x@FrobError)
+setMethod("FrobError", "ButchR_integrativeNMF", function(x, ...) x@FrobError)
 
 
 #------------------------------------------------------------------------------#
@@ -255,7 +255,7 @@ setMethod("FrobError", "integrative_NMF", function(x, ...) x@FrobError)
 #'
 #' @examples
 #' \dontrun{
-#' # For integrative_NMF objects:
+#' # For ButchR_integrativeNMF objects:
 #' SignatureSpecificFeatures(inmf_exp)
 #' lapply(SignatureSpecificFeatures(inmf_exp), function(view){
 #'   sapply(view, function(x) sapply(x, length))
@@ -273,7 +273,7 @@ setMethod("FrobError", "integrative_NMF", function(x, ...) x@FrobError)
 #' }
 #'
 setMethod("SignatureSpecificFeatures",
-          "integrative_NMF",
+          "ButchR_integrativeNMF",
           function(x, k = NULL, return_all_features = FALSE, view_id = NULL, ...){
             # if no feature extraction was performed
             if (length(x@SignFeatures) == 0) {
@@ -343,7 +343,7 @@ setMethod("SignatureSpecificFeatures",
 #' @rdname compute_SignatureFeatures-methods
 #' @aliases compute_SignatureFeatures,ANY-method
 #'
-#' @param x an nmfExperiment, integrative_NMF objects
+#' @param x An object of class ButchR_integrativeNMF.
 #' @export
 #'
 #' @examples
@@ -361,7 +361,7 @@ setMethod("SignatureSpecificFeatures",
 #' SignatureSpecificFeatures(inmf_exp, k = 3, return_all_features = TRUE)
 #' }
 setMethod("compute_SignatureFeatures",
-          "integrative_NMF",
+          "ButchR_integrativeNMF",
           function(x){
             k <- x@OptKStats$k
             if (length(k) == 1 & 2 %in% k) {
@@ -389,7 +389,7 @@ setMethod("compute_SignatureFeatures",
 
 
             #------------------------------------------------------------------#
-            #                  Return integrative_NMF object                   #
+            #               Return ButchR_integrativeNMF object               #
             #------------------------------------------------------------------#
             x@SignFeatures <- SignFeatures
             return(x)

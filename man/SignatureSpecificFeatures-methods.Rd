@@ -6,7 +6,7 @@
 \alias{SignatureSpecificFeatures}
 \alias{SignatureSpecificFeatures,ButchR_NMF-method}
 \alias{SignatureSpecificFeatures,ANY-method}
-\alias{SignatureSpecificFeatures,integrative_NMF-method}
+\alias{SignatureSpecificFeatures,ButchR_integrativeNMF-method}
 \alias{SignatureSpecificFeatures,ButchR_joinNMF-method}
 \title{Signature Specific Features}
 \usage{
@@ -14,7 +14,7 @@ SignatureSpecificFeatures(x, k = NULL, return_all_features = FALSE, ...)
 
 \S4method{SignatureSpecificFeatures}{ButchR_NMF}(x, k = NULL, return_all_features = FALSE, ...)
 
-\S4method{SignatureSpecificFeatures}{integrative_NMF}(
+\S4method{SignatureSpecificFeatures}{ButchR_integrativeNMF}(
   x,
   k = NULL,
   return_all_features = FALSE,
@@ -76,7 +76,7 @@ SignatureSpecificFeatures(nmf_exp, k = 3)
 SignatureSpecificFeatures(nmf_exp, k = 3, return_all_features = TRUE)
 }
 \dontrun{
-# For integrative_NMF objects:
+# For ButchR_integrativeNMF objects:
 SignatureSpecificFeatures(inmf_exp)
 lapply(SignatureSpecificFeatures(inmf_exp), function(view){
   sapply(view, function(x) sapply(x, length))

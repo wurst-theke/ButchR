@@ -53,8 +53,9 @@ if the convergence test is constant for this number of iterations.}
 \item{extract_features}{\code{TRUE} Extract signature specific features.}
 }
 \value{
-A integrative_NMF object,
-containing a integrative H matrix and one W matrix for each input matrix
+There are five different types of possible outputs, depending on the
+selected option on `Output_type`. The default output is a data.frame with
+the residual resulting from tuning lambdas across multiple lambdas.
 }
 \description{
 Based on Yang and Michailidis, 2016,

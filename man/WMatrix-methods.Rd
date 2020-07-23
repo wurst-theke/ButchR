@@ -6,7 +6,7 @@
 \alias{WMatrix}
 \alias{WMatrix,ButchR_NMF-method}
 \alias{WMatrix,ANY-method}
-\alias{WMatrix,integrative_NMF-method}
+\alias{WMatrix,ButchR_integrativeNMF-method}
 \alias{WMatrix,ButchR_joinNMF-method}
 \title{W-Matrix (W-Matrix with smallest frobError)}
 \usage{
@@ -14,7 +14,7 @@ WMatrix(x, k = NULL, ...)
 
 \S4method{WMatrix}{ButchR_NMF}(x, k = NULL, ...)
 
-\S4method{WMatrix}{integrative_NMF}(x, k = NULL, view_id = NULL, ...)
+\S4method{WMatrix}{ButchR_integrativeNMF}(x, k = NULL, view_id = NULL, ...)
 
 \S4method{WMatrix}{ButchR_joinNMF}(x, k = NULL, view_id = NULL, ...)
 }
@@ -45,7 +45,7 @@ WMatrix(nmf_exp, k = 2)
 WMatrix(nmf_exp)
 WMatrix(nmf_exp, k = 2)
 \dontrun{
-# For integrative_NMF objects:
+# For ButchR_integrativeNMF objects:
 WMatrix(inmf_exp)
 WMatrix(inmf_exp, k = 2)
 lapply(WMatrix(inmf_exp, k = 2), head)

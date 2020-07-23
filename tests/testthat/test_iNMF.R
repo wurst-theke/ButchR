@@ -15,6 +15,7 @@ inmf_exp <- run_iNMF_tensor(norm_mat_list,
 
 
 test_that("iNMF print", {
+  expect_is(inmf_exp, "ButchR_integrativeNMF")
   expect_output(show(inmf_exp)) # default print
   inmf_exp@OptK <- 3 # fake optK to test
   expect_output(show(inmf_exp)) # default print

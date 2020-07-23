@@ -324,7 +324,7 @@ setMethod("compute_SignatureFeatures",
 
 
             #------------------------------------------------------------------#
-            #                  Return integrative_NMF object                   #
+            #                  Return ButchR_joinNMF object                    #
             #------------------------------------------------------------------#
             x@SignFeatures <- SignFeatures
             return(x)
