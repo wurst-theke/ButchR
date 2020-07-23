@@ -37,6 +37,7 @@ RoxygenNote: 7.1.1
 Collate: 
     'data.R'
     'generics.R'
+    'input_validation.R'
     'nmfExperiment-class_lite.R'
     'integrativeNMF-class.R'
     'integrativeNMF_functions.R'

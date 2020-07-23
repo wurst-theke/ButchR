@@ -101,15 +101,9 @@ run_NMF_tensor <- function (X,
   #----------------------------------------------------------------------------#
   #                                    Setup                                   #
   #----------------------------------------------------------------------------#
-  # Check  data
-  if (min(X) < 0 ) {
-    stop("\nNegative values present in input matrix\n
-         only non-negative matrices supported\n")
-  }
-  if(is.data.frame(X)) {
-    warning("Provided input is a data frame, coercing into matrix.")
-    X = as.matrix(X)
-  }
+  # Validate in input data is correct
+  X <- val_nonnegative_matrix(X)
+  val_ranks_torun(ranks, ncol(X))
 
 
   # Convert params to integer

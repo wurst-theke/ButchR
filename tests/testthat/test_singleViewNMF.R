@@ -13,14 +13,6 @@ h <- HMatrix(nmf_exp, k=2)
 w <- WMatrix(nmf_exp, k=2)
 
 
-test_that("A matrix with negative values return error", {
-  expect_error(run_NMF_tensor(matrix(rnorm(1000), ncol = 10),
-                              ranks = 2, n_initializations = 1))
-  expect_warning(run_NMF_tensor(as.data.frame(X),
-                                ranks = 2, n_initializations = 1))
-})
-
-
 test_that("Factozation metrics", {
   expect_output(show(nmf_exp)) # deafault print
 
