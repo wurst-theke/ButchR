@@ -36,7 +36,7 @@ Return a list of W-Matrices or a W-Matrix for the indicaded rank
 }
 \examples{
 data("leukemia")
-nmf_exp <- runNMFtensor_lite(leukemia$matrix, ranks = 2,
+nmf_exp <- run_NMF_tensor(leukemia$matrix, ranks = 2,
 method = "NMF",
 n_initializations = 2)
 WMatrix(nmf_exp)

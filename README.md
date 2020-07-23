@@ -171,17 +171,17 @@ NMF analysis
 ### Call wrapper function
 
 The wrapper function for the NMF solvers in the ButchR package is
-`runNMFtensor_lite`. It is called as follows:
+`run_NMF_tensor`. It is called as follows:
 
 ``` r
 k_min <- 2
 k_max <- 4
 
-leukemia_nmf_exp <- runNMFtensor_lite(X = leukemia$matrix,
-                                      ranks = k_min:k_max,
-                                      method = "NMF",
-                                      n_initializations = 10, 
-                                      extract_features = TRUE)
+leukemia_nmf_exp <- run_NMF_tensor(X = leukemia$matrix,
+                                   ranks = k_min:k_max,
+                                   method = "NMF",
+                                   n_initializations = 10, 
+                                   extract_features = TRUE)
 ```
 
     ## [1] "2020-07-16 17:50:42 CEST"

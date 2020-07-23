@@ -80,23 +80,23 @@ source_NMFtensor_function <- function(method) {
 #' @export
 #'
 #' @examples
-#' nmf_exp <- runNMFtensor_lite(matrix(1:1000, ncol = 10),
+#' nmf_exp <- run_NMF_tensor(matrix(1:1000, ncol = 10),
 #'                              ranks = 2:5,
 #'                              n_initializations     = 10,
 #'                              iterations            = 10^4,
 #'                              convergence_threshold = 40)
 #' nmf_exp
-runNMFtensor_lite <- function (X,
-                               ranks,
-                               method                = "NMF",
-                               n_initializations     = 10,
-                               iterations            = 10^4,
-                               convergence_threshold = 40,
-                               n_neighbors           = 4,
-                               alpha                 = 0.1,
-                               lamb                  = 10,
-                               graph                 = NULL,
-                               extract_features      = FALSE){
+run_NMF_tensor <- function (X,
+                            ranks,
+                            method                = "NMF",
+                            n_initializations     = 10,
+                            iterations            = 10^4,
+                            convergence_threshold = 40,
+                            n_neighbors           = 4,
+                            alpha                 = 0.1,
+                            lamb                  = 10,
+                            graph                 = NULL,
+                            extract_features      = FALSE){
 
   #----------------------------------------------------------------------------#
   #                                    Setup                                   #

@@ -359,7 +359,7 @@ iNMF_lambda_tuning <- function (matrix_list,
   #----------------------------------------------------------------------------#
   snmf_obj_list <- lapply(viewsIDs, function(viewID){
     cat("Running single view NMF for : ", viewID, "\n")
-    runNMFtensor_lite(X = matrix_list[[viewID]],
+    run_NMF_tensor(X = matrix_list[[viewID]],
                       ranks                 = nmf_params$rank,
                       method = "NMF",
                       n_initializations     = nmf_params$n_initializations,

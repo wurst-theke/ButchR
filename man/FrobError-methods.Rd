@@ -33,13 +33,13 @@ and the Frobenius error for every NMF initialization in the rows.
 }
 \examples{
 data("leukemia")
-nmf_exp <- runNMFtensor_lite(leukemia$matrix, ranks = 2,
+nmf_exp <- run_NMF_tensor(leukemia$matrix, ranks = 2,
 method = "NMF",
 n_initializations = 2)
 FrobError(nmf_exp)
 \dontrun{
 data("leukemia")
-nmf_exp <- runNMFtensor_lite(leukemia$matrix, ranks = 2:10,
+nmf_exp <- run_NMF_tensor(leukemia$matrix, ranks = 2:10,
 method = "NMF",
 n_initializations = 2)
 FrobError(nmf_exp)

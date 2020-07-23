@@ -5,19 +5,19 @@ ranks <- 2:4
 X <- matrix(abs(rnorm(1000)), ncol = 10)
 colnames(X) <- paste0("Sample", 1:10)
 n_inits <- 5
-nmf_exp <- runNMFtensor_lite(X,
-                             ranks = ranks,
-                             n_initializations = n_inits,
-                             extract_features = TRUE)
+nmf_exp <- run_NMF_tensor(X,
+                          ranks = ranks,
+                          n_initializations = n_inits,
+                          extract_features = TRUE)
 h <- HMatrix(nmf_exp, k=2)
 w <- WMatrix(nmf_exp, k=2)
 
 
 test_that("A matrix with negative values return error", {
-  expect_error(runNMFtensor_lite(matrix(rnorm(1000), ncol = 10),
-                                 ranks = 2, n_initializations = 1))
-  expect_warning(runNMFtensor_lite(as.data.frame(X),
-                                   ranks = 2, n_initializations = 1))
+  expect_error(run_NMF_tensor(matrix(rnorm(1000), ncol = 10),
+                              ranks = 2, n_initializations = 1))
+  expect_warning(run_NMF_tensor(as.data.frame(X),
+                                ranks = 2, n_initializations = 1))
 })
 
 
@@ -64,10 +64,10 @@ test_that("Feature extraction", {
 
 
 test_that("Feature extraction after decomposition", {
-  nmf_exp_nf <- runNMFtensor_lite(X,
-                                  ranks = ranks,
-                                  n_initializations = n_inits,
-                                  extract_features = FALSE)
+  nmf_exp_nf <- run_NMF_tensor(X,
+                               ranks = ranks,
+                               n_initializations = n_inits,
+                               extract_features = FALSE)
   expect_error(SignatureSpecificFeatures(nmf_exp_nf)) # if no feature extraction
   nmf_exp_nf <- compute_SignatureFeatures(nmf_exp_nf) # compute features
   nmf_exp_nf_ssf <- SignatureSpecificFeatures(nmf_exp_nf, k = 3, return_all_features = TRUE)
@@ -75,10 +75,10 @@ test_that("Feature extraction after decomposition", {
 })
 
 test_that("Feature extraction after decomposition error K == 2", {
-  nmf_exp_nf <- runNMFtensor_lite(X,
-                                  ranks = 2,
-                                  n_initializations = n_inits,
-                                  extract_features = FALSE)
+  nmf_exp_nf <- run_NMF_tensor(X,
+                               ranks = 2,
+                               n_initializations = n_inits,
+                               extract_features = FALSE)
   expect_error(SignatureSpecificFeatures(nmf_exp_nf)) # if no feature extraction
   expect_error(compute_SignatureFeatures(inmf_exp)) # K =2 not supported
 })

@@ -168,7 +168,7 @@ setMethod("WMatrix",
 #' @examples
 #' \dontrun{
 #' data("leukemia")
-#' nmf_exp <- runNMFtensor_lite(leukemia$matrix, ranks = 2:10,
+#' nmf_exp <- run_NMF_tensor(leukemia$matrix, ranks = 2:10,
 #' method = "NMF",
 #' n_initializations = 2)
 #' FrobError(nmf_exp)
@@ -188,7 +188,7 @@ setMethod("FrobError", "ButchR_NMF", function(x, ...) x@FrobError)
 #' @examples
 #' \dontrun{
 #' data("leukemia")
-#' nmf_exp <- runNMFtensor_lite(leukemia$matrix, ranks = 2:10,
+#' nmf_exp <- run_NMF_tensor(leukemia$matrix, ranks = 2:10,
 #' method = "NMF",
 #' n_initializations = 2)
 #' OptKStats(nmf_exp)
@@ -207,7 +207,7 @@ setMethod("OptKStats", "ButchR_NMF", function(x, ...) x@OptKStats)
 #' @examples
 #' \dontrun{
 #' data("leukemia")
-#' nmf_exp <- runNMFtensor_lite(leukemia$matrix, ranks = 2:10,
+#' nmf_exp <- run_NMF_tensor(leukemia$matrix, ranks = 2:10,
 #' method = "NMF",
 #' n_initializations = 10)
 #' OptK(nmf_exp)
@@ -226,7 +226,7 @@ setMethod("OptK", "ButchR_NMF", function(x, ...) x@OptK)
 #' @examples
 #' \dontrun{
 #' data("leukemia")
-#' nmf_exp <- runNMFtensor_lite(leukemia$matrix, ranks = 2:10,
+#' nmf_exp <- run_NMF_tensor(leukemia$matrix, ranks = 2:10,
 #' method = "NMF",
 #' n_initializations = 10)
 #' normalize_matrix_per_dim(WMatrix(nmf_exp, k=2), 2)
@@ -261,7 +261,7 @@ normalize_matrix_per_dim <- function (in_matrix, in_dimension) {
 #' @examples
 #' \dontrun{
 #' data("leukemia")
-#' nmf_exp <- runNMFtensor_lite(leukemia$matrix, ranks = 2:10,
+#' nmf_exp <- run_NMF_tensor(leukemia$matrix, ranks = 2:10,
 #' method = "NMF",
 #' n_initializations = 10)
 #' normalizeW(nmf_exp)
@@ -298,7 +298,7 @@ setMethod("normalizeW",
 #' @examples
 #' \dontrun{
 #' data("leukemia")
-#' nmf_exp <- runNMFtensor_lite(leukemia$matrix, ranks = 2:10,
+#' nmf_exp <- run_NMF_tensor(leukemia$matrix, ranks = 2:10,
 #' method = "NMF",
 #' n_initializations = 10)
 #' normalizeH(nmf_exp)
@@ -335,7 +335,7 @@ setMethod("normalizeH",
 #' @examples
 #' \dontrun{
 #' data("leukemia")
-#' nmf_exp <- runNMFtensor_lite(leukemia$matrix, ranks = 2:10,
+#' nmf_exp <- run_NMF_tensor(leukemia$matrix, ranks = 2:10,
 #' method = "NMF",
 #' n_initializations = 10)
 #' regularizeH(nmf_exp)
@@ -437,7 +437,7 @@ setMethod("SignatureSpecificFeatures",
 #' @examples
 #' \dontrun{
 #' data("leukemia")
-#' nmf_exp <- runNMFtensor_lite(leukemia$matrix, ranks = 3,
+#' nmf_exp <- run_NMF_tensor(leukemia$matrix, ranks = 3,
 #'                              method = "NMF",
 #'                              n_initializations = 2,
 #'                              extract_features = FALSE)

@@ -45,7 +45,7 @@ plot(plt, plot_area = 1, yscale = 0.6, nodewidth = 0.5)
 }
 \dontrun{
 data("leukemia")
-nmf_exp <- runNMFtensor_lite(leukemia$matrix, ranks = 2:10,
+nmf_exp <- run_NMF_tensor(leukemia$matrix, ranks = 2:10,
 method = "NMF",
 n_initializations = 2)
 plot(generateRiverplot(nmf_exp))

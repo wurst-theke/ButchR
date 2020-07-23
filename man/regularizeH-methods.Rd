@@ -27,14 +27,14 @@ constant.
 \examples{
 \dontrun{
 data("leukemia")
-nmf_exp <- runNMFtensor_lite(leukemia$matrix, ranks = 2,
+nmf_exp <- run_NMF_tensor(leukemia$matrix, ranks = 2,
 method = "NMF",
 n_initializations = 2)
 regularizeH(nmf_exp)
 }
 \dontrun{
 data("leukemia")
-nmf_exp <- runNMFtensor_lite(leukemia$matrix, ranks = 2:10,
+nmf_exp <- run_NMF_tensor(leukemia$matrix, ranks = 2:10,
 method = "NMF",
 n_initializations = 10)
 regularizeH(nmf_exp)

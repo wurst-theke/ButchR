@@ -46,7 +46,7 @@ The extraction of Signature Specific Features is not supported for k = 2
 \examples{
 \dontrun{
 data("leukemia")
-nmf_exp <- runNMFtensor_lite(leukemia$matrix, ranks = 3,
+nmf_exp <- run_NMF_tensor(leukemia$matrix, ranks = 3,
                              method = "NMF",
                              n_initializations = 2,
                              extract_features = FALSE)
@@ -56,7 +56,7 @@ SignatureSpecificFeatures(nmf_exp, k = 3, return_all_features = TRUE)
 }
 \dontrun{
 data("leukemia")
-nmf_exp <- runNMFtensor_lite(leukemia$matrix, ranks = 3,
+nmf_exp <- run_NMF_tensor(leukemia$matrix, ranks = 3,
                              method = "NMF",
                              n_initializations = 2,
                              extract_features = FALSE)
