@@ -12,12 +12,12 @@ normalizeH(nmf_exp, ...)
 \S4method{normalizeH}{nmfExperiment_lite}(nmf_exp)
 }
 \arguments{
-\item{nmf_exp}{an nmfExperiment or a nmfExperiment_lite object}
+\item{nmf_exp}{an R object of type ButchR_NMF.}
 
 \item{...}{additional parameters.}
 }
 \value{
-an nmfExperiment or a nmfExperiment_lite object normalized by W
+a ButchR_NMF object normalized by H.
 }
 \description{
 After row normalization of the matrix H, the inverse factors are

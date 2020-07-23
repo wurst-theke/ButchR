@@ -19,8 +19,8 @@ WMatrix(x, k = NULL, ...)
 \S4method{WMatrix}{join_NMF}(x, k = NULL, view_id = NULL, ...)
 }
 \arguments{
-\item{x}{an R object of type nmfExperiment, nmfExperiment_lite, join_NMF or
-integrative_NMF.}
+\item{x}{an R object of type ButchR_NMF, ButchR_JoinNMF, or
+ButchR_IntegrativeNMF.}
 
 \item{k}{numeric - factorization rank.}
 
@@ -29,7 +29,7 @@ integrative_NMF.}
 \item{view_id}{character vector with views from which to extract W matrices}
 }
 \value{
-list of W-Matrices or a W-Matrix for the indicaded rank.
+list of W-Matrices or a W-Matrix for the indicated rank.
 }
 \description{
 Return a list of W-Matrices or a W-Matrix for the indicaded rank

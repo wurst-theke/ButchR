@@ -4,8 +4,8 @@
 #' Returns a data.frame with factorization ranks in the columns,
 #' and the Frobenius error for every NMF initialization in the rows.
 #'
-#' @param x an R object of type nmfExperiment, nmfExperiment_lite, join_NMF or
-#' integrative_NMF.
+#' @param x an R object of type ButchR_NMF, ButchR_JoinNMF, or
+#' ButchR_IntegrativeNMF.
 #' @param ... additional parameters.
 #'
 #' @return data.frame with Frobenius errors
@@ -25,8 +25,8 @@ setGeneric("FrobError", function(x, ...) standardGeneric("FrobError"))
 #'
 #' Return a list of H-Matrices or an H-Matrix for the indicaded rank
 #'
-#' @param x an R object of type nmfExperiment, nmfExperiment_lite, join_NMF or
-#' integrative_NMF.
+#' @param x an R object of type ButchR_NMF, ButchR_JoinNMF, or
+#' ButchR_IntegrativeNMF.
 #' @param k numeric - factorization rank.
 #' @param ... additional parameters.
 #'
@@ -49,12 +49,12 @@ setGeneric("HMatrix", function(x, k = NULL, ...)
 #'
 #' Return a list of W-Matrices or a W-Matrix for the indicaded rank
 #'
-#' @param x an R object of type nmfExperiment, nmfExperiment_lite, join_NMF or
-#' integrative_NMF.
+#' @param x an R object of type ButchR_NMF, ButchR_JoinNMF, or
+#' ButchR_IntegrativeNMF.
 #' @param k numeric - factorization rank.
 #' @param ... additional parameters.
 #'
-#' @return list of W-Matrices or a W-Matrix for the indicaded rank.
+#' @return list of W-Matrices or a W-Matrix for the indicated rank.
 #' @docType methods
 #' @rdname WMatrix-methods
 #' @exportMethod WMatrix
@@ -71,7 +71,7 @@ setGeneric("WMatrix", function(x, k = NULL, ...) standardGeneric("WMatrix"))
 
 #' Return optimal factorization rank (K) Statistics
 #'
-#' @param x an nmfExperiment_lite object
+#' @param x an R object of type ButchR_NMF.
 #' @param ... additional parameters.
 #'
 #' @return optimal K Statistics
@@ -92,7 +92,7 @@ setGeneric("OptKStats", function(x, ...) standardGeneric("OptKStats"))
 #### Optimal K
 #' Return optimal K
 #'
-#' @param x an nmfExperiment_lite object
+#' @param x an R object of type ButchR_NMF.
 #' @param ... additional parameters.
 #'
 #' @return numeric - optimal K
@@ -129,7 +129,8 @@ setGeneric("FeatureStats", function(x, ...) standardGeneric("FeatureStats"))
 #' and 0 it does not.
 #' The extraction of Signature Specific Features is not supported for k = 2
 #'
-#' @param x an nmfExperiment or a nmfExperiment_lite object
+#' @param x an R object of type ButchR_NMF, ButchR_JoinNMF, or
+#' ButchR_IntegrativeNMF.
 #' @param k numeric  - factorization rank
 #' @param return_all_features logical indicating whether to return a binary
 #' matrix with the same dimension as the selected factorization rank.
@@ -167,7 +168,8 @@ setGeneric("SignatureSpecificFeatures",
 #' and 0 it does not.
 #' The extraction of Signature Specific Features is not supported for k = 2
 #'
-#' @param x an nmfExperiment, integrative_NMF objects
+#' @param x an R object of type ButchR_NMF, ButchR_JoinNMF, or
+#' ButchR_IntegrativeNMF.
 #' @return the same type of input object with computed signature features.
 #' @docType methods
 #' @rdname compute_SignatureFeatures-methods
@@ -197,10 +199,10 @@ setGeneric("compute_SignatureFeatures",
 #' mutiplied with the rows of H in order to keep the matrix product W*H
 #' constant.
 #'
-#' @param nmf_exp an nmfExperiment or a nmfExperiment_lite object
+#' @param nmf_exp an R object of type ButchR_NMF.
 #' @param ... additional parameters.
 #'
-#' @return an nmfExperiment or a nmfExperiment_lite object normalized by W
+#' @return a ButchR_NMF object normalized by W.
 #' @export
 #' @docType methods
 #' @rdname normalizeW-methods
@@ -219,10 +221,10 @@ setGeneric("normalizeW", function(nmf_exp, ...) standardGeneric("normalizeW"))
 #' mutiplied with the columns of W in order to keep the matrix product W*H
 #' constant.
 #'
-#' @param nmf_exp an nmfExperiment or a nmfExperiment_lite object
+#' @param nmf_exp an R object of type ButchR_NMF.
 #' @param ... additional parameters.
 #'
-#' @return an nmfExperiment or a nmfExperiment_lite object normalized by W
+#' @return a ButchR_NMF object normalized by H.
 #' @export
 #' @docType methods
 #' @rdname normalizeH-methods
@@ -241,10 +243,10 @@ setGeneric("normalizeH", function(nmf_exp, ...) standardGeneric("normalizeH"))
 #' mutiplied with the columns of W in order to keep the matrix product W*H
 #' constant.
 #'
-#' @param nmf_exp an nmfExperiment or a nmfExperiment_lite object
+#' @param nmf_exp an R object of type ButchR_NMF.
 #' @param ... additional parameters.
 #'
-#' @return an nmfExperiment or a nmfExperiment_lite object normalized by W
+#' @return a ButchR_NMF object regularized by H.
 #'
 #' @export
 #' @docType methods
@@ -268,7 +270,7 @@ setGeneric("regularizeH", function(nmf_exp, ...) standardGeneric("regularizeH"))
 #' Generate a riverplot object that displays the similarities between
 #' signatures at different factorization ranks
 #'
-#' @param nmf_exp an nmfExperiment or a nmfExperiment_lite object
+#' @param nmf_exp an R object of type ButchR_NMF.
 #' @param ranks numeric vector of the selected factorization ranks to generate
 #' a riverplot.
 #' @param edges.cutoff cutoff until which similarities are displayed

@@ -31,7 +31,8 @@ SignatureSpecificFeatures(x, k = NULL, return_all_features = FALSE, ...)
 )
 }
 \arguments{
-\item{x}{an nmfExperiment or a nmfExperiment_lite object}
+\item{x}{an R object of type ButchR_NMF, ButchR_JoinNMF, or
+ButchR_IntegrativeNMF.}
 
 \item{k}{numeric  - factorization rank}
 

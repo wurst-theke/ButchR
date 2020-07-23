@@ -19,8 +19,8 @@ HMatrix(x, k = NULL, ...)
 \S4method{HMatrix}{join_NMF}(x, k = NULL, ...)
 }
 \arguments{
-\item{x}{an R object of type nmfExperiment, nmfExperiment_lite, join_NMF or
-integrative_NMF.}
+\item{x}{an R object of type ButchR_NMF, ButchR_JoinNMF, or
+ButchR_IntegrativeNMF.}
 
 \item{k}{numeric - factorization rank.}
 

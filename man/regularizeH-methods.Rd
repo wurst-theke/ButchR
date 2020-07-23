@@ -12,12 +12,12 @@ regularizeH(nmf_exp, ...)
 \S4method{regularizeH}{nmfExperiment_lite}(nmf_exp)
 }
 \arguments{
-\item{nmf_exp}{an nmfExperiment or a nmfExperiment_lite object}
+\item{nmf_exp}{an R object of type ButchR_NMF.}
 
 \item{...}{additional parameters.}
 }
 \value{
-an nmfExperiment or a nmfExperiment_lite object normalized by W
+a ButchR_NMF object regularized by H.
 }
 \description{
 After row regularization of the matrix H, the inverse factors are

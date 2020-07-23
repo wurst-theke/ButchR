@@ -18,7 +18,7 @@ generateRiverplot(nmf_exp, ...)
 )
 }
 \arguments{
-\item{nmf_exp}{an nmfExperiment or a nmfExperiment_lite object}
+\item{nmf_exp}{an R object of type ButchR_NMF.}
 
 \item{...}{additional parameters.}
 

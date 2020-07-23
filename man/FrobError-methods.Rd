@@ -19,8 +19,8 @@ FrobError(x, ...)
 \S4method{FrobError}{join_NMF}(x, ...)
 }
 \arguments{
-\item{x}{an R object of type nmfExperiment, nmfExperiment_lite, join_NMF or
-integrative_NMF.}
+\item{x}{an R object of type ButchR_NMF, ButchR_JoinNMF, or
+ButchR_IntegrativeNMF.}
 
 \item{...}{additional parameters.}
 }
