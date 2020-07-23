@@ -32,7 +32,7 @@ if the convergence test is constant for this number of iterations}
 factorization ranks > 2.}
 }
 \value{
-A join_NMF object,
+An object of class ButchR_joinNMF.
 containing a join H matrix and one W matrix for each input matrix
 }
 \description{

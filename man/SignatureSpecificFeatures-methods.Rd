@@ -7,7 +7,7 @@
 \alias{SignatureSpecificFeatures,ButchR_NMF-method}
 \alias{SignatureSpecificFeatures,ANY-method}
 \alias{SignatureSpecificFeatures,integrative_NMF-method}
-\alias{SignatureSpecificFeatures,join_NMF-method}
+\alias{SignatureSpecificFeatures,ButchR_joinNMF-method}
 \title{Signature Specific Features}
 \usage{
 SignatureSpecificFeatures(x, k = NULL, return_all_features = FALSE, ...)
@@ -22,7 +22,7 @@ SignatureSpecificFeatures(x, k = NULL, return_all_features = FALSE, ...)
   ...
 )
 
-\S4method{SignatureSpecificFeatures}{join_NMF}(
+\S4method{SignatureSpecificFeatures}{ButchR_joinNMF}(
   x,
   k = NULL,
   return_all_features = FALSE,
@@ -31,8 +31,8 @@ SignatureSpecificFeatures(x, k = NULL, return_all_features = FALSE, ...)
 )
 }
 \arguments{
-\item{x}{an object of type ButchR_NMF, ButchR_JoinNMF, or
-ButchR_IntegrativeNMF.}
+\item{x}{an object of type ButchR_NMF, ButchR_joinNMF, or
+ButchR_integrativeNMF.}
 
 \item{k}{numeric  - factorization rank}
 
@@ -94,7 +94,7 @@ SignatureSpecificFeatures(inmf_exp,
 }
 
 \dontrun{
-# For join_NMF objects:
+# For ButchR_joinNMF objects:
 SignatureSpecificFeatures(jnmf_exp)
 SignatureSpecificFeatures(jnmf_exp)
 lapply(SignatureSpecificFeatures(jnmf_exp), function(view){

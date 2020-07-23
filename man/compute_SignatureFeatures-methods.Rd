@@ -15,7 +15,7 @@
 \alias{class}
 \alias{ButchR_NMF.}
 \alias{compute_SignatureFeatures,integrative_NMF-method}
-\alias{compute_SignatureFeatures,join_NMF-method}
+\alias{compute_SignatureFeatures,ButchR_joinNMF-method}
 \title{Compute Signature Features
 Performs feature extraction for all
 factorization ranks > 2.
@@ -27,10 +27,10 @@ compute_SignatureFeatures(x)
 
 \S4method{compute_SignatureFeatures}{integrative_NMF}(x)
 
-\S4method{compute_SignatureFeatures}{join_NMF}(x)
+\S4method{compute_SignatureFeatures}{ButchR_joinNMF}(x)
 }
 \arguments{
-\item{x}{an nmfExperiment, join_NMF objects}
+\item{x}{An object of class ButchR_joinNMF.}
 }
 \value{
 the same type of input object with computed signature features.

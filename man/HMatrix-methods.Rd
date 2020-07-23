@@ -7,7 +7,7 @@
 \alias{HMatrix,ButchR_NMF-method}
 \alias{HMatrix,ANY-method}
 \alias{HMatrix,integrative_NMF-method}
-\alias{HMatrix,join_NMF-method}
+\alias{HMatrix,ButchR_joinNMF-method}
 \title{H-Matrix (H-Matrix with smallest frobError)}
 \usage{
 HMatrix(x, k = NULL, ...)
@@ -16,11 +16,11 @@ HMatrix(x, k = NULL, ...)
 
 \S4method{HMatrix}{integrative_NMF}(x, k = NULL, view_id = NULL, type = "all", ...)
 
-\S4method{HMatrix}{join_NMF}(x, k = NULL, ...)
+\S4method{HMatrix}{ButchR_joinNMF}(x, k = NULL, ...)
 }
 \arguments{
-\item{x}{an object of type ButchR_NMF, ButchR_JoinNMF, or
-ButchR_IntegrativeNMF.}
+\item{x}{an object of type ButchR_NMF, ButchR_joinNMF, or
+ButchR_integrativeNMF.}
 
 \item{k}{numeric - factorization rank.}
 
@@ -70,7 +70,7 @@ HMatrix(inmf_exp, k = 2, view_id = "atac", type = "total")
 }
 
 \dontrun{
-# For join_NMF objects:
+# For ButchR_joinNMF objects:
 HMatrix(jnmf_exp)
 HMatrix(jnmf_exp, k = 2)
 lapply(HMatrix(jnmf_exp, k = 2), head)

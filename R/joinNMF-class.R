@@ -14,21 +14,21 @@ NULL
 #' @slot OptK numeric
 #' @slot SignFeatures DataFrame or list
 #'
-#' @return An object of join_NMF Experiment Class
+#' @return An object of class ButchR_joinNMF.
 #' @export
 #'
 #' @examples
 #' \dontrun{
-#' join_NMF(input_data   = input_data,
-#'          HMatrix      = shared_HMatrix_list,
-#'          WMatrix_vs   = view_specific_WMatrix_list,
-#'          FrobError    = frob_errors,
-#'          OptKStats    = OptKStats,
-#'          OptK         = OptK,
-#'          SignFeatures = SignFeatures)
+#' ButchR_joinNMF(input_data   = input_data,
+#'                HMatrix      = shared_HMatrix_list,
+#'                WMatrix_vs   = view_specific_WMatrix_list,
+#'                FrobError    = frob_errors,
+#'                OptKStats    = OptKStats,
+#'                OptK         = OptK,
+#'                SignFeatures = SignFeatures)
 #' }
-join_NMF <- setClass(
-  Class = "join_NMF",
+ButchR_joinNMF <- setClass(
+  Class = "ButchR_joinNMF",
   slots = list(input_data   = "list",
                HMatrix      = "list",
                WMatrix_vs   = "list",
@@ -39,7 +39,7 @@ join_NMF <- setClass(
 )
 
 setMethod("show",
-          "join_NMF",
+          "ButchR_joinNMF",
           function(object) {
             #cat("class: join NMF object \n")
             #cat("Best factorization index: ", object@best_factorization_idx, "\n")
@@ -75,14 +75,14 @@ setMethod("show",
 #'
 #' @examples
 #' \dontrun{
-#' # For join_NMF objects:
+#' # For ButchR_joinNMF objects:
 #' HMatrix(jnmf_exp)
 #' HMatrix(jnmf_exp, k = 2)
 #' lapply(HMatrix(jnmf_exp, k = 2), head)
 #' HMatrix(jnmf_exp, k = 2, view_id = "atac")
 #' }
 setMethod("HMatrix",
-          "join_NMF",
+          "ButchR_joinNMF",
           function(x, k = NULL, ...) {
             if(is.null(k)) {
               H <- x@HMatrix
@@ -117,14 +117,14 @@ setMethod("HMatrix",
 #'
 #' @examples
 #' \dontrun{
-#' # For join_NMF objects:
+#' # For ButchR_joinNMF objects:
 #' WMatrix(jnmf_exp)
 #' WMatrix(jnmf_exp, k = 2)
 #' lapply(WMatrix(jnmf_exp, k = 2), head)
 #' WMatrix(jnmf_exp, k = 2, view_id = "atac")
 #' }
 setMethod("WMatrix",
-          "join_NMF",
+          "ButchR_joinNMF",
           function(x, k = NULL, view_id = NULL, ...) {
             # Check if view id is indeed one of the views
             if (is.null(view_id)) {
@@ -174,7 +174,7 @@ setMethod("WMatrix",
 #' @aliases FrobError,ANY-method
 #' @export
 #'
-setMethod("FrobError", "join_NMF", function(x, ...) x@FrobError)
+setMethod("FrobError", "ButchR_joinNMF", function(x, ...) x@FrobError)
 
 
 #------------------------------------------------------------------------------#
@@ -189,7 +189,7 @@ setMethod("FrobError", "join_NMF", function(x, ...) x@FrobError)
 #'
 #' @examples
 #' \dontrun{
-#' # For join_NMF objects:
+#' # For ButchR_joinNMF objects:
 #' SignatureSpecificFeatures(jnmf_exp)
 #' SignatureSpecificFeatures(jnmf_exp)
 #' lapply(SignatureSpecificFeatures(jnmf_exp), function(view){
@@ -207,7 +207,7 @@ setMethod("FrobError", "join_NMF", function(x, ...) x@FrobError)
 #'                           view_id = "atac")
 #' }
 setMethod("SignatureSpecificFeatures",
-          "join_NMF",
+          "ButchR_joinNMF",
           function(x, k = NULL, return_all_features = FALSE, view_id = NULL, ...){
             # if no feature extraction was performed
             if (length(x@SignFeatures) == 0) {
@@ -279,7 +279,7 @@ setMethod("SignatureSpecificFeatures",
 #' @rdname compute_SignatureFeatures-methods
 #' @aliases compute_SignatureFeatures,ANY-method
 #'
-#' @param x an nmfExperiment, join_NMF objects
+#' @param x An object of class ButchR_joinNMF.
 #' @export
 #'
 #' @examples
@@ -297,7 +297,7 @@ setMethod("SignatureSpecificFeatures",
 #' SignatureSpecificFeatures(inmf_exp, k = 3, return_all_features = TRUE)
 #' }
 setMethod("compute_SignatureFeatures",
-          "join_NMF",
+          "ButchR_joinNMF",
           function(x){
             k <- x@OptKStats$k
             if (length(k) == 1 & 2 %in% k) {

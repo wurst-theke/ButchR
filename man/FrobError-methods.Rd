@@ -7,7 +7,7 @@
 \alias{FrobError,ButchR_NMF-method}
 \alias{FrobError,ANY-method}
 \alias{FrobError,integrative_NMF-method}
-\alias{FrobError,join_NMF-method}
+\alias{FrobError,ButchR_joinNMF-method}
 \title{Frobenius error for all factorization ranks}
 \usage{
 FrobError(x, ...)
@@ -16,11 +16,11 @@ FrobError(x, ...)
 
 \S4method{FrobError}{integrative_NMF}(x, ...)
 
-\S4method{FrobError}{join_NMF}(x, ...)
+\S4method{FrobError}{ButchR_joinNMF}(x, ...)
 }
 \arguments{
-\item{x}{an object of type ButchR_NMF, ButchR_JoinNMF, or
-ButchR_IntegrativeNMF.}
+\item{x}{an object of type ButchR_NMF, ButchR_joinNMF, or
+ButchR_integrativeNMF.}
 
 \item{...}{additional parameters.}
 }

@@ -7,7 +7,7 @@
 \alias{WMatrix,ButchR_NMF-method}
 \alias{WMatrix,ANY-method}
 \alias{WMatrix,integrative_NMF-method}
-\alias{WMatrix,join_NMF-method}
+\alias{WMatrix,ButchR_joinNMF-method}
 \title{W-Matrix (W-Matrix with smallest frobError)}
 \usage{
 WMatrix(x, k = NULL, ...)
@@ -16,11 +16,11 @@ WMatrix(x, k = NULL, ...)
 
 \S4method{WMatrix}{integrative_NMF}(x, k = NULL, view_id = NULL, ...)
 
-\S4method{WMatrix}{join_NMF}(x, k = NULL, view_id = NULL, ...)
+\S4method{WMatrix}{ButchR_joinNMF}(x, k = NULL, view_id = NULL, ...)
 }
 \arguments{
-\item{x}{an object of type ButchR_NMF, ButchR_JoinNMF, or
-ButchR_IntegrativeNMF.}
+\item{x}{an object of type ButchR_NMF, ButchR_joinNMF, or
+ButchR_integrativeNMF.}
 
 \item{k}{numeric - factorization rank.}
 
@@ -52,7 +52,7 @@ lapply(WMatrix(inmf_exp, k = 2), head)
 WMatrix(inmf_exp, k = 2, view_id = "atac")
 }
 \dontrun{
-# For join_NMF objects:
+# For ButchR_joinNMF objects:
 WMatrix(jnmf_exp)
 WMatrix(jnmf_exp, k = 2)
 lapply(WMatrix(jnmf_exp, k = 2), head)

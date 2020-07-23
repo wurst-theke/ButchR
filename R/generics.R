@@ -4,8 +4,8 @@
 #' Returns a data.frame with factorization ranks in the columns,
 #' and the Frobenius error for every NMF initialization in the rows.
 #'
-#' @param x an object of type ButchR_NMF, ButchR_JoinNMF, or
-#' ButchR_IntegrativeNMF.
+#' @param x an object of type ButchR_NMF, ButchR_joinNMF, or
+#' ButchR_integrativeNMF.
 #' @param ... additional parameters.
 #'
 #' @return data.frame with Frobenius errors
@@ -25,8 +25,8 @@ setGeneric("FrobError", function(x, ...) standardGeneric("FrobError"))
 #'
 #' Return a list of H-Matrices or an H-Matrix for the indicaded rank
 #'
-#' @param x an object of type ButchR_NMF, ButchR_JoinNMF, or
-#' ButchR_IntegrativeNMF.
+#' @param x an object of type ButchR_NMF, ButchR_joinNMF, or
+#' ButchR_integrativeNMF.
 #' @param k numeric - factorization rank.
 #' @param ... additional parameters.
 #'
@@ -49,8 +49,8 @@ setGeneric("HMatrix", function(x, k = NULL, ...)
 #'
 #' Return a list of W-Matrices or a W-Matrix for the indicaded rank
 #'
-#' @param x an object of type ButchR_NMF, ButchR_JoinNMF, or
-#' ButchR_IntegrativeNMF.
+#' @param x an object of type ButchR_NMF, ButchR_joinNMF, or
+#' ButchR_integrativeNMF.
 #' @param k numeric - factorization rank.
 #' @param ... additional parameters.
 #'
@@ -129,8 +129,8 @@ setGeneric("FeatureStats", function(x, ...) standardGeneric("FeatureStats"))
 #' and 0 it does not.
 #' The extraction of Signature Specific Features is not supported for k = 2
 #'
-#' @param x an object of type ButchR_NMF, ButchR_JoinNMF, or
-#' ButchR_IntegrativeNMF.
+#' @param x an object of type ButchR_NMF, ButchR_joinNMF, or
+#' ButchR_integrativeNMF.
 #' @param k numeric  - factorization rank
 #' @param return_all_features logical indicating whether to return a binary
 #' matrix with the same dimension as the selected factorization rank.
@@ -168,8 +168,8 @@ setGeneric("SignatureSpecificFeatures",
 #' and 0 it does not.
 #' The extraction of Signature Specific Features is not supported for k = 2
 #'
-#' @param x an object of type ButchR_NMF, ButchR_JoinNMF, or
-#' ButchR_IntegrativeNMF.
+#' @param x an object of type ButchR_NMF, ButchR_joinNMF, or
+#' ButchR_integrativeNMF.
 #' @return the same type of input object with computed signature features.
 #' @docType methods
 #' @rdname compute_SignatureFeatures-methods

@@ -16,7 +16,7 @@ NULL
 #' @param extract_features if TRUE performs feature extraction for all
 #' factorization ranks > 2.
 #'
-#' @return A join_NMF object,
+#' @return An object of class ButchR_joinNMF.
 #' containing a join H matrix and one W matrix for each input matrix
 #'
 #' @import reticulate
@@ -177,15 +177,15 @@ run_joinNMF_tensor <- function (matrix_list,
   }
 
   #----------------------------------------------------------------------------#
-  #                              Return join_NMF object                        #
+  #                         Return ButchR_joinNMF object                       #
   #----------------------------------------------------------------------------#
+  ButchR_joinNMF(input_data   = input_data,
+                 HMatrix      = shared_HMatrix_list,
+                 WMatrix_vs   = view_specific_WMatrix_list,
+                 FrobError    = frob_errors,
+                 OptKStats    = OptKStats,
+                 OptK         = OptK,
+                 SignFeatures = SignFeatures)
 
-  join_NMF(input_data   = input_data,
-           HMatrix      = shared_HMatrix_list,
-           WMatrix_vs   = view_specific_WMatrix_list,
-           FrobError    = frob_errors,
-           OptKStats    = OptKStats,
-           OptK         = OptK,
-           SignFeatures = SignFeatures)
 }
 
