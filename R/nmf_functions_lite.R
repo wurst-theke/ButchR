@@ -104,6 +104,10 @@ run_NMF_tensor <- function (X,
   # Validate in input data is correct
   X <- val_nonnegative_matrix(X)
   val_ranks_torun(ranks, ncol(X))
+  val_single_numeric(n_initializations, "n_initializations")
+  val_single_numeric(iterations, "iterations")
+  val_single_numeric(convergence_threshold, "convergence_threshold")
+  val_single_numeric(n_neighbors, "n_neighbors")
 
 
   # Convert params to integer
