@@ -117,10 +117,12 @@ run_NMF_tensor <- function (X,
          "supported methods: NMF, GRNMF_SC")
   }
 
-  val_single_numeric(n_initializations, "n_initializations")
-  val_single_numeric(iterations, "iterations")
-  val_single_numeric(convergence_threshold, "convergence_threshold")
-  val_single_numeric(n_neighbors, "n_neighbors")
+  val_single_integer(n_initializations, "n_initializations")
+  val_single_integer(iterations, "iterations")
+  val_single_integer(convergence_threshold, "convergence_threshold")
+  val_single_integer(n_neighbors, "n_neighbors")
+  val_single_numeric(alpha, "alpha")
+  val_single_numeric(lamb, "lamb")
 
 
   # Convert params to integer

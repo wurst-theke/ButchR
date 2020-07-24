@@ -45,6 +45,29 @@ val_ranks_torun <- function(ranks, ncolmat) {
   NULL
 }
 
+#' Validate input single numeric integer
+#'
+#' @param x numeric
+#' @param id param id
+#' @return NULL
+#' @examples
+#' \dontrun{
+#' ButchR:::val_single_integer(X)
+#' }
+val_single_integer <- function(x, id) {
+  if (!is.numeric(x)) {
+    stop("\n", id, " = ", x, ": expecting single numeric value\n")
+  }
+  if (!length(x) == 1) {
+    stop("\n", id, " = ", x, ": expecting single numeric value\n")
+  }
+  if (x < 0 | !x%%1==0) {
+    stop("\n", id, " = ", x, ": should be a positive integer\n")
+  }
+  NULL
+}
+
+
 #' Validate input single numeric
 #'
 #' @param x numeric
@@ -61,8 +84,8 @@ val_single_numeric <- function(x, id) {
   if (!length(x) == 1) {
     stop("\n", id, " = ", x, ": expecting single numeric value\n")
   }
-  if (x < 0 | !x%%1==0) {
-    stop("\n", id, " = ", x, ": should be a positive integer\n")
+  if (x <= 0 ) {
+    stop("\n", id, " = ", x, ": should be  >= 0\n")
   }
   NULL
 }

@@ -68,6 +68,20 @@ test_that("Bad n_neighbors", {
 })
 
 
+test_that("Bad alpha", {
+  expect_error(run_NMF_tensor(X, ranks = 2, alpha = "a"))
+  expect_error(run_NMF_tensor(X, ranks = 2, alpha = 4:3))
+  expect_error(run_NMF_tensor(X, ranks = 2, alpha = -3.1))
+})
+
+test_that("Bad lamb", {
+  expect_error(run_NMF_tensor(X, ranks = 2, lamb = "a"))
+  expect_error(run_NMF_tensor(X, ranks = 2, lamb = 4:3))
+  expect_error(run_NMF_tensor(X, ranks = 2, lamb = -3.1))
+})
+
+
+
 #
 # run_NMF_tensor <- function (X,
 #                             ranks,
