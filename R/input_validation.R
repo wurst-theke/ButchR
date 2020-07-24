@@ -7,12 +7,15 @@
 #' ButchR:::val_nonnegative_matrix(X)
 #' }
 val_nonnegative_matrix <- function(X) {
-  if (!is.numeric(X[1,1])) {
-    stop("\nProvided input matrix is not a numeric matrix\n")
-  }
   if(is.data.frame(X)) {
     warning("Provided input is a data frame, coercing into matrix.")
     X = as.matrix(X)
+  }
+  if (!is.matrix(X)) {
+    stop("\nProvided input matrix is not a matrix\n")
+  }
+  if (!is.numeric(X[1,1])) {
+    stop("\nProvided input matrix is not a numeric matrix\n")
   }
   if (min(X) < 0 ) {
     stop("\nNegative values present in input matrix\n
@@ -91,3 +94,41 @@ val_single_numeric <- function(x, id) {
 }
 
 
+#' Validate if input graph is a matrix for GRNMF_SC
+#'
+#' @param graph graph
+#' @param X matrix
+#' @param method NMF method
+#' @return graph
+#' @examples
+#' \dontrun{
+#' ButchR:::val_graph_GRNMF_SC(graph)
+#' }
+val_graph_GRNMF_SC <- function(graph, X, method) {
+  if(!method == "GRNMF_SC") {
+    warning("\ngraph: graph is only used with the method: GRNMF_SC.\n",
+            "\nignoring graph\n")
+  }
+  if(is.data.frame(graph)) {
+    warning("\ngraph: Provided input graph is a data frame, coercing into matrix.")
+    graph = as.matrix(graph)
+  }
+  if (!is.matrix(graph)) {
+    stop("\ngraph: Provided input graph is not a matrix\n")
+  }
+  if (!nrow(graph) == ncol(graph)) {
+    stop("\ngraph: Expecting square matrix found: nrow(graph) != ncol(graph)!\n")
+  }
+  if (!ncol(X) == ncol(graph)) {
+    stop("\ngraph: Expecting matrix with same number of columns than input X\n",
+         "found: ncol(X)=", ncol(X), " and ncol(graph)=", ncol(graph), "\n")
+  }
+  if (!is.numeric(graph[1,1])) {
+    stop("\ngraph: Provided input graph is not a numeric matrix\n")
+  }
+  # if (min(graph) < 0 ) {
+  #   stop("\nNegative values present in input graph\n
+  #        only non-negative graph matrices supported\n")
+  # }
+  return(graph)
+}

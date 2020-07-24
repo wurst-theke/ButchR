@@ -14,9 +14,7 @@ w <- WMatrix(nmf_exp, k=2)
 
 
 test_that("Factozation metrics", {
-  expect_output(show(nmf_exp)) # deafault print
-
-
+  expect_output(show(nmf_exp)) # default print
   # data.frame with Frob error for each init
   expect_is(FrobError(nmf_exp), "data.frame")
   expect_equal(dim(FrobError(nmf_exp)), c(n_inits, length(ranks)))

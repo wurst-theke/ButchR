@@ -80,6 +80,23 @@ test_that("Bad lamb", {
   expect_error(run_NMF_tensor(X, ranks = 2, lamb = -3.1))
 })
 
+test_that("Bad graph", {
+  graph <- matrix(abs(rnorm(100)), ncol = 10)
+  # Good input print
+  nmf_exp <- run_NMF_tensor(X, ranks = 2, method = "GRNMF_SC", graph = graph)
+  expect_output(show(nmf_exp))
+  # Bad input
+  expect_warning(run_NMF_tensor(X, ranks = 2, method = "NMF", graph = graph))
+  expect_warning(run_NMF_tensor(X, ranks = 2, method = "GRNMF_SC", graph = as.data.frame(graph)))
+  expect_error(run_NMF_tensor(X, ranks = 2, method = "GRNMF_SC", graph = "a"))
+  graph <- matrix(abs(rnorm(110)), ncol = 11)
+  expect_error(run_NMF_tensor(X, ranks = 2, method = "GRNMF_SC", graph = graph))
+  graph <- matrix(abs(rnorm(121)), ncol = 11)
+  expect_error(run_NMF_tensor(X, ranks = 2, method = "GRNMF_SC", graph = graph))
+  graph <- matrix(rep("a", 100), ncol = 10)
+  expect_error(run_NMF_tensor(X, ranks = 2, method = "GRNMF_SC", graph = graph))
+})
+
 
 
 #

@@ -123,6 +123,8 @@ run_NMF_tensor <- function (X,
   val_single_integer(n_neighbors, "n_neighbors")
   val_single_numeric(alpha, "alpha")
   val_single_numeric(lamb, "lamb")
+  if (!is.null(graph)) graph <- val_graph_GRNMF_SC(graph, X, method)
+
 
 
   # Convert params to integer
