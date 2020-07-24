@@ -38,6 +38,13 @@ test_that("Results of runNMFtensor are matrices", {
   expect_is(w, "matrix")
   expect_equal(dim(h), c(2, ncol(X))) # dim H matrix
   expect_equal(dim(w), c(nrow(X), 2)) # dim W matrix
+
+  # X without colnames and with rownames
+  X <- matrix(abs(rnorm(1000)), ncol = 10)
+  rownames(X) <- paste0("f", 1:100)
+  x <- run_NMF_tensor(X, ranks = 2, n_initializations = 2)
+  expect_is(WMatrix(x), "list")
+  expect_is(WMatrix(x , k=2), "matrix")
 })
 
 
@@ -70,11 +77,8 @@ test_that("Feature extraction after decomposition error K == 2", {
                                n_initializations = n_inits,
                                extract_features = FALSE)
   expect_error(SignatureSpecificFeatures(nmf_exp_nf)) # if no feature extraction
-  expect_error(compute_SignatureFeatures(inmf_exp)) # K =2 not supported
+  expect_error(compute_SignatureFeatures(nmf_exp_nf)) # K =2 not supported
 })
-
-
-
 
 
 

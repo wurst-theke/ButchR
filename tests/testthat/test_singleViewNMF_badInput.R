@@ -17,6 +17,7 @@ test_that("A matrix with negative values return error", {
                                 ranks = 2, n_initializations = 1))
   expect_error(run_NMF_tensor(as.data.frame(matrix(rep("a", 1000)), ncol = 10),
                               ranks = 2, n_initializations = 1))
+  expect_error(run_NMF_tensor("a", ranks = 2, n_initializations = 1))
 })
 
 test_that("Bad ranks", {
