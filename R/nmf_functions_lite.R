@@ -104,6 +104,19 @@ run_NMF_tensor <- function (X,
   # Validate in input data is correct
   X <- val_nonnegative_matrix(X)
   val_ranks_torun(ranks, ncol(X))
+  if (!is.character(method)) {
+    stop("\nmethod = ", method, ": expecting single character value\n",
+         "supported methods: NMF, GRNMF_SC")
+  }
+  if (!length(method) == 1) {
+    stop("\nmethod = ", method, ": expecting single character value\n",
+         "supported methods: NMF, GRNMF_SC")
+  }
+  if (!method %in% c("NMF", "GRNMF_SC")) {
+    stop("\nmethod = ", method, ": non valid NMF method\n",
+         "supported methods: NMF, GRNMF_SC")
+  }
+
   val_single_numeric(n_initializations, "n_initializations")
   val_single_numeric(iterations, "iterations")
   val_single_numeric(convergence_threshold, "convergence_threshold")

@@ -58,7 +58,7 @@ val_single_numeric <- function(x, id) {
   if (!is.numeric(x)) {
     stop("\n", id, " = ", x, ": expecting single numeric value\n")
   }
-  if (!length(x)) {
+  if (!length(x) == 1) {
     stop("\n", id, " = ", x, ": expecting single numeric value\n")
   }
   if (x < 0 | !x%%1==0) {
