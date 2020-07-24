@@ -94,6 +94,27 @@ val_single_numeric <- function(x, id) {
 }
 
 
+#' Validate input single boolean
+#'
+#' @param x bool
+#' @param id param id
+#' @return NULL
+#' @examples
+#' \dontrun{
+#' ButchR:::val_single_numeric(X)
+#' }
+val_single_boolean <- function(x, id) {
+  if (!is.logical(x)) {
+    stop("\n", id, " = ", x, ": expecting single boolean value: TRUE or FALSE\n")
+  }
+  if (!length(x) == 1) {
+    stop("\n", id, " = ", x, ": expecting single boolean value: TRUE or FALSE\n")
+  }
+  NULL
+}
+
+
+
 #' Validate if input graph is a matrix for GRNMF_SC
 #'
 #' @param graph graph

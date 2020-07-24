@@ -98,20 +98,8 @@ test_that("Bad graph", {
 })
 
 
-
-#
-# run_NMF_tensor <- function (X,
-#                             ranks,
-#                             method                = "NMF",
-#                             n_initializations     = 10,
-#                             iterations            = 10^4,
-#                             convergence_threshold = 40,
-#                             n_neighbors           = 4,
-#                             alpha                 = 0.1,
-#                             lamb                  = 10,
-#                             graph                 = NULL,
-#                             extract_features      = FALSE){
-#
-#
-#
+test_that("Bad extract_features", {
+  expect_error(run_NMF_tensor(X, ranks = 2, extract_features = "a"))
+  expect_error(run_NMF_tensor(X, ranks = 2, extract_features = c(FALSE, FALSE)))
+})
 
