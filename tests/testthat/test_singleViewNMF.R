@@ -13,7 +13,7 @@ h <- HMatrix(nmf_exp, k=2)
 w <- WMatrix(nmf_exp, k=2)
 
 
-test_that("Factozation metrics", {
+test_that("Factorization metrics", {
   expect_output(show(nmf_exp)) # default print
   # data.frame with Frob error for each init
   expect_is(FrobError(nmf_exp), "data.frame")

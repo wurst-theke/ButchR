@@ -94,15 +94,13 @@ setMethod("HMatrix",
                 })
               }
             } else {
-              if (length(k) > 1 ) {
-                stop("k:", paste0(k, collapse = ","), " expecting single value",
-                     "\nPlease select from ranks = ", paste0(x@OptKStats$k, collapse = ","),
-                     "\nOr NULL to retur a list of H matrices for all Ks")
-              }
+              val_single_integer(k, "k") # validate K
               idx <- as.character(x@OptKStats$rank_id[x@OptKStats$k == k])
               if (length(idx) == 0 ) {
                 stop("No H matrix present for k = ", k,
-                     "\nPlease select from ranks = ", paste0(x@OptKStats$k, collapse = ","))
+                     "\nPlease select from ranks = ",
+                     paste0(x@OptKStats$k, collapse = ","),
+                     "\nOr NULL to retur a list of H matrices for all Ks")
               }
 
               H <- x@HMatrix[[idx]]
@@ -136,15 +134,13 @@ setMethod("WMatrix",
                 })
               }
             } else {
-              if (length(k) > 1 ) {
-                stop("k:", paste0(k, collapse = ","), " expecting single value",
-                     "\nPlease select from ranks = ", paste0(x@OptKStats$k, collapse = ","),
-                     "\nOr NULL to retur a list of W matrices for all Ks")
-              }
+              val_single_integer(k, "k") # validate K
               idx <- as.character(x@OptKStats$rank_id[x@OptKStats$k == k])
               if (length(idx) == 0 ) {
                 stop("No W matrix present for k = ", k,
-                     "\nPlease select from ranks = ", paste0(x@OptKStats$k, collapse = ","))
+                     "\nPlease select from ranks = ",
+                     paste0(x@OptKStats$k, collapse = ","),
+                     "\nOr NULL to retur a list of W matrices for all Ks")
               }
 
               W <- x@WMatrix[[idx]]
