@@ -118,6 +118,18 @@ test_that("NMF metric Plots", {
   expect_length(unique(gstat$data$k), length(ranks)) # for all k
   # FrobError cv sumSilWidth meanSilWidth copheneticCoeff meanAmariDist
   expect_length(unique(gstat$data$Metric), 6)
+  # for more metrics
+  gstat <- gg_plotKStats(nmf_exp,
+                         plot_vars = c("FrobError", "FrobError_min",
+                                       "FrobError_mean", "FrobError_cv",
+                                       "FrobError_sd", "sumSilWidth",
+                                       "meanSilWidth", "copheneticCoeff",
+                                       "meanAmariDist"))
+  expect_length(unique(gstat$data$Metric), 9)
+  # Errors
+  expect_error(gg_plotKStats(X))
+  expect_error(gg_plotKStats(nmf_exp, plot_vars = X))
+  expect_error(gg_plotKStats(nmf_exp, plot_vars = c("a", "FrobError")))
 })
 
 test_that("NMF metric riverplot", {

@@ -6,23 +6,28 @@
 \usage{
 gg_plotKStats(
   nmf_exp,
-  plot_vars = c("FrobError", "cv", "sumSilWidth", "meanSilWidth", "copheneticCoeff",
-    "meanAmariDist")
+  plot_vars = c("FrobError", "FrobError_cv", "sumSilWidth", "meanSilWidth",
+    "copheneticCoeff", "meanAmariDist")
 )
 }
 \arguments{
-\item{nmf_exp}{an object of class ButchR_NMF.}
+\item{nmf_exp}{an object of class ButchR_NMF, ButchR_joinNMF, or
+ButchR_integrativeNMF.}
 
-\item{plot_vars}{character - ids of the metrics to display}
+\item{plot_vars}{a character vector with the ids of the metrics to display.
+possible values are: FrobError, FrobError_min, FrobError_mean, FrobError_cv,
+FrobError_sd, sumSilWidth, meanSilWidth, copheneticCoeff, and meanAmariDist.
+Default value: c("FrobError", "FrobError_cv", "sumSilWidth", "meanSilWidth",
+"copheneticCoeff", "meanAmariDist").}
 }
 \value{
-a ggplot figure with the values for the six factorization metrics
+a ggplot figure with the values for the selected factorization metrics
 }
 \description{
 For every factorization rank the Frobenius error,
 coefficient variation of Frobenius error,
 sum Silhouette Width, mean Silhouette width,
-cophenetic coefficient and mean Amari distance is shown
+cophenetic coefficient and mean Amari distance is shown.
 }
 \examples{
 \dontrun{

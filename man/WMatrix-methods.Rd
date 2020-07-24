@@ -19,7 +19,7 @@ WMatrix(x, k = NULL, ...)
 \S4method{WMatrix}{ButchR_joinNMF}(x, k = NULL, view_id = NULL, ...)
 }
 \arguments{
-\item{x}{an object of type ButchR_NMF, ButchR_joinNMF, or
+\item{x}{an object of class ButchR_NMF, ButchR_joinNMF, or
 ButchR_integrativeNMF.}
 
 \item{k}{numeric - factorization rank.}

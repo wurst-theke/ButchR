@@ -10,12 +10,17 @@
 #' For every factorization rank the Frobenius error,
 #' coefficient variation of Frobenius error,
 #' sum Silhouette Width, mean Silhouette width,
-#' cophenetic coefficient and mean Amari distance is shown
+#' cophenetic coefficient and mean Amari distance is shown.
 #'
-#' @param nmf_exp an object of class ButchR_NMF.
-#' @param plot_vars character - ids of the metrics to display
+#' @param nmf_exp an object of class ButchR_NMF, ButchR_joinNMF, or
+#' ButchR_integrativeNMF.
+#' @param plot_vars a character vector with the ids of the metrics to display.
+#' possible values are: FrobError, FrobError_min, FrobError_mean, FrobError_cv,
+#' FrobError_sd, sumSilWidth, meanSilWidth, copheneticCoeff, and meanAmariDist.
+#' Default value: c("FrobError", "FrobError_cv", "sumSilWidth", "meanSilWidth",
+#' "copheneticCoeff", "meanAmariDist").
 #'
-#' @return a ggplot figure with the values for the six factorization metrics
+#' @return a ggplot figure with the values for the selected factorization metrics
 #' @import ggplot2 dplyr
 #' @importFrom rlang .data
 #' @export
@@ -29,17 +34,40 @@
 #' gg_plotKStats(nmf_exp)
 #' }
 gg_plotKStats <- function(nmf_exp,
-                          plot_vars = c("FrobError", "cv", "sumSilWidth",
-                                        "meanSilWidth", "copheneticCoeff",
-                                        "meanAmariDist")) {
+                          plot_vars = c("FrobError", "FrobError_cv",
+                                        "sumSilWidth", "meanSilWidth",
+                                        "copheneticCoeff", "meanAmariDist")) {
+
+  if (!class(nmf_exp) %in% c("ButchR_NMF", "ButchR_joinNMF", "ButchR_integrativeNMF")) {
+    stop("\ngg_plotKStats is only supported for objects of class: \n",
+         "ButchR_NMF, ButchR_joinNMF, or ButchR_integrativeNMF\n")
+  }
+  if (!is.character(plot_vars)) {
+    stop("\nplot_vars: Expecting a character vector with IDs of the
+         factorization metrics to visualize, e.g.:\n",
+         "c('FrobError', 'FrobError_cv', 'sumSilWidth', 'meanSilWidth',
+         'copheneticCoeff', 'meanAmariDist')\n")
+  }
+  if (!all(plot_vars %in% c("FrobError", "FrobError_min", "FrobError_mean",
+                           "FrobError_cv", "FrobError_sd", "sumSilWidth",
+                           "meanSilWidth", "copheneticCoeff", "meanAmariDist"))) {
+    stop("\nPossible factorization metrics are: FrobError, FrobError_min,
+    FrobError_mean, FrobError_cv, FrobError_sd, sumSilWidth, meanSilWidth,
+    copheneticCoeff, and meanAmariDist.\n")
+  }
+
+
+
+
+  # Frobenius error for all initializations
   frob_df <- nmf_exp@FrobError %>%
     tidyr::pivot_longer(everything(), names_to = "k", values_to = "Stat") %>%
     dplyr::mutate(Metric = "FrobError") %>%
     dplyr::mutate(k = as.numeric(sub("^k", "", .data$k)))
-
+  # Optimal factorization rank metrix coputed by compute_OptKStats_NMF
   metrics_df <- nmf_exp@OptKStats[,-1] %>%
     tidyr::pivot_longer(names_to = "Metric", values_to = "Stat", -.data$k)
-
+  # Plot and highlight optK
   dplyr::bind_rows(frob_df, metrics_df) %>%
     dplyr::filter(.data$Metric %in% plot_vars) %>%
     dplyr::mutate(Metric = factor(.data$Metric, levels = unique(.data$Metric))) %>%

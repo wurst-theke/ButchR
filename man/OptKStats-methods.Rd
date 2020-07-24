@@ -8,7 +8,7 @@
 OptKStats(x, ...)
 }
 \arguments{
-\item{x}{an object of type ButchR_NMF.}
+\item{x}{an object of class ButchR_NMF.}
 
 \item{...}{additional parameters.}
 }

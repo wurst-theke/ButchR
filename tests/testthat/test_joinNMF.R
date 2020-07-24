@@ -15,7 +15,7 @@ jnmf_exp <- run_joinNMF_tensor(norm_mat_list,
 
 
 
-
+#gg_plotKStats(jnmf_exp)
 
 test_that("jNMF print", {
   expect_is(jnmf_exp, "ButchR_joinNMF")

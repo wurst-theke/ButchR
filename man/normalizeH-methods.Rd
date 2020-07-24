@@ -12,7 +12,7 @@ normalizeH(nmf_exp, ...)
 \S4method{normalizeH}{ButchR_NMF}(nmf_exp)
 }
 \arguments{
-\item{nmf_exp}{an object of type ButchR_NMF.}
+\item{nmf_exp}{an object of class ButchR_NMF.}
 
 \item{...}{additional parameters.}
 }

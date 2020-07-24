@@ -19,7 +19,7 @@ FrobError(x, ...)
 \S4method{FrobError}{ButchR_joinNMF}(x, ...)
 }
 \arguments{
-\item{x}{an object of type ButchR_NMF, ButchR_joinNMF, or
+\item{x}{an object of class ButchR_NMF, ButchR_joinNMF, or
 ButchR_integrativeNMF.}
 
 \item{...}{additional parameters.}

@@ -169,7 +169,12 @@ setMethod("WMatrix",
 #' n_initializations = 2)
 #' FrobError(nmf_exp)
 #' }
-setMethod("FrobError", "ButchR_NMF", function(x, ...) x@FrobError)
+setMethod("FrobError", "ButchR_NMF", function(x, ...) {
+  if (length(x@OptK) == 0) {
+    print("\nNo optimal K found, please select manualy\n")
+  }
+  x@FrobError
+})
 
 
 #### Optimal K Statistics
