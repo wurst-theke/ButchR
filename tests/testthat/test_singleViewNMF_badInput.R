@@ -26,6 +26,15 @@ test_that("Bad ranks", {
 })
 
 
+
+test_that("Bad ranks", {
+  expect_error(run_NMF_tensor(X, ranks = 2, method = 1))
+  expect_error(run_NMF_tensor(X, ranks = 2, method = c("nmf")))
+  expect_error(run_NMF_tensor(X, ranks = 2, method = c("nmf", "nmf2")))
+})
+
+
+
 test_that("Bad n_initializations", {
   expect_error(run_NMF_tensor(X, ranks = 2, n_initializations = "a"))
   expect_error(run_NMF_tensor(X, ranks = 2, n_initializations = 1:3))
