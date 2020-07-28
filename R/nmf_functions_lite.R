@@ -101,7 +101,7 @@ run_NMF_tensor <- function (X,
   #----------------------------------------------------------------------------#
   #                                    Setup                                   #
   #----------------------------------------------------------------------------#
-  # Validate in input data is correct
+  # Validate if input data is correct
   X <- val_nonnegative_matrix(X)
   val_ranks_torun(ranks, ncol(X))
   if (!is.character(method)) {

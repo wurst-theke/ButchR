@@ -46,22 +46,47 @@ run_iNMF_tensor <- function (matrix_list,
   #                            Setup and data check                            #
   #----------------------------------------------------------------------------#
   # Check  data
-  if (!is.list(matrix_list) &
-      (!sum(sapply(matrix_list, is.matrix)) == length(matrix_list))) {
+  if (!is.list(matrix_list) ) {
     stop("\nmatrix_list should be a list of Non-negative matrices\n")
   }
-  if (min(sapply(matrix_list, min)) < 0 ) {
-    stop("\nNegative values present in input matrix\n
-         only non-negative matrices supported\n")
-  }
+  matrix_list <- lapply(matrix_list, val_nonnegative_matrix)
   if (!all(sapply(lapply(matrix_list, colnames),
                   identical, colnames(matrix_list[[1]])))) {
     stop("\nColumn names should be identical between matrices\n")
   }
   if (is.null(names(matrix_list))) {
     names(matrix_list) <- paste0("view", 1:length(matrix_list))
-    warning("Input matrix list do not have names, assigning ids:\n", names(matrix_list), "\n")
+    warning("Input matrix list do not have names, assigning ids:\n",
+            paste0(names(matrix_list), collapse = ","), "\n")
   }
+
+
+
+
+  #
+  # val_ranks_torun(ranks, ncol(X))
+
+
+  #
+  # val_single_integer(n_initializations, "n_initializations")
+  # val_single_integer(iterations, "iterations")
+  # val_single_integer(convergence_threshold, "convergence_threshold")
+  # val_single_integer(n_neighbors, "n_neighbors")
+  # val_single_numeric(alpha, "alpha")
+  # val_single_numeric(lamb, "lamb")
+  # if (!is.null(graph)) graph <- val_graph_GRNMF_SC(graph, X, method)
+  # val_single_boolean(extract_features, "extract_features")
+  #
+
+
+
+
+
+
+
+
+
+
 
   # Convert params to integer
   nmf_params <- lapply(list(ranks                 = ranks,

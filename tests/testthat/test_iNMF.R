@@ -2,11 +2,11 @@ context("Integrative NMF")
 library(ButchR)
 
 
-norm_mat_list <- list(a = matrix(abs(rnorm(1000)), ncol = 10),
-                      b = matrix(abs(rnorm(1000)), ncol = 10))
+mat_list <- list(a = matrix(abs(rnorm(1000)), ncol = 10),
+                 b = matrix(abs(rnorm(1000)), ncol = 10))
 ranks <- 2:3
 n_inits <- 2
-inmf_exp <- run_iNMF_tensor(norm_mat_list,
+inmf_exp <- run_iNMF_tensor(mat_list,
                             ranks = ranks,
                             n_initializations     = n_inits,
                             iterations            = 10^4,
@@ -65,7 +65,7 @@ test_that("iNMF feature extraction", {
   expect_error(SignatureFeatures(inmf_exp)) # if no feature extraction
   inmf_exp <- compute_SignatureFeatures(inmf_exp) # compute features
   inmf_exp_ssf <- SignatureSpecificFeatures(inmf_exp)
-  expect_length(inmf_exp_ssf, length(norm_mat_list))
+  expect_length(inmf_exp_ssf, length(mat_list))
   expect_length(inmf_exp_ssf[[1]][[1]], 3) # for each K
   expect_is(SignatureSpecificFeatures(inmf_exp, view_id = "a", k = 3,
                                       return_all_features = TRUE)[[1]],
@@ -87,7 +87,7 @@ test_that("iNMF feature extraction", {
 })
 
 test_that("iNMF feature extraction error K == 2", {
-  inmf_exp <- run_iNMF_tensor(norm_mat_list,
+  inmf_exp <- run_iNMF_tensor(mat_list,
                               ranks = 2,
                               n_initializations     = 2,
                               iterations            = 10^4,
