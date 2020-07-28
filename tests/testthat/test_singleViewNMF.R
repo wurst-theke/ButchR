@@ -57,6 +57,11 @@ test_that("Feature extraction", {
   expect_length(SignatureSpecificFeatures(nmf_exp, k = 3), 3) # select k
   expect_is(ssf3m, "matrix")
   expect_equal(dim(ssf3m), c(nrow(X), 3)) # dim
+
+  expect_length(SignatureFeatures(nmf_exp), length(ranks)-1) # All K
+  expect_is(SignatureFeatures(nmf_exp), "list")
+  expect_error(SignatureFeatures(nmf_exp , k = 2))
+  expect_is(SignatureFeatures(nmf_exp , k = 3), "matrix")
 })
 
 
