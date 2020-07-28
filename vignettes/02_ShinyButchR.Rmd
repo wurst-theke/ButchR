@@ -7,9 +7,9 @@ vignette: >
   %\VignetteEncoding{UTF-8}  
   %\VignetteEngine{knitr::rmarkdown}
 output:
+  #BiocStyle::pdf_document:
   BiocStyle::html_document:
     toc: yes
-  #BiocStyle::pdf_document:
   #md_document:
   #  variant: markdown_github
 editor_options: 
@@ -42,25 +42,25 @@ or also the Github repository can be pulled from
 ## Loading screen
 
 When you start the app the first displayed screen is a loading screen, while the
-app loades ButchR and TensorFlow (**Figure 1**).  
+app loads ButchR and TensorFlow (**Figure 1**).  
 Depending on the system this step could take from a few second to around one 
 minute. If you are using `ShinyButchR` from the 
 [ShinyButchR website](https://hdsu-bioquant.shinyapps.io/shinyButchR/), and the 
-app was idle for more than one hour, a new instance has to be created by 
+app was idle for more than one hour; a new instance has to be created by 
 shinyapps.io, this process can take around one to one and a half minutes.  
 
-![ShinyButchR loading screen](ShinyButchR_figs/ShinyButchR_001.png)
+![ShinyButchR loading screen](figs/ShinyButchR_figs/ShinyButchR_001.png)
   
   
 ## Data and annotation screen  
 
 When the app is loaded, you are prompted to either run an analysis using the 
-demo dataset, or to upload your own data (**Figure 2**). For this tutorial we are using the
-demo dataset which is a the publicly available RNA-seq dataset of sorted blood 
-cell populations, comprising 12 cell populations and 45 sam-ples 
+demo dataset, or to upload your own data (**Figure 2**). For this tutorial we 
+are using the demo dataset which is a the publicly available RNA-seq dataset of 
+sorted blood cell populations, comprising 12 cell populations and 45 samples 
 (Corces et al., 2016).  
 
-![ShinyButchR welcome screen](ShinyButchR_figs/ShinyButchR_002.png)  
+![ShinyButchR welcome screen](figs/ShinyButchR_figs/ShinyButchR_002.png)  
   
 
 The options available in the **Data and annotation** screen are (**Figure 3**):
@@ -82,7 +82,7 @@ with annotation data), the NMF-based analysis run by clicking the
 `Submit` button.
 
 
-![ShinyButchR Data and annotation screen](ShinyButchR_figs/ShinyButchR_003.png)
+![ShinyButchR Data and annotation screen](figs/ShinyButchR_figs/ShinyButchR_003.png)
   
 To load the demo dataset, please click on the `demo` button inside the 
 Matrix upload box  (**Figure 4.1**). After loading the demo dataset, the first 
@@ -96,7 +96,7 @@ Now the data is ready to be run the workflow, please click the `Submit` button
 in the **Start NMF** box (**Figure 4.2**).
 
 
-![ShinyButchR load demo data](ShinyButchR_figs/ShinyButchR_004.png)
+![ShinyButchR load demo data](figs/ShinyButchR_figs/ShinyButchR_004.png)
 
 # Data exploration with ShinyButchR
   
@@ -105,11 +105,11 @@ in the **Start NMF** box (**Figure 4.2**).
 
 The matrix decomposition starts after clicking the `Submit` button in the 
 **Start NMF** box (**Figure 5**). The running time of the decomposition depends 
-on the initial NMF parameters. For the demo default parameters it takes around
+on the initial NMF parameters. For the demo default parameters, it takes around
 one minute.
 
 
-![ShinyButchR running NMF](ShinyButchR_figs/ShinyButchR_005.png)
+![ShinyButchR running NMF](figs/ShinyButchR_figs/ShinyButchR_005.png)
 
 
 
@@ -128,13 +128,13 @@ The differential exposure of the samples to the signature can be seen in this
 type of plot, allowing to understand which samples are closely related 
 (**Figure 6**).
 
-![H matrix heatmap](ShinyButchR_figs/ShinyButchR_006.1.png)
+![H matrix heatmap](figs/ShinyButchR_figs/ShinyButchR_006.1.png)
 
 In case you have more than one type of annotation for the samples in the input 
 matrix, it is possible to display them all by clicking on the 
 `Select columns to use` input box (**Figure 7**).
 
-![H matrix heatmap - annotation](ShinyButchR_figs/ShinyButchR_007.png)
+![H matrix heatmap - annotation](figs/ShinyButchR_figs/ShinyButchR_007.png)
 
 
 In `ShinyButchR` you can change the factorization rank in the `Select K` input 
@@ -148,29 +148,29 @@ analysis.
   
 To identify clusters on the samples, a UMAP is run using the H matrix as input.
 It is possible to select the factorization rank to change the H matrix used to
-run UMAP. And also the coloring of the samples on the scatter plot is 
+run UMAP. And also, the coloring of the samples on the scatter plot is 
 customizable depending on the uploaded annotation table (**Figure 8.2**).
 
-![H matrix heatmap and UMAP - select K](ShinyButchR_figs/ShinyButchR_008.png)
+![H matrix heatmap and UMAP - select K](figs/ShinyButchR_figs/ShinyButchR_008.png)
 
 
 ## Recovery plots based on the H matrix
 
 The association of the recovered signatures to known biological and clinical 
 variables is one of the most important steps in an NMF-based workflow.
-In ShinyButchR a revery plot os made for all the associated categorical 
-variables available in the annotaiton table. (**Figure 9.1**).
+In ShinyButchR a recovery plot is made for all the associated categorical 
+variables available in the annotation table. (**Figure 9.1**).
 
 
-## Determining the optimal factorzation rank
+## Determining the optimal factorization rank
 
 Based on the results of the factorization quality metrics, the optimal number 
-of signatures (k) is determined by minizing the Frobenius error, the coefficient 
+of signatures (k) is determined by minimizing the Frobenius error, the coefficient 
 of variation and the mean Amari distance, while maximizing the sum and mean 
 silhouette width and the cophenic coefficient (**Figure 9.2**).
 
 
-![Recovery plots and optimal factorization rank](ShinyButchR_figs/ShinyButchR_009.png)
+![Recovery plots and optimal factorization rank](figs/ShinyButchR_figs/ShinyButchR_009.png)
 
 ## Riverplot visualization
 
@@ -181,15 +181,15 @@ be changed with the slider, as well as the range of factorization ranks to use
 in the visualization (**Figure 10**).
 
 
-![riverplot](ShinyButchR_figs/ShinyButchR_010.png)
+![riverplot](figs/ShinyButchR_figs/ShinyButchR_010.png)
 
 
 
 # Download results
 
 ShinyButchR allows to download the results as and RDS object of class 
-**ButchR_NMF** compatible with the latest version of ButchR. To use this object 
-you can start a new R session and read read it like this:
+**ButchR_NMF** compatible with the latest version of ButchR (**Figure 11.1**). 
+To use this object you can start a new R session and read it like this:
 
 ```
 library(ButchR)
@@ -198,6 +198,6 @@ nmf_exp <- readRDS("~/path/to/NMF_object.RDS")
 ```
 
 It is also possible to download csv and RDS files of the H and W matrices for a 
-selected factorization rank.
+selected factorization rank (**Figure 11.2**).
 
-![Download results](ShinyButchR_figs/ShinyButchR_011.png)
+![Download results](figs/ShinyButchR_figs/ShinyButchR_011.png)

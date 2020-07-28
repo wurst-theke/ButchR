@@ -301,7 +301,7 @@ NMF basically solves the problem as illustrated in the following figure
 (Image taken from 
 <https://en.wikipedia.org/wiki/Non-negative_matrix_factorization>):
 
-![NMF](NMF.png)
+![NMF](figs/ButchR/NMF.png)
 
 Here, $V$ is an input matrix with dimensions $n \times m$. It is decomposed
 into two matrices $W$ of dimension $n \times l$ and $H$ of dimension

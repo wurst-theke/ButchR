@@ -98,7 +98,7 @@ implementing several NMF solvers was published (Gaujoux and Seoighe
 figure (Image taken from
 <a href="https://en.wikipedia.org/wiki/Non-negative_matrix_factorization" class="uri">https://en.wikipedia.org/wiki/Non-negative_matrix_factorization</a>):
 
-![NMF](vignettes/NMF.png)
+![NMF](vignettes/figs/ButchR/NMF.png)
 
 Here, *V* is an input matrix with dimensions *n* × *m*. It is decomposed
 into two matrices *W* of dimension *n* × *l* and *H* of dimension
@@ -445,7 +445,7 @@ These quality measures can be displayed together:
 gg_plotKStats(leukemia_nmf_exp)
 ```
 
-![](vignettes/kstats-1.png)
+![](vignettes/figs/ButchR/kstats-1.png)
 
 Visualize the matrix H (exposures)
 ----------------------------------
@@ -485,15 +485,15 @@ for(ki in k_min:k_max) {
 
 #### H matrix for k= 2
 
-![](vignettes/hheatmap-1.png)
+![](vignettes/figs/ButchR/hheatmap-1.png)
 
 #### H matrix for k= 3
 
-![](vignettes/hheatmap-2.png)
+![](vignettes/figs/ButchR/hheatmap-2.png)
 
 #### H matrix for k= 4
 
-![](vignettes/hheatmap-3.png)
+![](vignettes/figs/ButchR/hheatmap-3.png)
 
 Feature selection
 -----------------
@@ -557,7 +557,7 @@ w_heatmap <- Heatmap(leukemia_Wspecific,
 w_heatmap
 ```
 
-![](vignettes/wspecific-1.png)
+![](vignettes/figs/ButchR/wspecific-1.png)
 
 
 # References
