@@ -22,13 +22,13 @@ test_that("A matrix with negative values return error", {
 
 test_that("Bad ranks", {
   expect_error(run_NMF_tensor(X, ranks = "a", n_initializations = 1))
-  expect_error(run_NMF_tensor(X, ranks = 20, n_initializations = 1))
+  expect_error(run_NMF_tensor(X, ranks = 20, n_initializations = 1)) # k greater than cols
   expect_error(run_NMF_tensor(X, ranks = -4:1, n_initializations = 1))
 })
 
 
 
-test_that("Bad ranks", {
+test_that("Bad method", {
   expect_error(run_NMF_tensor(X, ranks = 2, method = 1))
   expect_error(run_NMF_tensor(X, ranks = 2, method = c("nmf")))
   expect_error(run_NMF_tensor(X, ranks = 2, method = c("nmf", "nmf2")))

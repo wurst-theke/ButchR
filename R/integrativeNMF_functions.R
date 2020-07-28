@@ -50,6 +50,9 @@ run_iNMF_tensor <- function (matrix_list,
     stop("\nmatrix_list should be a list of Non-negative matrices\n")
   }
   matrix_list <- lapply(matrix_list, val_nonnegative_matrix)
+  if (!length(unique(sapply(matrix_list, ncol))) == 1 ) {
+    stop("\nThe number of columns should be identical for all matrices\n")
+  }
   if (!all(sapply(lapply(matrix_list, colnames),
                   identical, colnames(matrix_list[[1]])))) {
     stop("\nColumn names should be identical between matrices\n")
@@ -59,12 +62,7 @@ run_iNMF_tensor <- function (matrix_list,
     warning("Input matrix list do not have names, assigning ids:\n",
             paste0(names(matrix_list), collapse = ","), "\n")
   }
-
-
-
-
-  #
-  # val_ranks_torun(ranks, ncol(X))
+  val_ranks_torun(ranks, ncol(matrix_list[[1]]))
 
 
   #
