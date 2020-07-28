@@ -111,10 +111,37 @@ setGeneric("OptKStats", function(x, ...) standardGeneric("OptKStats"))
 setGeneric("OptK", function(x, ...) standardGeneric("OptK"))
 
 
-#### Feature Statistics
-# Getter
-setGeneric("FeatureStats", function(x, ...) standardGeneric("FeatureStats"))
 
+#### Signature features
+#' Signature Features
+#'
+#' Returns a binary matrix for every factorization rank,
+#' with features in the rows and samples in the columns,
+#' in which 1 means that the features is contributing to the signature,
+#' and 0 it does not.
+#' The extraction of Signature Features is not supported for k = 2.
+#'
+#' @param x an object of class ButchR_NMF, ButchR_joinNMF, or
+#' ButchR_integrativeNMF.
+#' @param k numeric  - factorization rank
+#' @param ... additional parameters.
+#'
+#' @return list of binary matrices if `k`=NULL or a single binary matrix for
+#' the selected factorization rank.
+#' @docType methods
+#' @rdname SignatureFeatures-methods
+#' @exportMethod SignatureFeatures
+#' @examples
+#' data("leukemia")
+#' nmf_exp <- run_NMF_tensor(leukemia$matrix, ranks = 3,
+#'                              method = "NMF",
+#'                              n_initializations = 2,
+#'                              extract_features = TRUE)
+#' SignatureFeatures(nmf_exp)
+#' SignatureFeatures(nmf_exp, k = 3)
+setGeneric("SignatureFeatures",
+           function(x, k = NULL, ...)
+             standardGeneric("SignatureFeatures"))
 
 
 #### Signature specific features

@@ -365,9 +365,58 @@ setMethod("regularizeH",
 )
 
 #------------------------------------------------------------------------------#
-#                       Signature specfific features                           #
+#                       Signature feature extraction                           #
 #------------------------------------------------------------------------------#
-# Signature specfific features
+# Signature features
+
+#' @rdname SignatureFeatures-methods
+#' @aliases SignatureFeatures,ANY-method
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' # For ButchR_NMF objects:
+#' SignatureFeatures(nmf_exp)
+#' SignatureFeatures(nmf_exp, k = 3)
+#' }
+setMethod("SignatureFeatures",
+          "ButchR_NMF",
+          function(x, k = NULL, ...){
+            # if no feature extraction was performed
+            if (nrow(x@SignFeatures) == 0) {
+              stop("No feature extraction has been performed, please run: \n",
+                   "`compute_SignatureFeatures`")
+            }
+
+            # String of 0 and 1 to matrix function
+            bin_str_tu_mat <- function(binstr){
+              names(binstr) <- rownames(x@SignFeatures)
+              as.matrix(do.call(rbind,
+                                lapply(strsplit(binstr, split = ""),
+                                       as.numeric)))
+            }
+
+
+            if(is.null(k)) {
+              ssf <- lapply(x@SignFeatures, function(binstr) {
+                bin_str_tu_mat(binstr)
+              })
+            } else {
+              if (k == 2 ) {
+                stop("Signature feature extraction is not supported for K = 2")
+              }
+
+              idx <- as.character(x@OptKStats$rank_id[x@OptKStats$k == k])
+              if (length(idx) == 0 ) {
+                stop("No W matrix present for k = ", k,
+                     "\nPlease select from ranks = ", paste0(x@OptKStats$k, collapse = ","))
+              }
+              ssf <- bin_str_tu_mat(x@SignFeatures[,idx])
+            }
+            return(ssf)
+          }
+)
+
 
 #' @rdname SignatureSpecificFeatures-methods
 #' @aliases SignatureSpecificFeatures,ANY-method
