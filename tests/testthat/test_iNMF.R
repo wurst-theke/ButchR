@@ -62,6 +62,7 @@ test_that("W matrix", {
 
 test_that("iNMF feature extraction", {
   expect_error(SignatureSpecificFeatures(inmf_exp)) # if no feature extraction
+  expect_error(SignatureFeatures(inmf_exp)) # if no feature extraction
   inmf_exp <- compute_SignatureFeatures(inmf_exp) # compute features
   inmf_exp_ssf <- SignatureSpecificFeatures(inmf_exp)
   expect_length(inmf_exp_ssf, length(norm_mat_list))
@@ -73,6 +74,16 @@ test_that("iNMF feature extraction", {
   expect_error(SignatureSpecificFeatures(inmf_exp, view_id = "c")) # no view
   expect_error(SignatureSpecificFeatures(inmf_exp, k = 2))
   expect_error(SignatureSpecificFeatures(inmf_exp, k = 7))
+
+  # SignatureFeatures
+  expect_is(SignatureFeatures(inmf_exp), "list")
+  expect_is(SignatureFeatures(inmf_exp , k = 3), "list")
+  expect_is(SignatureFeatures(inmf_exp , k = 3, view_id = "a"), "list")
+  # errors
+  expect_error(SignatureFeatures(inmf_exp, view_id = "c")) # no view
+  expect_error(SignatureFeatures(inmf_exp, k = 2))
+  expect_error(SignatureFeatures(inmf_exp, k = 7))
+
 })
 
 test_that("iNMF feature extraction error K == 2", {

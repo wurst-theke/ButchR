@@ -241,15 +241,95 @@ setMethod("FrobError", "ButchR_integrativeNMF", function(x, ...) x@FrobError)
 
 
 #------------------------------------------------------------------------------#
-#                       Signature specfific features                           #
+#                       Signature feature extraction                           #
 #------------------------------------------------------------------------------#
+
+#' @rdname SignatureFeatures-methods
+#' @aliases SignatureFeatures,ANY-method
+#'
+#' @param view_id character vector with views from which signature features
+#' will be extracted.
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' # For ButchR_integrativeNMF objects:
+#' SignatureFeatures(inmf_exp, k = 3)
+#' }
+setMethod("SignatureFeatures",
+          "ButchR_integrativeNMF",
+          function(x, k = NULL, view_id = NULL, ...){
+            # if no feature extraction was performed
+            if (length(x@SignFeatures) == 0) {
+              stop("No feature extraction has been performed, please run: \n",
+                   "`compute_SignatureFeatures`")
+            }
+            # Check if view id is indeed one of the views
+            if (is.null(view_id)) {
+              view_id <- stats::setNames(names(x@SignFeatures), names(x@SignFeatures))
+            } else if (all(view_id %in% names(x@SignFeatures))) {
+              view_id <- stats::setNames(view_id, view_id)
+            } else {
+              view_id <- view_id[!view_id %in% names(x@SignFeatures)]
+              stop("View: ", paste0(view_id, collapse = ","),
+                   "\nis not present, please select from views = ",
+                   paste0(names(x@SignFeatures), collapse = ","))
+            }
+            # Only selected views
+            SignFeatures <- x@SignFeatures[view_id]
+
+
+            # String of 0 and 1 to matrix
+            bin_str_tu_mat <- function(binstr, feature_ids){
+              names(binstr) <- feature_ids
+              sig_feats <- do.call(rbind, lapply(strsplit(binstr, split = ""), as.numeric))
+              return(sig_feats)
+
+            }
+
+
+            # Extract for all ranks
+            if(is.null(k)) {
+              ssf <- lapply(SignFeatures, function(viewSignF){
+                #print(head(viewSignF))
+                lapply(viewSignF, function(binstr) {
+                  bin_str_tu_mat(binstr, rownames(viewSignF))
+                })
+              })
+              # Extract for selected rank
+            } else {
+              if (k == 2 ) {
+                stop("Signature Specific Features extraction is not supported for K = 2")
+              }
+              idx <- as.character(x@OptKStats$rank_id[x@OptKStats$k == k])
+              if (length(idx) == 0 ) {
+                stop("No W matrix present for k = ", k,
+                     "\nPlease select from ranks = ", paste0(x@OptKStats$k, collapse = ","))
+              }
+
+              ssf <- lapply(SignFeatures, function(viewSignF){
+                bin_str_tu_mat(viewSignF[,idx], rownames(viewSignF))
+              })
+            }
+            return(ssf)
+
+
+
+
+          }
+)
+
+
+
+
+
 # Returns Signature specfific features
 # For join NMF view_id is the name of one of original matrix to retrieve features from
 
 #' @rdname SignatureSpecificFeatures-methods
 #' @aliases SignatureSpecificFeatures,ANY-method
 #'
-#' @param view_id character vector with views from which sigature specific
+#' @param view_id character vector with views from which signature specific
 #' features will be extracted.
 #' @export
 #'

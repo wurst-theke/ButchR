@@ -43,7 +43,7 @@ a 0 to those that do not show a significant contribution.}
 
 \item{...}{additional parameters.}
 
-\item{view_id}{character vector with views from which sigature specific
+\item{view_id}{character vector with views from which signature specific
 features will be extracted.}
 }
 \value{
