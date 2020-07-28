@@ -62,6 +62,7 @@ test_that("Feature extraction", {
   expect_is(SignatureFeatures(nmf_exp), "list")
   expect_error(SignatureFeatures(nmf_exp , k = 2))
   expect_is(SignatureFeatures(nmf_exp , k = 3), "matrix")
+  expect_error(SignatureFeatures(nmf_exp, k = 5))
 })
 
 
@@ -71,6 +72,7 @@ test_that("Feature extraction after decomposition", {
                                n_initializations = n_inits,
                                extract_features = FALSE)
   expect_error(SignatureSpecificFeatures(nmf_exp_nf)) # if no feature extraction
+  expect_error(SignatureFeatures(nmf_exp_nf)) # if no feature extraction
   nmf_exp_nf <- compute_SignatureFeatures(nmf_exp_nf) # compute features
   nmf_exp_nf_ssf <- SignatureSpecificFeatures(nmf_exp_nf, k = 3, return_all_features = TRUE)
   expect_is(nmf_exp_nf_ssf, "matrix")
