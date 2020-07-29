@@ -104,6 +104,19 @@ test_that("Bad Output_type", {
   expect_error(iNMF_lambda_tuning(mat_list, Output_type = c("residuals", "all")))
 })
 
+test_that("Bad thr_cons", {
+  expect_error(iNMF_lambda_tuning(mat_list, thr_cons = "a"))
+  expect_error(iNMF_lambda_tuning(mat_list, thr_cons = 4:3))
+  expect_error(iNMF_lambda_tuning(mat_list, thr_cons = -3.1))
+})
+
+# test_that("Bad Sp", {
+#   expect_error(iNMF_lambda_tuning(mat_list, Sp = "a"))
+#   expect_error(iNMF_lambda_tuning(mat_list, Sp = 4:3))
+#   expect_error(iNMF_lambda_tuning(mat_list, Sp = -3.1))
+# })
+
+
 
 
 # test_that("Bad ranks", {

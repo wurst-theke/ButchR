@@ -331,18 +331,16 @@ iNMF_lambda_tuning <- function (matrix_list,
     stop("\nOutput_type invalid value, output types supported are only:\n
          'residuals', 'iNMF', 'all_iNMF', 'plot' or 'all' \n")
   }
-  # if (!any(Output_type %in% c("residuals", "iNMF", "all_iNMF", "plot", "all")) ) {
-  #   stop("\nOutput_type invalid value, output types supported are only:\n
-  #        'residuals', 'iNMF', 'all_iNMF', 'plot' or 'all' \n")
-  # }
-  if (!is.logical(show_plot) & !length(show_plot) == 1) {
-    stop("\nshow_plot invalid value, select TRUE or FALSE \n")
-  }
+  val_single_numeric(thr_cons, "thr_cons")
+
+
+
   if (!length(rank) == 1) {
     stop("\nrank has to be a unique integer number \n")
   }
 
-
+  val_single_boolean(show_plot, "show_plot")
+  val_single_boolean(extract_features, "extract_features")
 
 
 
@@ -353,7 +351,7 @@ iNMF_lambda_tuning <- function (matrix_list,
   # val_single_integer(convergence_threshold, "convergence_threshold")
   # val_single_numeric(Sp, "Sp")
   # val_single_numeric(lamb, "lamb")
-  # val_single_boolean(extract_features, "extract_features")
+  #
 
 
 
