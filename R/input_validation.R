@@ -42,7 +42,7 @@ val_ranks_torun <- function(ranks, ncolmat) {
     stop("\nMaximum factorization rank should be less than the number of columns
          in the input matrix\n")
   }
-  if(min(ranks) <= 0) {
+  if(min(ranks) < 2) {
     stop("\nMinimum factorization rank should be greater or equal than 2\n")
   }
   NULL
@@ -92,6 +92,32 @@ val_single_numeric <- function(x, id) {
   }
   NULL
 }
+
+
+#' Validate input positive numeric vector
+#'
+#' @param x numeric
+#' @param id param id
+#' @return NULL
+#' @examples
+#' \dontrun{
+#' ButchR:::val_positive_numeric(X)
+#' }
+val_positive_numeric <- function(x, id) {
+  if (!is.numeric(x)) {
+    stop("\n", id, " = ", x, ": expecting a numeric vector\n")
+  }
+  if (length(x) < 1) {
+    stop("\n", id, " = ", x, ": expecting a numeric vector of length >= 1\n")
+  }
+  if (!all(x >= 0 )) {
+    stop("\n", id, " = ",
+         paste0(x, collapse = ";"),
+         ": should all be  >= 0\n")
+  }
+  NULL
+}
+
 
 
 #' Validate input single boolean

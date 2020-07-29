@@ -1,4 +1,4 @@
-context("Integrative NMF alpha tune")
+context("Integrative NMF lambda tune")
 library(ButchR)
 
 mat_list <- list(a = matrix(abs(rnorm(1000)), ncol = 10),
@@ -23,7 +23,7 @@ inmf_atune <- lapply(setNames(atune_outtypes, atune_outtypes), function(atune_ou
 inmf_exp <- inmf_atune$iNMF
 inmf_exp_ssf <- SignatureSpecificFeatures(inmf_exp)
 
-test_that("iNMF alpha tuning", {
+test_that("iNMF lambda tuning", {
   # iNMF
   expect_is(inmf_exp, "ButchR_integrativeNMF")
   expect_is(inmf_exp_ssf, "list")
@@ -51,6 +51,11 @@ test_that("iNMF alpha tuning", {
 #------------------------------------------------------------------------------#
 
 test_that("A list of matrices with negative values return error", {
+  expect_error(
+    iNMF_lambda_tuning(mat_list$a, # noly one matrix returns error
+                       n_initializations = 1,
+                       convergence_threshold = 1)
+  )
   expect_error(
     iNMF_lambda_tuning(list(matrix(rnorm(1000), ncol = 10), mat_list$a),
                        n_initializations = 1,
@@ -87,50 +92,58 @@ test_that("Non matching col names and list without names", {
   )
 })
 
+test_that("Bad lambdas", {
+  expect_error(iNMF_lambda_tuning(mat_list, lambdas = "a"))
+  expect_error(iNMF_lambda_tuning(mat_list, lambdas = numeric()))
+  expect_error(iNMF_lambda_tuning(mat_list, lambdas = c(-3.1, 0)))
+})
+
+
+
 # test_that("Bad ranks", {
-#   expect_error(run_iNMF_tensor(mat_list, ranks = "a", n_initializations = 1))
-#   expect_error(run_iNMF_tensor(mat_list, ranks = 20, n_initializations = 1)) # k greater than cols
-#   expect_error(run_iNMF_tensor(mat_list, ranks = -4:1, n_initializations = 1))
+#   expect_error(iNMF_lambda_tuning(mat_list, ranks = "a", n_initializations = 1))
+#   expect_error(iNMF_lambda_tuning(mat_list, ranks = 20, n_initializations = 1)) # k greater than cols
+#   expect_error(iNMF_lambda_tuning(mat_list, ranks = -4:1, n_initializations = 1))
 # })
 #
 #
 # test_that("Bad n_initializations", {
-#   expect_error(run_iNMF_tensor(mat_list, ranks = 2, n_initializations = "a"))
-#   expect_error(run_iNMF_tensor(mat_list, ranks = 2, n_initializations = 1:3))
-#   expect_error(run_iNMF_tensor(mat_list, ranks = 2, n_initializations = 1.1))
-#   expect_error(run_iNMF_tensor(mat_list, ranks = 2, n_initializations = -1.1))
-#   expect_error(run_iNMF_tensor(mat_list, ranks = 2, n_initializations = -3))
+#   expect_error(iNMF_lambda_tuning(mat_list, ranks = 2, n_initializations = "a"))
+#   expect_error(iNMF_lambda_tuning(mat_list, ranks = 2, n_initializations = 1:3))
+#   expect_error(iNMF_lambda_tuning(mat_list, ranks = 2, n_initializations = 1.1))
+#   expect_error(iNMF_lambda_tuning(mat_list, ranks = 2, n_initializations = -1.1))
+#   expect_error(iNMF_lambda_tuning(mat_list, ranks = 2, n_initializations = -3))
 # })
 #
 # test_that("Bad iterations", {
-#   expect_error(run_iNMF_tensor(mat_list, ranks = 2, iterations = "a"))
-#   expect_error(run_iNMF_tensor(mat_list, ranks = 2, iterations = 10000:10001))
-#   expect_error(run_iNMF_tensor(mat_list, ranks = 2, iterations = 10000.1))
-#   expect_error(run_iNMF_tensor(mat_list, ranks = 2, iterations = -10000.1))
-#   expect_error(run_iNMF_tensor(mat_list, ranks = 2, iterations = -10000))
+#   expect_error(iNMF_lambda_tuning(mat_list, ranks = 2, iterations = "a"))
+#   expect_error(iNMF_lambda_tuning(mat_list, ranks = 2, iterations = 10000:10001))
+#   expect_error(iNMF_lambda_tuning(mat_list, ranks = 2, iterations = 10000.1))
+#   expect_error(iNMF_lambda_tuning(mat_list, ranks = 2, iterations = -10000.1))
+#   expect_error(iNMF_lambda_tuning(mat_list, ranks = 2, iterations = -10000))
 # })
 #
 # test_that("Bad convergence_threshold", {
-#   expect_error(run_iNMF_tensor(mat_list, ranks = 2, convergence_threshold = "a"))
-#   expect_error(run_iNMF_tensor(mat_list, ranks = 2, convergence_threshold = 30:31))
-#   expect_error(run_iNMF_tensor(mat_list, ranks = 2, convergence_threshold = 30.1))
-#   expect_error(run_iNMF_tensor(mat_list, ranks = 2, convergence_threshold = -30.1))
-#   expect_error(run_iNMF_tensor(mat_list, ranks = 2, convergence_threshold = -30))
+#   expect_error(iNMF_lambda_tuning(mat_list, ranks = 2, convergence_threshold = "a"))
+#   expect_error(iNMF_lambda_tuning(mat_list, ranks = 2, convergence_threshold = 30:31))
+#   expect_error(iNMF_lambda_tuning(mat_list, ranks = 2, convergence_threshold = 30.1))
+#   expect_error(iNMF_lambda_tuning(mat_list, ranks = 2, convergence_threshold = -30.1))
+#   expect_error(iNMF_lambda_tuning(mat_list, ranks = 2, convergence_threshold = -30))
 # })
 #
 # test_that("Bad Sp", {
-#   expect_error(run_iNMF_tensor(mat_list, ranks = 2, Sp = "a"))
-#   expect_error(run_iNMF_tensor(mat_list, ranks = 2, Sp = 4:3))
-#   expect_error(run_iNMF_tensor(mat_list, ranks = 2, Sp = -3.1))
+#   expect_error(iNMF_lambda_tuning(mat_list, ranks = 2, Sp = "a"))
+#   expect_error(iNMF_lambda_tuning(mat_list, ranks = 2, Sp = 4:3))
+#   expect_error(iNMF_lambda_tuning(mat_list, ranks = 2, Sp = -3.1))
 # })
 #
 # test_that("Bad lamb", {
-#   expect_error(run_iNMF_tensor(mat_list, ranks = 2, lamb = "a"))
-#   expect_error(run_iNMF_tensor(mat_list, ranks = 2, lamb = 4:3))
-#   expect_error(run_iNMF_tensor(mat_list, ranks = 2, lamb = -3.1))
+#   expect_error(iNMF_lambda_tuning(mat_list, ranks = 2, lamb = "a"))
+#   expect_error(iNMF_lambda_tuning(mat_list, ranks = 2, lamb = 4:3))
+#   expect_error(iNMF_lambda_tuning(mat_list, ranks = 2, lamb = -3.1))
 # })
 #
 # test_that("Bad extract_features", {
-#   expect_error(run_iNMF_tensor(mat_list, ranks = 2, extract_features = "a"))
-#   expect_error(run_iNMF_tensor(mat_list, ranks = 2, extract_features = c(FALSE, FALSE)))
+#   expect_error(iNMF_lambda_tuning(mat_list, ranks = 2, extract_features = "a"))
+#   expect_error(iNMF_lambda_tuning(mat_list, ranks = 2, extract_features = c(FALSE, FALSE)))
 # })
