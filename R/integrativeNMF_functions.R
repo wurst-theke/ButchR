@@ -305,13 +305,12 @@ iNMF_lambda_tuning <- function (matrix_list,
   #                            Setup and data check                            #
   #----------------------------------------------------------------------------#
   # Check  data
-  if (!is.list(matrix_list) &
-      (!sum(sapply(matrix_list, is.matrix)) == length(matrix_list))) {
+  if (!is.list(matrix_list) ) {
     stop("\nmatrix_list should be a list of Non-negative matrices\n")
   }
-  if (min(sapply(matrix_list, min)) < 0 ) {
-    stop("\nNegative values present in input matrix\n
-         only non-negative matrices supported\n")
+  matrix_list <- lapply(matrix_list, val_nonnegative_matrix)
+  if (!length(unique(sapply(matrix_list, ncol))) == 1 ) {
+    stop("\nThe number of columns should be identical for all matrices\n")
   }
   if (!all(sapply(lapply(matrix_list, colnames),
                   identical, colnames(matrix_list[[1]])))) {
@@ -319,8 +318,11 @@ iNMF_lambda_tuning <- function (matrix_list,
   }
   if (is.null(names(matrix_list))) {
     names(matrix_list) <- paste0("view", 1:length(matrix_list))
-    warning("Input matrix list do not have names, assigning ids:\n", names(matrix_list), "\n")
+    warning("Input matrix list do not have names, assigning ids:\n",
+            paste0(names(matrix_list), collapse = ","), "\n")
   }
+
+
   if (!any(Output_type %in% c("residuals", "iNMF", "all_iNMF", "plot", "all")) &
       !length(Output_type) == 1) {
     stop("\nOutput_type invalid value, output types supported are only:\n
@@ -332,6 +334,21 @@ iNMF_lambda_tuning <- function (matrix_list,
   if (!length(rank) == 1) {
     stop("\nrank has to be a unique integer number \n")
   }
+
+
+
+
+
+
+  # val_ranks_torun(ranks, ncol(matrix_list[[1]]))
+  # val_single_integer(n_initializations, "n_initializations")
+  # val_single_integer(iterations, "iterations")
+  # val_single_integer(convergence_threshold, "convergence_threshold")
+  # val_single_numeric(Sp, "Sp")
+  # val_single_numeric(lamb, "lamb")
+  # val_single_boolean(extract_features, "extract_features")
+
+
 
 
   # Convert params to integer
