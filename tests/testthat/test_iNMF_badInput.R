@@ -48,39 +48,30 @@ test_that("Bad ranks", {
 })
 
 
+test_that("Bad n_initializations", {
+  expect_error(run_iNMF_tensor(mat_list, ranks = 2, n_initializations = "a"))
+  expect_error(run_iNMF_tensor(mat_list, ranks = 2, n_initializations = 1:3))
+  expect_error(run_iNMF_tensor(mat_list, ranks = 2, n_initializations = 1.1))
+  expect_error(run_iNMF_tensor(mat_list, ranks = 2, n_initializations = -1.1))
+  expect_error(run_iNMF_tensor(mat_list, ranks = 2, n_initializations = -3))
+})
 
-# test_that("Bad ranks", {
-#   expect_error(run_iNMF_tensor(mat_list, ranks = 2, method = 1))
-#   expect_error(run_iNMF_tensor(mat_list, ranks = 2, method = c("nmf")))
-#   expect_error(run_iNMF_tensor(mat_list, ranks = 2, method = c("nmf", "nmf2")))
-# })
-#
-#
-#
-# test_that("Bad n_initializations", {
-#   expect_error(run_iNMF_tensor(mat_list, ranks = 2, n_initializations = "a"))
-#   expect_error(run_iNMF_tensor(mat_list, ranks = 2, n_initializations = 1:3))
-#   expect_error(run_iNMF_tensor(mat_list, ranks = 2, n_initializations = 1.1))
-#   expect_error(run_iNMF_tensor(mat_list, ranks = 2, n_initializations = -1.1))
-#   expect_error(run_iNMF_tensor(mat_list, ranks = 2, n_initializations = -3))
-# })
-#
-# test_that("Bad iterations", {
-#   expect_error(run_iNMF_tensor(mat_list, ranks = 2, iterations = "a"))
-#   expect_error(run_iNMF_tensor(mat_list, ranks = 2, iterations = 10000:10001))
-#   expect_error(run_iNMF_tensor(mat_list, ranks = 2, iterations = 10000.1))
-#   expect_error(run_iNMF_tensor(mat_list, ranks = 2, iterations = -10000.1))
-#   expect_error(run_iNMF_tensor(mat_list, ranks = 2, iterations = -10000))
-# })
-#
-# test_that("Bad convergence_threshold", {
-#   expect_error(run_iNMF_tensor(mat_list, ranks = 2, convergence_threshold = "a"))
-#   expect_error(run_iNMF_tensor(mat_list, ranks = 2, convergence_threshold = 30:31))
-#   expect_error(run_iNMF_tensor(mat_list, ranks = 2, convergence_threshold = 30.1))
-#   expect_error(run_iNMF_tensor(mat_list, ranks = 2, convergence_threshold = -30.1))
-#   expect_error(run_iNMF_tensor(mat_list, ranks = 2, convergence_threshold = -30))
-# })
-#
+test_that("Bad iterations", {
+  expect_error(run_iNMF_tensor(mat_list, ranks = 2, iterations = "a"))
+  expect_error(run_iNMF_tensor(mat_list, ranks = 2, iterations = 10000:10001))
+  expect_error(run_iNMF_tensor(mat_list, ranks = 2, iterations = 10000.1))
+  expect_error(run_iNMF_tensor(mat_list, ranks = 2, iterations = -10000.1))
+  expect_error(run_iNMF_tensor(mat_list, ranks = 2, iterations = -10000))
+})
+
+test_that("Bad convergence_threshold", {
+  expect_error(run_iNMF_tensor(mat_list, ranks = 2, convergence_threshold = "a"))
+  expect_error(run_iNMF_tensor(mat_list, ranks = 2, convergence_threshold = 30:31))
+  expect_error(run_iNMF_tensor(mat_list, ranks = 2, convergence_threshold = 30.1))
+  expect_error(run_iNMF_tensor(mat_list, ranks = 2, convergence_threshold = -30.1))
+  expect_error(run_iNMF_tensor(mat_list, ranks = 2, convergence_threshold = -30))
+})
+
 # test_that("Bad n_neighbors", {
 #   expect_error(run_iNMF_tensor(mat_list, ranks = 2, n_neighbors = "a"))
 #   expect_error(run_iNMF_tensor(mat_list, ranks = 2, n_neighbors = 4:3))

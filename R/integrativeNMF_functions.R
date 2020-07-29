@@ -63,13 +63,10 @@ run_iNMF_tensor <- function (matrix_list,
             paste0(names(matrix_list), collapse = ","), "\n")
   }
   val_ranks_torun(ranks, ncol(matrix_list[[1]]))
+  val_single_integer(n_initializations, "n_initializations")
+  val_single_integer(iterations, "iterations")
+  val_single_integer(convergence_threshold, "convergence_threshold")
 
-
-  #
-  # val_single_integer(n_initializations, "n_initializations")
-  # val_single_integer(iterations, "iterations")
-  # val_single_integer(convergence_threshold, "convergence_threshold")
-  # val_single_integer(n_neighbors, "n_neighbors")
   # val_single_numeric(alpha, "alpha")
   # val_single_numeric(lamb, "lamb")
   # if (!is.null(graph)) graph <- val_graph_GRNMF_SC(graph, X, method)
