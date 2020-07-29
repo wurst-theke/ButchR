@@ -322,12 +322,19 @@ iNMF_lambda_tuning <- function (matrix_list,
             paste0(names(matrix_list), collapse = ","), "\n")
   }
   val_positive_numeric(lambdas, "lambdas")
-
-  if (!any(Output_type %in% c("residuals", "iNMF", "all_iNMF", "plot", "all")) &
-      !length(Output_type) == 1) {
+  if (!is.character(Output_type)) {
     stop("\nOutput_type invalid value, output types supported are only:\n
          'residuals', 'iNMF', 'all_iNMF', 'plot' or 'all' \n")
   }
+  if (length(Output_type) != 1  |
+      !any(Output_type %in% c("residuals", "iNMF", "all_iNMF", "plot", "all"))) {
+    stop("\nOutput_type invalid value, output types supported are only:\n
+         'residuals', 'iNMF', 'all_iNMF', 'plot' or 'all' \n")
+  }
+  # if (!any(Output_type %in% c("residuals", "iNMF", "all_iNMF", "plot", "all")) ) {
+  #   stop("\nOutput_type invalid value, output types supported are only:\n
+  #        'residuals', 'iNMF', 'all_iNMF', 'plot' or 'all' \n")
+  # }
   if (!is.logical(show_plot) & !length(show_plot) == 1) {
     stop("\nshow_plot invalid value, select TRUE or FALSE \n")
   }

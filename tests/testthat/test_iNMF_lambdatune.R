@@ -98,6 +98,12 @@ test_that("Bad lambdas", {
   expect_error(iNMF_lambda_tuning(mat_list, lambdas = c(-3.1, 0)))
 })
 
+test_that("Bad Output_type", {
+  expect_error(iNMF_lambda_tuning(mat_list, Output_type = "a"))
+  expect_error(iNMF_lambda_tuning(mat_list, Output_type = 1))
+  expect_error(iNMF_lambda_tuning(mat_list, Output_type = c("residuals", "all")))
+})
+
 
 
 # test_that("Bad ranks", {
