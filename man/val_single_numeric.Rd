@@ -4,12 +4,14 @@
 \alias{val_single_numeric}
 \title{Validate input single numeric}
 \usage{
-val_single_numeric(x, id)
+val_single_numeric(x, id, minval = 0)
 }
 \arguments{
 \item{x}{numeric}
 
 \item{id}{param id}
+
+\item{minval}{minimum value to test}
 }
 \description{
 Validate input single numeric

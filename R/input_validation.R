@@ -52,6 +52,7 @@ val_ranks_torun <- function(ranks, ncolmat) {
 #'
 #' @param x numeric
 #' @param id param id
+#' @param minval minimum value to test
 #' @return NULL
 #' @examples
 #' \dontrun{
@@ -78,6 +79,7 @@ val_single_integer <- function(x, id, minval = 0) {
 #'
 #' @param x numeric
 #' @param id param id
+#' @param minval minimum value to test
 #' @return NULL
 #' @examples
 #' \dontrun{
