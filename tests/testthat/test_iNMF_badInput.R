@@ -72,45 +72,18 @@ test_that("Bad convergence_threshold", {
   expect_error(run_iNMF_tensor(mat_list, ranks = 2, convergence_threshold = -30))
 })
 
-# test_that("Bad n_neighbors", {
-#   expect_error(run_iNMF_tensor(mat_list, ranks = 2, n_neighbors = "a"))
-#   expect_error(run_iNMF_tensor(mat_list, ranks = 2, n_neighbors = 4:3))
-#   expect_error(run_iNMF_tensor(mat_list, ranks = 2, n_neighbors = 4.1))
-#   expect_error(run_iNMF_tensor(mat_list, ranks = 2, n_neighbors = -3.1))
-#   expect_error(run_iNMF_tensor(mat_list, ranks = 2, n_neighbors = -3))
-# })
-#
-#
-# test_that("Bad alpha", {
-#   expect_error(run_iNMF_tensor(mat_list, ranks = 2, alpha = "a"))
-#   expect_error(run_iNMF_tensor(mat_list, ranks = 2, alpha = 4:3))
-#   expect_error(run_iNMF_tensor(mat_list, ranks = 2, alpha = -3.1))
-# })
-#
-# test_that("Bad lamb", {
-#   expect_error(run_iNMF_tensor(mat_list, ranks = 2, lamb = "a"))
-#   expect_error(run_iNMF_tensor(mat_list, ranks = 2, lamb = 4:3))
-#   expect_error(run_iNMF_tensor(mat_list, ranks = 2, lamb = -3.1))
-# })
-#
-# test_that("Bad graph", {
-#   graph <- matrix(abs(rnorm(100)), ncol = 10)
-#   # Good input print
-#   nmf_exp <- run_iNMF_tensor(mat_list, ranks = 2, method = "GRNMF_SC", graph = graph)
-#   expect_output(show(nmf_exp))
-#   # Bad input
-#   expect_warning(run_iNMF_tensor(mat_list, ranks = 2, method = "NMF", graph = graph))
-#   expect_warning(run_iNMF_tensor(mat_list, ranks = 2, method = "GRNMF_SC", graph = as.data.frame(graph)))
-#   expect_error(run_iNMF_tensor(mat_list, ranks = 2, method = "GRNMF_SC", graph = "a"))
-#   graph <- matrix(abs(rnorm(110)), ncol = 11)
-#   expect_error(run_iNMF_tensor(mat_list, ranks = 2, method = "GRNMF_SC", graph = graph))
-#   graph <- matrix(abs(rnorm(121)), ncol = 11)
-#   expect_error(run_iNMF_tensor(mat_list, ranks = 2, method = "GRNMF_SC", graph = graph))
-#   graph <- matrix(rep("a", 100), ncol = 10)
-#   expect_error(run_iNMF_tensor(mat_list, ranks = 2, method = "GRNMF_SC", graph = graph))
-# })
-#
-#
+test_that("Bad Sp", {
+  expect_error(run_iNMF_tensor(mat_list, ranks = 2, Sp = "a"))
+  expect_error(run_iNMF_tensor(mat_list, ranks = 2, Sp = 4:3))
+  expect_error(run_iNMF_tensor(mat_list, ranks = 2, Sp = -3.1))
+})
+
+test_that("Bad lamb", {
+  expect_error(run_iNMF_tensor(mat_list, ranks = 2, lamb = "a"))
+  expect_error(run_iNMF_tensor(mat_list, ranks = 2, lamb = 4:3))
+  expect_error(run_iNMF_tensor(mat_list, ranks = 2, lamb = -3.1))
+})
+
 # test_that("Bad extract_features", {
 #   expect_error(run_iNMF_tensor(mat_list, ranks = 2, extract_features = "a"))
 #   expect_error(run_iNMF_tensor(mat_list, ranks = 2, extract_features = c(FALSE, FALSE)))

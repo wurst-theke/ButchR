@@ -66,10 +66,8 @@ run_iNMF_tensor <- function (matrix_list,
   val_single_integer(n_initializations, "n_initializations")
   val_single_integer(iterations, "iterations")
   val_single_integer(convergence_threshold, "convergence_threshold")
-
-  # val_single_numeric(alpha, "alpha")
-  # val_single_numeric(lamb, "lamb")
-  # if (!is.null(graph)) graph <- val_graph_GRNMF_SC(graph, X, method)
+  val_single_numeric(Sp, "Sp")
+  val_single_numeric(lamb, "lamb")
   # val_single_boolean(extract_features, "extract_features")
   #
 
