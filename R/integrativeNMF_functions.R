@@ -175,9 +175,7 @@ run_iNMF_tensor <- function (matrix_list,
   #----------------------------------------------------------------------------#
   #                  Compute signatures specific features                      #
   #----------------------------------------------------------------------------#
-  if (length(ranks) == 1 & 2 %in% ranks) {
-    SignFeatures <- list()
-  } else if (extract_features) {
+  if (extract_features) {
     SignFeatures <- lapply(viewsIDs, function(viewsID){
 
       #print(names(k_eval))
@@ -197,7 +195,9 @@ run_iNMF_tensor <- function (matrix_list,
   } else {
     SignFeatures <- list()
   }
-
+  if (length(ranks) == 1 & 2 %in% ranks) {
+    SignFeatures <- list()
+  }
   #----------------------------------------------------------------------------#
   #                   Return ButchR_integrativeNMF object                      #
   #----------------------------------------------------------------------------#
