@@ -92,7 +92,7 @@ test_that("iNMF feature extraction error K == 2", {
                               n_initializations     = 2,
                               iterations            = 10^4,
                               convergence_threshold = 10,
-                              extract_features = FALSE)
+                              extract_features = TRUE)
   expect_error(SignatureSpecificFeatures(inmf_exp)) # if no feature extraction
   expect_error(compute_SignatureFeatures(inmf_exp)) # K =2 not supported
 })

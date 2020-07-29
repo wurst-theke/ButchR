@@ -84,8 +84,8 @@ test_that("Bad lamb", {
   expect_error(run_iNMF_tensor(mat_list, ranks = 2, lamb = -3.1))
 })
 
-# test_that("Bad extract_features", {
-#   expect_error(run_iNMF_tensor(mat_list, ranks = 2, extract_features = "a"))
-#   expect_error(run_iNMF_tensor(mat_list, ranks = 2, extract_features = c(FALSE, FALSE)))
-# })
+test_that("Bad extract_features", {
+  expect_error(run_iNMF_tensor(mat_list, ranks = 2, extract_features = "a"))
+  expect_error(run_iNMF_tensor(mat_list, ranks = 2, extract_features = c(FALSE, FALSE)))
+})
 

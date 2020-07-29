@@ -68,18 +68,7 @@ run_iNMF_tensor <- function (matrix_list,
   val_single_integer(convergence_threshold, "convergence_threshold")
   val_single_numeric(Sp, "Sp")
   val_single_numeric(lamb, "lamb")
-  # val_single_boolean(extract_features, "extract_features")
-  #
-
-
-
-
-
-
-
-
-
-
+  val_single_boolean(extract_features, "extract_features")
 
   # Convert params to integer
   nmf_params <- lapply(list(ranks                 = ranks,
@@ -186,7 +175,9 @@ run_iNMF_tensor <- function (matrix_list,
   #----------------------------------------------------------------------------#
   #                  Compute signatures specific features                      #
   #----------------------------------------------------------------------------#
-  if (extract_features) {
+  if (length(ranks) == 1 & 2 %in% ranks) {
+    SignFeatures <- list()
+  } else if (extract_features) {
     SignFeatures <- lapply(viewsIDs, function(viewsID){
 
       #print(names(k_eval))
