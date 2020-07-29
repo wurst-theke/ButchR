@@ -332,26 +332,17 @@ iNMF_lambda_tuning <- function (matrix_list,
          'residuals', 'iNMF', 'all_iNMF', 'plot' or 'all' \n")
   }
   val_single_numeric(thr_cons, "thr_cons")
-
-
-
-  if (!length(rank) == 1) {
-    stop("\nrank has to be a unique integer number \n")
+  val_single_integer(rank, "rank", minval = 2)
+  if(rank >= ncol(matrix_list[[1]])) {
+    stop("\nMaximum factorization rank should be less than the number of columns
+         in the input matrix\n")
   }
-
+  val_single_integer(n_initializations, "n_initializations")
+  val_single_integer(iterations, "iterations")
+  val_single_integer(convergence_threshold, "convergence_threshold")
+  val_single_numeric(Sp, "Sp")
   val_single_boolean(show_plot, "show_plot")
   val_single_boolean(extract_features, "extract_features")
-  val_single_integer(rank, "rank", minval = 2)
-
-
-
-
-  # val_ranks_torun(ranks, ncol(matrix_list[[1]]))
-  # val_single_integer(n_initializations, "n_initializations")
-  # val_single_integer(iterations, "iterations")
-  # val_single_integer(convergence_threshold, "convergence_threshold")
-  # val_single_numeric(Sp, "Sp")
-  #
 
 
 

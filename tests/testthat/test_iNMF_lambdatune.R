@@ -110,59 +110,45 @@ test_that("Bad thr_cons", {
   expect_error(iNMF_lambda_tuning(mat_list, thr_cons = -3.1))
 })
 
-# test_that("Bad Sp", {
-#   expect_error(iNMF_lambda_tuning(mat_list, Sp = "a"))
-#   expect_error(iNMF_lambda_tuning(mat_list, Sp = 4:3))
-#   expect_error(iNMF_lambda_tuning(mat_list, Sp = -3.1))
-# })
+test_that("Bad rank", {
+  expect_error(iNMF_lambda_tuning(mat_list, rank = "a"))
+  expect_error(iNMF_lambda_tuning(mat_list, rank = 20)) # k greater than cols
+  expect_error(iNMF_lambda_tuning(mat_list, rank = -4:1))
+  expect_error(iNMF_lambda_tuning(mat_list, rank = 1))
+})
 
 
+test_that("Bad n_initializations", {
+  expect_error(iNMF_lambda_tuning(mat_list, n_initializations = "a"))
+  expect_error(iNMF_lambda_tuning(mat_list, n_initializations = 1:3))
+  expect_error(iNMF_lambda_tuning(mat_list, n_initializations = 1.1))
+  expect_error(iNMF_lambda_tuning(mat_list, n_initializations = -1.1))
+  expect_error(iNMF_lambda_tuning(mat_list, n_initializations = -3))
+})
 
+test_that("Bad iterations", {
+  expect_error(iNMF_lambda_tuning(mat_list, iterations = "a"))
+  expect_error(iNMF_lambda_tuning(mat_list, iterations = 10000:10001))
+  expect_error(iNMF_lambda_tuning(mat_list, iterations = 10000.1))
+  expect_error(iNMF_lambda_tuning(mat_list, iterations = -10000.1))
+  expect_error(iNMF_lambda_tuning(mat_list, iterations = -10000))
+})
 
-# test_that("Bad ranks", {
-#   expect_error(iNMF_lambda_tuning(mat_list, ranks = "a", n_initializations = 1))
-#   expect_error(iNMF_lambda_tuning(mat_list, ranks = 20, n_initializations = 1)) # k greater than cols
-#   expect_error(iNMF_lambda_tuning(mat_list, ranks = -4:1, n_initializations = 1))
-# })
-#
-#
-# test_that("Bad n_initializations", {
-#   expect_error(iNMF_lambda_tuning(mat_list, ranks = 2, n_initializations = "a"))
-#   expect_error(iNMF_lambda_tuning(mat_list, ranks = 2, n_initializations = 1:3))
-#   expect_error(iNMF_lambda_tuning(mat_list, ranks = 2, n_initializations = 1.1))
-#   expect_error(iNMF_lambda_tuning(mat_list, ranks = 2, n_initializations = -1.1))
-#   expect_error(iNMF_lambda_tuning(mat_list, ranks = 2, n_initializations = -3))
-# })
-#
-# test_that("Bad iterations", {
-#   expect_error(iNMF_lambda_tuning(mat_list, ranks = 2, iterations = "a"))
-#   expect_error(iNMF_lambda_tuning(mat_list, ranks = 2, iterations = 10000:10001))
-#   expect_error(iNMF_lambda_tuning(mat_list, ranks = 2, iterations = 10000.1))
-#   expect_error(iNMF_lambda_tuning(mat_list, ranks = 2, iterations = -10000.1))
-#   expect_error(iNMF_lambda_tuning(mat_list, ranks = 2, iterations = -10000))
-# })
-#
-# test_that("Bad convergence_threshold", {
-#   expect_error(iNMF_lambda_tuning(mat_list, ranks = 2, convergence_threshold = "a"))
-#   expect_error(iNMF_lambda_tuning(mat_list, ranks = 2, convergence_threshold = 30:31))
-#   expect_error(iNMF_lambda_tuning(mat_list, ranks = 2, convergence_threshold = 30.1))
-#   expect_error(iNMF_lambda_tuning(mat_list, ranks = 2, convergence_threshold = -30.1))
-#   expect_error(iNMF_lambda_tuning(mat_list, ranks = 2, convergence_threshold = -30))
-# })
-#
-# test_that("Bad Sp", {
-#   expect_error(iNMF_lambda_tuning(mat_list, ranks = 2, Sp = "a"))
-#   expect_error(iNMF_lambda_tuning(mat_list, ranks = 2, Sp = 4:3))
-#   expect_error(iNMF_lambda_tuning(mat_list, ranks = 2, Sp = -3.1))
-# })
-#
-# test_that("Bad lamb", {
-#   expect_error(iNMF_lambda_tuning(mat_list, ranks = 2, lamb = "a"))
-#   expect_error(iNMF_lambda_tuning(mat_list, ranks = 2, lamb = 4:3))
-#   expect_error(iNMF_lambda_tuning(mat_list, ranks = 2, lamb = -3.1))
-# })
-#
-# test_that("Bad extract_features", {
-#   expect_error(iNMF_lambda_tuning(mat_list, ranks = 2, extract_features = "a"))
-#   expect_error(iNMF_lambda_tuning(mat_list, ranks = 2, extract_features = c(FALSE, FALSE)))
-# })
+test_that("Bad convergence_threshold", {
+  expect_error(iNMF_lambda_tuning(mat_list, convergence_threshold = "a"))
+  expect_error(iNMF_lambda_tuning(mat_list, convergence_threshold = 30:31))
+  expect_error(iNMF_lambda_tuning(mat_list, convergence_threshold = 30.1))
+  expect_error(iNMF_lambda_tuning(mat_list, convergence_threshold = -30.1))
+  expect_error(iNMF_lambda_tuning(mat_list, convergence_threshold = -30))
+})
+
+test_that("Bad Sp", {
+  expect_error(iNMF_lambda_tuning(mat_list, Sp = "a"))
+  expect_error(iNMF_lambda_tuning(mat_list, Sp = 4:3))
+  expect_error(iNMF_lambda_tuning(mat_list, Sp = -3.1))
+})
+
+test_that("Bad extract_features", {
+  expect_error(iNMF_lambda_tuning(mat_list, extract_features = "a"))
+  expect_error(iNMF_lambda_tuning(mat_list, extract_features = c(FALSE, FALSE)))
+})
