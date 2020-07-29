@@ -341,6 +341,7 @@ iNMF_lambda_tuning <- function (matrix_list,
 
   val_single_boolean(show_plot, "show_plot")
   val_single_boolean(extract_features, "extract_features")
+  val_single_integer(rank, "rank", minval = 2)
 
 
 
@@ -350,7 +351,6 @@ iNMF_lambda_tuning <- function (matrix_list,
   # val_single_integer(iterations, "iterations")
   # val_single_integer(convergence_threshold, "convergence_threshold")
   # val_single_numeric(Sp, "Sp")
-  # val_single_numeric(lamb, "lamb")
   #
 
 
