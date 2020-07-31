@@ -552,16 +552,7 @@ leukemia_Wspecific <- WMatrix(leukemia_nmf_exp, k = 4)[leukemia_specific, ]
 colnames(leukemia_Wspecific) <- paste0("Sign.", 1:4)
 
 # normalize exposure score in W matrix across rows
-leukemia_Wspecific <- as.data.frame(leukemia_Wspecific) %>% 
-  rownames_to_column("GeneID") %>% 
-  pivot_longer(-GeneID, names_to = "SignatureID", values_to = "exposure") %>% 
-  group_by(GeneID) %>% 
-  mutate(exposure = exposure/max(exposure)) %>% 
-  pivot_wider(id_cols = GeneID, names_from = "SignatureID", values_from = "exposure") %>% 
-  column_to_rownames("GeneID") %>% 
-  as.matrix()
-  
-
+leukemia_Wspecific <- leukemia_Wspecific/matrixStats::rowMaxs(leukemia_Wspecific)
 
 # Display selected features on W matrix
 w_heatmap <- Heatmap(leukemia_Wspecific,
