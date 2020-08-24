@@ -319,3 +319,32 @@ setGeneric("regularizeH", function(nmf_exp, ...) standardGeneric("regularizeH"))
 #' plot(plt, plot_area = 1, yscale = 0.6, nodewidth = 0.5)
 #' }
 setGeneric("generateRiverplot", function(nmf_exp, ...) standardGeneric("generateRiverplot"))
+
+
+
+#' Recovery plot
+#'
+#' Generate a recovery plot to visualize the association between the NMF
+#' signatures and a biological or clinical annotation factor.
+#'
+#' @param x an object of class ButchR_NMF, ButchR_joinNMF, or
+#' ButchR_integrativeNMF.
+#' @param annot input named factor/character with biological/clinical
+#' annotation for the columns of the input data.
+#' @param ... additional parameters.
+#'
+#' @return recovery plot or a data frame with the association analysis results.
+#'
+#' @import ggplot2 dplyr
+#' @importFrom rlang .data
+#' @export
+#'
+#' @docType methods
+#' @rdname recovery_plot-methods
+#'
+#' @examples
+#' \dontrun{
+#' recovery_plot(x, annot_factor)
+#' }
+setGeneric("recovery_plot", function(x, annot, ...) standardGeneric("recovery_plot"))
+
