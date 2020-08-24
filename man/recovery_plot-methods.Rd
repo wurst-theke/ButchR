@@ -32,6 +32,13 @@ signatures and a biological or clinical annotation factor.
 recovery_plot(x, annot_factor)
 }
 \dontrun{
-recovery_plot(x, annot_factor)
+data(leukemia)
+leukemia_nmf_exp <- run_NMF_tensor(X = leukemia$matrix,
+                                   ranks = 2:4,
+                                   method = "NMF",
+                                   n_initializations = 10,
+                                   extract_features = TRUE)
+recovery_plot(HMatrix(leukemia_nmf_exp, k = 4),
+              leukemia$annotation$ALL_AML)
 }
 }

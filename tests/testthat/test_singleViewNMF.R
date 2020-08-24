@@ -154,4 +154,16 @@ test_that("NMF metric riverplot", {
 })
 
 
+test_that("NMF recovery plots", {
+
+  ggrecov <- recovery_plot(h, c(rep("A", 5), rep("B", 5)))
+  # recovery plot
+  expect_is(ggrecov, "ggplot")
+  expect_length(unique(ggrecov$data$Annotation_level), 2) # for all annots
+  expect_length(unique(ggrecov$data$SignatureID), nrow(h)) # for all k
+
+})
+
+
+
 

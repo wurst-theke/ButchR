@@ -277,7 +277,7 @@ reorderEdges <- function(nodes, edges){
 
 
 #------------------------------------------------------------------------------#
-#                                  Riverplot                                   #
+#                            Recovery plots for matrix                         #
 #------------------------------------------------------------------------------#
 #' @rdname recovery_plot-methods
 #' @aliases recovery_plot,ANY,ANY-method
@@ -287,7 +287,14 @@ reorderEdges <- function(nodes, edges){
 #'
 #' @examples
 #' \dontrun{
-#' recovery_plot(x, annot_factor)
+#' data(leukemia)
+#' leukemia_nmf_exp <- run_NMF_tensor(X = leukemia$matrix,
+#'                                    ranks = 2:4,
+#'                                    method = "NMF",
+#'                                    n_initializations = 10,
+#'                                    extract_features = TRUE)
+#' recovery_plot(HMatrix(leukemia_nmf_exp, k = 4),
+#'               leukemia$annotation$ALL_AML)
 #' }
 setMethod("recovery_plot",
           "matrix",
