@@ -272,3 +272,169 @@ reorderEdges <- function(nodes, edges){
                       node_ranks[as.character(edges$N2)])
   return(edges[edgesOrder, ])
 }
+
+
+
+
+#------------------------------------------------------------------------------#
+#                                  Riverplot                                   #
+#------------------------------------------------------------------------------#
+#' @rdname recovery_plot-methods
+#' @aliases recovery_plot,ANY,ANY-method
+#' @import ggplot2 dplyr cowplot
+#' @importFrom rlang .data
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' recovery_plot(x, annot_factor)
+#' }
+setMethod("recovery_plot",
+          "matrix",
+          function(x, annot){
+            h <- x
+            # Add sig IDs if missing
+            if (is.null(rownames(h))) {
+              rownames(h) <- paste0('Sig ',1:nrow(h))
+            }
+            # check i annot lenght == h
+
+            if (is.factor(annot) | is.character((annot))) {
+              # annot_list <- list(main_annot = as.factor(annot))
+              annot_factor <- as.factor(annot)
+              if (is.null(names(annot))) {
+                names(annot_factor) <- colnames(h)
+              }
+            } else {
+              stop("Not a valid annotation input")
+            }
+            n_samples  <- ncol(h)
+            #which.a = annotID
+            #annot.factor <- annot[,annotID]
+
+
+            ## -------------------------------------------------------------------##
+            ##                        Find ranks                                  ##
+            ##--------------------------------------------------------------------##
+            # cycle annot levels
+            lIds <- stats::setNames(levels(annot_factor), levels(annot_factor))
+            ALL_RNKS <-  lapply(lIds,function(l) {
+              # cycle h matrix rows and find ranks
+              lapply(stats::setNames(1:nrow(h), rownames(h)),function(i) {
+                exp   <-  sort(h[i,],decreasing=TRUE) # sorted exposure
+                i_rnk <-  match(names(annot_factor)[annot_factor==l], names(exp))
+                sort(i_rnk[!is.na(i_rnk)]) # keep steps/ranks
+              })
+              #print(RNKS)
+              #return(RNKS)
+            })
+            # ALL_RNKS
+
+            ## -------------------------------------------------------------------##
+            ##                  Find AUC and P-value                              ##
+            ##--------------------------------------------------------------------##
+            AUC_singleannot <- lapply(ALL_RNKS,function(r) {
+              # AUC random set
+              AUC_RAND <- do.call("rbind",lapply(r, function(x) {
+                l = lapply(1:500,function(i) {
+                  sample(1:n_samples, length(x))
+                })
+                aux = auc(l, max = n_samples)
+                return(c(mean(aux), stats::sd(aux)))
+              }))
+
+              # AUC
+              #AUC <-  lapply(ALL_RNKS, auc, max = n_samples)
+              AUC <-  auc(r, max = n_samples)
+              #print(AUC)
+
+              # Find P - value
+              AUC_df <- data.frame(AUC_RAND, AUC)
+              colnames(AUC_df) = c('mean','sd','val')
+              AUC_df <- AUC_df %>%
+                tibble::rownames_to_column("SignatureID") %>%
+                mutate(z = (.data$val - .data$mean)/.data$sd) %>%
+                mutate(p = ifelse(.data$z>0,
+                                  stats::pnorm(.data$z, lower.tail=FALSE),
+                                  stats::pnorm(.data$z)))
+
+              #Return randon and AUC - P-val
+              return(AUC_df)
+            })
+            # AUC_allannot <- bind_rows(AUC_singleannot, .id = "Annotation_level") %>%
+            #   mutate(Annotation = "main_annot")
+            AUC_allannot <- bind_rows(AUC_singleannot, .id = "Annotation_level")
+
+            # Add min and max to rank, for step plot
+            # cycle all annots
+            # cycle annot levels
+            ALL_RNKS <- lapply(ALL_RNKS, function(x){
+              # cycle h matrix rows and find ranks
+              lapply(x, function(xi) c(0, xi, n_samples))
+            })
+
+
+
+            ALL_RNKS_df <- bind_rows(ALL_RNKS, .id = "Annotation_level") %>%
+              tidyr::pivot_longer(-c("Annotation_level"),  names_to = "SignatureID", values_to = "Rank") %>%
+              left_join(AUC_allannot, by = c("Annotation_level", "SignatureID"))
+
+
+            #return(ALL_RNKS_df)
+
+            gg_recov <- ALL_RNKS_df %>%
+              group_by(.data$Annotation_level, .data$SignatureID ) %>%
+              mutate(Frequency = c(seq(0, 1, length.out = n()-1), 1)) %>% # all y axis step
+              mutate(issignif = .data$p < 0.05) %>%
+
+              ggplot(aes(x = .data$Rank, y = .data$Frequency, color = .data$SignatureID,
+                         linetype = .data$issignif, size = .data$issignif)) +
+
+              # geom_step(data = function(x){x %>% filter(!issignif)}, size  = 0.5) +
+              # geom_step(data = function(x){x %>% filter(issignif)}, size  = 1.5) +
+              geom_step() +
+
+              geom_abline(intercept = 0, slope = 1/n_samples) +
+              facet_wrap(.~Annotation_level) +
+              # chance line style
+              scale_linetype_manual(name = c("Significant p-val<0.05"),
+                                    values = c("TRUE" = 1, "FALSE" = 2)) +
+              scale_size_manual(name = c("Significant p-val<0.05"),
+                                values = c("TRUE" = 1, "FALSE" = 0.5)) +
+              #theme_bw() +
+              theme_cowplot() +
+              panel_border(color = "grey40", size = 1, linetype = 1,
+                           remove = FALSE)
+
+
+            #return(ALL_RNKS_df)
+            return(gg_recov)
+          }
+)
+
+
+#' Helper function to estimate AUC in the recovery plots
+#'
+#' @param rnk.list list of ranks for a particular annotation
+#' @param max maximum rank
+#' @return AUC
+#'
+auc <- function(rnk.list, max = NULL) {
+  aux <-  sapply(rnk.list,function(rnk) {
+    if (is.null(max)) {
+      max <-  max(rnk)
+    }
+    rnk <-  sort(rnk)
+    X <-  0
+    i <-  1
+    ngenes <-  length(rnk)
+    while ((rnk[i] <= max) && (i <= length(rnk))) {
+      X <-  X + max -rnk[i]
+      i <-  i+1
+    }
+
+    rauc <-  X/(i-1)/max
+    rauc
+  })
+  return(aux)
+}

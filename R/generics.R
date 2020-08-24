@@ -327,7 +327,7 @@ setGeneric("generateRiverplot", function(nmf_exp, ...) standardGeneric("generate
 #' Generate a recovery plot to visualize the association between the NMF
 #' signatures and a biological or clinical annotation factor.
 #'
-#' @param x an object of class ButchR_NMF, ButchR_joinNMF, or
+#' @param x an object of class matrix, ButchR_NMF, ButchR_joinNMF, or
 #' ButchR_integrativeNMF.
 #' @param annot input named factor/character with biological/clinical
 #' annotation for the columns of the input data.
