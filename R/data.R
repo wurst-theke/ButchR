@@ -2,10 +2,15 @@
 #'
 #' Dataset containing Affymetrix Hgu6800 microarray expression data of B-ALL,
 #' T-ALL and AML samples.
+#' Original publication: Molecular classification of cancer: class discovery
+#' and class prediction by gene expression monitoring.
+#' T R Golub, D K Slonim, P Tamayo, C Huard, M Gaasenbeek, J P Mesirov,
+#' H Coller, M L Loh, J R Downing, M A Caligiuri, C D Bloomfield, E S Lander.
+#' Science. 1999 Oct 15;286(5439):531-7. doi: 10.1126/science.286.5439.531.
 #' This dataset had also been used by Brunet et al. (PNAS, 2004) and
 #' Gaujoux et al. (BMC Bioinformatics, 2010).
 #'
-#' @format A list with an expression matrix and annotatin data frame
+#' @format A list with an expression matrix and annotation data frame
 #' \describe{
 #'   \item{matrix}{4452 rows/genes and 38 samples}
 #'   \item{annotation}{AL and _AML status with type}

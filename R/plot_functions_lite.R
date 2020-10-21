@@ -275,6 +275,34 @@ reorderEdges <- function(nodes, edges){
 
 
 
+#' Relabel and recolour a riverplot
+#'
+#' @param in_riverplot riverplot object
+#' @param in_list list of new colors and labels to use
+#'
+#' @return relabeled riverplots
+#' @export
+#'
+#' @examples
+relabelRiverplot <- function(in_riverplot, in_list){
+  in_riverplot$nodes$labels <-
+    in_list$name_vector[as.character(in_riverplot$nodes$ID)]
+  tempVec <-lapply(
+    strsplit(in_list$sig_names[as.character(in_riverplot$nodes$ID)], split = "_"),
+    function(x) utils::head(x, n = 1))
+  tempVec <- unlist(tempVec)
+  in_riverplot$nodes$col <-
+    as.character(in_list$col_vector[as.character(tempVec)])
+  temp_list <-
+    lapply(seq_len(dim(in_riverplot$nodes)[1]), function(current_nodeInd){
+      in_riverplot$styles[[current_nodeInd]]$col <-
+        as.character(in_riverplot$nodes$col[current_nodeInd])
+      return(in_riverplot$styles[[current_nodeInd]])
+    })
+  names(temp_list) <- names(in_riverplot$styles)
+  in_riverplot$styles <- temp_list
+  return(in_riverplot)
+}
 
 #------------------------------------------------------------------------------#
 #                            Recovery plots for matrix                         #
