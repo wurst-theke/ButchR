@@ -1,0 +1,406 @@
+---
+title: "Corces-Buenrostro human hematopoietic system NMF"
+author: "HDSU"
+date: "`r date()`"
+vignette: >
+  %\VignetteIndexEntry{CorcesHematopoieticSystem}
+  %\VignetteEncoding{UTF-8}  
+  %\VignetteEngine{knitr::rmarkdown}
+output:
+  BiocStyle::html_document:
+    toc: yes
+  #md_document:
+  #  variant: markdown_github
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE, message=FALSE, warning=FALSE, echo=FALSE}
+#this chunk sets global options for Rmarkdown
+
+knitr::opts_chunk$set(echo = TRUE)
+options(knitr.table.format="html")
+
+if (Sys.info()[["sysname"]] == "Darwin") {
+    # When running locally use conda env
+    reticulate::use_condaenv("tensor2pip", required = TRUE)
+    print(reticulate::py_config())
+}
+
+library(tidyverse)
+library(viridis)
+library(ComplexHeatmap)
+library(DESeq2)
+library(ButchR)
+library(ggupset)
+library(clusterProfiler)
+library(msigdbr)
+library(umap)
+library(cowplot)
+
+```
+
+## NMF of the human hematopoietic system 
+
+Here we show how to use ButchR to achieve dimensionality reduction, and extract cell-type-specific features, from the RNA-seq dataset of different labeled cell types of the human hematopoietic system (Corces et al., 2016).
+
+**Lineage-specific and single-cell chromatin accessibility charts human hematopoiesis and leukemia evolution.**
+Corces MR, Buenrostro JD, Wu B, Greenside PG, Chan SM, Koenig JL, Snyder MP, Pritchard JK, Kundaje A, Greenleaf WJ, Majeti R, Chang HY.
+
+
+## Preprocessing   
+
+Download counts from GEO, select samples, and normalize data.
+
+
+```{r RNA-seqCounts,  fig.width=12, fig.height=12, out.width="90%"}
+
+##----------------------------------------------------------------------------##
+##                             Download counts                                ##
+##----------------------------------------------------------------------------##
+# set ftp url to RNA-seq data
+ftp_url <- file.path("ftp://ftp.ncbi.nlm.nih.gov/geo/series/GSE74nnn/GSE74246",
+                     "suppl/GSE74246_RNAseq_All_Counts.txt.gz")
+
+read_delim_gz <- function(file_url) {
+  con <- gzcon(url(file_url))
+  txt <- readLines(con)
+  return(read.delim(textConnection(txt), row.names = 1))
+}
+
+# read in data matrix
+corces_rna_counts <- read_delim_gz(ftp_url)
+
+
+##----------------------------------------------------------------------------##
+##                        Data loading and sample QC                          ##
+##----------------------------------------------------------------------------##
+
+corces_rna_counts[1:5,1:5]
+dim(corces_rna_counts)
+
+# remove leukemic and erythroblast samples
+corces_rna_counts <- corces_rna_counts[,-grep("Ery|rHSC|LSC|Blast", colnames(corces_rna_counts))]
+dim(corces_rna_counts)
+
+# inspect correlation matrix
+cor_dm <- cor(corces_rna_counts)
+Heatmap(cor_dm, col = magma(100), name = "Correlation")
+rm(cor_dm)
+
+# X5852.GMP is an outlier and will be removed, 
+# has much smaller library size as other GMPS
+corces_rna_counts <- corces_rna_counts[,-grep("X5852.GMP", colnames(corces_rna_counts))]
+
+# remove rows with rowSum==0
+corces_rna_counts <- corces_rna_counts[!rowSums(corces_rna_counts) == 0,]
+
+##----------------------------------------------------------------------------##
+##                              Normalize counts                              ##
+##----------------------------------------------------------------------------##
+
+# do DESeq2 size factor normalization
+sf <- estimateSizeFactorsForMatrix(corces_rna_counts)
+corces_rna_counts <- t( t(corces_rna_counts) / sf )
+
+# do +1 log2 transformation
+corces_rna_norm <- apply(corces_rna_counts + 1, 2, log2)
+rm(ftp_url, sf)
+
+##----------------------------------------------------------------------------##
+##                              Annotation                                    ##
+##----------------------------------------------------------------------------##
+# extract celltypes from colnames
+col.anno <- gsub(".*\\.", "", colnames(corces_rna_norm))
+col.anno[grep("NK", col.anno)] <- "NK"
+col.anno[grep("CD4", col.anno)] <- "CD4"
+col.anno[grep("CD8", col.anno)] <- "CD8"
+
+# Define color vector
+type.color <- setNames(c("#771155", "#AA4488", "#CC99BB", "#114477", "#4477AA", "#77AADD", 
+                         "#117777", "#44AAAA", "#77CCCC", "#777711", "#AAAA44", "#DDDD77"),
+                       c("HSC", "MPP", "LMPP", "CMP", "GMP", "MEP",
+                         "CLP", "CD4", "CD8", "NK", "Bcell", "Mono"))
+
+# Annotation data frame
+corces_rna_annot <- data.frame(sampleID = colnames(corces_rna_norm),
+                        Celltype = as.factor(col.anno),
+                        color    = type.color[match(col.anno, names(type.color))],
+                        row.names = colnames(corces_rna_norm),
+                        stringsAsFactors = FALSE)
+
+##----------------------------------------------------------------------------##
+##                          Print dataset dimension                           ##
+##----------------------------------------------------------------------------##
+
+cat("Dimension of transcriptome dataset (RNA-seq):  \n\n  ") 
+dim(corces_rna_norm)
+
+```
+
+## Applying NMF
+
+Applying Non-Negative Matrix Factorization (NMF) to normalized transcriptome data (RNA-seq). Using:  
+- Factorization ranks from 2 to 10.
+- Default NMF method.
+- 10 random initialization.
+
+```{r rna_NMF_run, message=FALSE, warning=FALSE, cache=TRUE}
+##----------------------------------------------------------------------------##
+##                             run NMF                                        ##
+##----------------------------------------------------------------------------##
+factorization_ranks <- 2:10
+rna_nmf_exp <- run_NMF_tensor(X                     = corces_rna_norm,
+                              ranks                 = factorization_ranks,
+                              method                = "NMF",
+                              n_initializations     = 10,
+                              iterations            = 10^4,
+                              convergence_threshold = 40, 
+                              extract_features = TRUE)
+rna_nmf_exp
+  
+## Normalize NMF
+rna_norm_nmf_exp <- normalizeW(rna_nmf_exp)
+
+```
+ 
+ 
+## Factorization quality metrics and optimal K
+
+Based on the results of the factorization quality metrics, an optimal number of signatures (k) must be chosen:
+  
+```{r rna_NMF_optK, results='hide',fig.keep='all', message=FALSE, warning=FALSE}
+## Plot K stats
+gg_plotKStats(rna_norm_nmf_exp)
+
+```
+Minize the Frobenius error, the coefficient of variation and the mean Amari distance, while maximizing the sum and mean silhouette width and the cophenic coefficient.
+  
+
+
+## H Matrix sample exposure:  {.tabset}  
+
+Visualization of the sample exposure to the decomposed signatures.
+  
+  
+```{r rna_Hmatrix_Wnorm, fig.width=8, fig.height=5.5, out.width="90%", results='asis', warning=FALSE, message=FALSE}
+##----------------------------------------------------------------------------##
+##                        H matrix heatmap annotation                         ##
+##----------------------------------------------------------------------------##
+#Annotation for H matrix heatmap
+corces_rna_annot_tmp <- corces_rna_annot %>% 
+  mutate(Celltype = factor(Celltype, levels = c("HSC", "MPP", "LMPP",
+                                                "CMP", "GMP", "MEP",
+                                                "CLP", "CD4", "CD8",
+                                                "NK", "Bcell", "Mono")))
+
+type.colVector <- corces_rna_annot_tmp %>% 
+  select(Celltype, color) %>% 
+  arrange(Celltype) %>% 
+  distinct() %>% 
+  deframe()
+
+type.colVector <- list(Celltype = type.colVector)
+
+# Build Heatmap annotation
+heat.anno <- HeatmapAnnotation(df  = corces_rna_annot_tmp[,"Celltype",drop=FALSE],
+                               col = type.colVector,
+                               show_annotation_name = TRUE, na_col = "white")
+
+##----------------------------------------------------------------------------##
+##              Generate H matrix heatmap, W normalized                       ##
+##----------------------------------------------------------------------------##
+for(ki in factorization_ranks) {
+  cat("\n")
+  cat("  \n### H matrix for k=",  ki, "  {.tabset}   \n  ")
+  #plot H matrix
+  tmp.hmatrix <- HMatrix(rna_norm_nmf_exp, k = ki)
+  h.heatmap <- Heatmap(tmp.hmatrix,
+                       col = viridis(100),
+                       name = paste0("Exposure ", ki),
+                       clustering_distance_columns = 'pearson',
+                       show_column_dend = TRUE,
+                       heatmap_legend_param = 
+                         list(color_bar = "continuous", legend_height=unit(2, "cm")),
+                       top_annotation = heat.anno,
+                       show_column_names = FALSE,
+                       show_row_names = FALSE,
+                       cluster_rows = FALSE)
+  
+  print(h.heatmap)
+  }
+```
+
+## Signature estability - Riverplot visualization
+
+Riverplot representation of the extracted signatures at different factorization ranks. The nodes represent the signatures, the edge strength encodes cosine similarity between signatures linked by the edges. 
+
+```{r rna_NMF_river, results='hide',fig.keep='all', message=FALSE, warning=FALSE}
+river <- generateRiverplot(rna_norm_nmf_exp, ranks = 2:8)
+plot(river, plot_area=1, yscale=0.6, nodewidth=0.5)
+
+```
+
+
+## Cluster identification - UMAP
+
+Cluster identification by running UMAP on the matrix H. 
+
+```{r umap_Hmatrix}
+##----------------------------------------------------------------------------##
+##                         UMAP H matrix                                      ##
+##----------------------------------------------------------------------------##
+hmatrix_norm <- HMatrix(rna_norm_nmf_exp, k = 8)
+umapView <- umap(t(hmatrix_norm))
+
+
+umapView_df <- as.data.frame(umapView$layout)
+colnames(umapView_df) <- c("UMAP1", "UMAP2")
+
+type_colVector <- corces_rna_annot %>% 
+  dplyr::select(Celltype, color) %>% 
+  arrange(Celltype) %>% 
+  distinct() %>% 
+  deframe()
+
+
+umapView_df %>% 
+  rownames_to_column("sampleID") %>% 
+  left_join(corces_rna_annot, by = "sampleID") %>% 
+  mutate(Celltype = factor(Celltype, levels = c("HSC", "MPP", "LMPP",
+                                                "CMP", "GMP", "MEP",
+                                                "CLP", "CD4", "CD8",
+                                                "NK", "Bcell", "Mono"))) %>% 
+  ggplot(aes(x=UMAP1, y=UMAP2, color = Celltype)) + 
+  geom_point(size = 1.5, alpha = 0.95) + 
+  scale_color_manual(values = type_colVector) +
+  theme_cowplot()
+
+
+```
+
+## Association of signatures to biological variables:  {.tabset}  
+
+Recovery plots showing the association of the NMF signatures to known biological variables.
+  
+  
+```{r recovery, fig.width=8, fig.height=5.5, out.width="90%", results='asis', warning=FALSE, message=FALSE}
+##----------------------------------------------------------------------------##
+##                               Recovery plots                               ##
+##----------------------------------------------------------------------------##
+for(ki in factorization_ranks) {
+  cat("\n")
+  cat("  \n### Recovery plots for k=",  ki, "  {.tabset}   \n  ")
+  print(ButchR::recovery_plot(tmp.hmatrix, corces_rna_annot$Celltype))
+  }
+```
+
+
+## Identification of signature specific features
+
+ButchR has a complete suite of functions to identify the differential contribution of a feature to every signature, classifying them into signature specific features and multi-signature features. 
+
+
+```{r sigspe_upset, warning=FALSE, message=FALSE}
+ss_features <- SignatureSpecificFeatures(rna_norm_nmf_exp, k = 8,return_all_features = TRUE)
+ssf_gg <- ss_features %>% 
+  as_tibble(rownames = "geneID") %>% 
+  pivot_longer(cols = -geneID, names_to = "SigID", values_to = "IsSig") %>% 
+  filter(IsSig == 1 ) %>% 
+  dplyr::select(-IsSig ) %>% 
+  group_by(geneID) %>%
+  summarize(SigID = list(SigID)) %>% 
+  ggplot(aes(x = SigID)) +
+  geom_bar(fill=c(rep("red",8),rep("black",12))) +
+  scale_x_upset(order_by = "degree", n_intersections = 20) +
+  cowplot::theme_cowplot()
+ssf_gg
+```
+
+Visual inspection of the top 10% of the signature specific features (i.e., signature specific genes). 
+
+```{r top10heat}
+ss_features <- SignatureSpecificFeatures(rna_norm_nmf_exp, k = 8)
+ss_features <- do.call(c, ss_features)
+
+wmatrix_norm <- WMatrix(rna_norm_nmf_exp, k = 8)
+colnames(wmatrix_norm) <- paste0("Sig", 1:8)
+
+##----------------------------------------------------------------------------##
+##                        top 10% features Heatmap                            ##
+##----------------------------------------------------------------------------##
+top_10perc_assing <- function(wmatrix){
+  sig_assign <- lapply(setNames(colnames(wmatrix), colnames(wmatrix)), function(sigID){
+    selec_wmatrix <- do.call(cbind, lapply(as.data.frame(wmatrix), function(sign_expo){
+      sign_expo[sign_expo < quantile(sign_expo, 0.9)] <- NA
+      sign_expo
+    }))
+    rownames(selec_wmatrix) <- rownames(wmatrix)
+    selec_wmatrix <- selec_wmatrix[!is.na(selec_wmatrix[,sigID]),,drop=FALSE]
+    # Keep only the top feature if there's an overlap
+    sig_SE_IDs <- rownames(selec_wmatrix[rowMaxs(selec_wmatrix, na.rm = TRUE) == selec_wmatrix[,sigID],])
+    sig_SE_IDs
+  })
+  sig_assign
+}
+sign_features <- top_10perc_assing(wmatrix_norm)
+
+wmatrix_norm_sel <- wmatrix_norm[do.call(c, sign_features), ]
+dim(wmatrix_norm_sel)
+Heatmap(wmatrix_norm_sel/rowMaxs(wmatrix_norm_sel), 
+        col = inferno(100), 
+        name = "Exposure",
+        show_row_names = FALSE, 
+        cluster_columns = FALSE )
+
+```
+
+## Gene set enrichment analysis of signature specific features
+
+Gene set enrichment analysis using the same set of genes displayed in the previous heatmap. -log10 of the corrected p-values are shown for representative gene set collections.
+
+```{r enrichment, fig.width=10, fig.height=5.5, results='asis', warning=FALSE, message=FALSE}
+##----------------------------------------------------------------------------##
+##                        Enrichment top 10%                                  ##
+##----------------------------------------------------------------------------##
+
+
+msigdb_hs <- msigdbr(species = "Homo sapiens")
+selected_terms <- c("JAATINEN_HEMATOPOIETIC_STEM_CELL_UP", 
+                    "LIM_MAMMARY_STEM_CELL_UP",
+                    "HALLMARK_EPITHELIAL_MESENCHYMAL_TRANSITION",
+                    "EPPERT_PROGENITOR", 
+                    "HALLMARK_HEME_METABOLISM",
+                    "GSE10325_LUPUS_CD4_TCELL_VS_LUPUS_BCELL_UP",
+                    "GSE22886_NAIVE_CD8_TCELL_VS_NKCELL_UP", 
+                    "KEGG_NATURAL_KILLER_CELL_MEDIATED_CYTOTOXICITY",
+                    "BIOCARTA_NKCELLS_PATHWAY",
+                    "GSE29618_MONOCYTE_VS_PDC_UP", 
+                    "GSE29618_MONOCYTE_VS_PDC_DAY7_FLU_VACCINE_UP", 
+                    "GSE22886_NAIVE_BCELL_VS_MONOCYTE_UP",
+                    "KEGG_INTESTINAL_IMMUNE_NETWORK_FOR_IGA_PRODUCTION", 
+                    "HADDAD_B_LYMPHOCYTE_PROGENITOR",
+                    "LEE_EARLY_T_LYMPHOCYTE_UP", 
+                    "GSE22886_NAIVE_TCELL_VS_DC_UP"
+)
+
+msigdb_sel <- msigdb_hs %>% 
+  filter(gs_name %in% selected_terms) %>% 
+  mutate(term = gs_name) %>% 
+  mutate(gene = gene_symbol) %>% 
+  select(term, gene)
+
+
+
+
+
+sign_compare_t10_Msig <- compareCluster(geneClusters = sign_features, 
+                                        fun = "enricher",
+                                        TERM2GENE = msigdb_sel)
+dotplot(sign_compare_t10_Msig, showCategory = 30)
+
+
+
+
+```
+

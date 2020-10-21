@@ -283,7 +283,6 @@ reorderEdges <- function(nodes, edges){
 #' @return relabeled riverplots
 #' @export
 #'
-#' @examples
 relabelRiverplot <- function(in_riverplot, in_list){
   in_riverplot$nodes$labels <-
     in_list$name_vector[as.character(in_riverplot$nodes$ID)]
