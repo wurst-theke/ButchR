@@ -3,6 +3,8 @@
 
 
 # ButchR
+![ButchR](vignettes/figs/ButchR/ButchR_logo.png)
+
 Andres Quintero, Daniel Huebschmann & Sebastian Steinhauser  
 15.07.2020  
 
