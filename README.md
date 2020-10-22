@@ -2,7 +2,6 @@
 [![codecov](https://codecov.io/gh/hdsu-bioquant/ButchR/branch/master/graph/badge.svg)](https://codecov.io/gh/hdsu-bioquant/ButchR)
 
 
-# ButchR
 <img src="vignettes/figs/ButchR/ButchR_logo.png" width="300">
 
 Andres Quintero, Daniel Huebschmann & Sebastian Steinhauser  
