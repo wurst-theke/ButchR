@@ -3,8 +3,7 @@
 
 
 # ButchR
-![ButchR](vignettes/figs/ButchR/ButchR_logo.png | width=150)
-<img src="vignettes/figs/ButchR/ButchR_logo.png" width="100">
+<img src="vignettes/figs/ButchR/ButchR_logo.png" width="300">
 
 Andres Quintero, Daniel Huebschmann & Sebastian Steinhauser  
 15.07.2020  
