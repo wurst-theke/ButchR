@@ -4,17 +4,13 @@
 
 <img src="vignettes/figs/ButchR/ButchR_logo.png" width="300">
 
-Andres Quintero, Daniel Huebschmann & Sebastian Steinhauser  
-15.07.2020  
+# ButchR
 
 `ButchR` is an R package providing functions to perform 
 non-negative matrix factorization and postprocessing using TensorFlow.  
 
-A detailed description 
-of the software and an application to cells of the human hematopoietic system 
-are available as a preprint: https://doi.org/10.1101/199547.  
-Intermediate results for the analysis on hematopoietic cells are available on
-zenodo: https://doi.org/10.5281/zenodo.800049.  
+## Citation 
+Andres Quintero, Daniel Hübschmann, Nils Kurzawa, Sebastian Steinhauser, Philipp Rentzsch, Stephen Krämer, Carolin Andresen, Jeongbin Park, Roland Eils, Matthias Schlesner, Carl Herrmann, [ShinyButchR: interactive NMF-based decomposition workflow of genome-scale datasets](https://doi.org/10.1093/biomethods/bpaa022), Biology Methods and Protocols, bpaa022.
 
 
 ## How to install ButchR
