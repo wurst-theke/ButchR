@@ -16,6 +16,7 @@ run_NMF_tensor(
   lamb = 10,
   graph = NULL,
   seed = NULL,
+  nthreads = 0,
   extract_features = FALSE
 )
 }
@@ -46,6 +47,10 @@ between columns of the input matrix, values correspond to edge weight,
 if NULL will compute own graph.}
 
 \item{seed}{Numeric seed to initialize matrices W and H.}
+
+\item{nthreads}{Number of CPU threads used to perform the NMF decomposition,
+(in case a GPU is not available).
+0 means the system picks an appropriate number.}
 
 \item{extract_features}{if TRUE performs feature extraction for all f
 actorization ranks > 2.}
