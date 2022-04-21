@@ -20,7 +20,11 @@ Created on Thu Jan  9 11:36:20 2020
 ##                Define Function to run NMF in tensorflow 2                 ##
 ##---------------------------------------------------------------------------##
 def NMF_tensor_py(matrix, rank, n_initializations, iterations, seed, 
-                  stop_threshold=40, **kwargs):
+                  stop_threshold=40, nthreads=0, **kwargs):
+    # Set numver of threads                
+    tf.config.threading.set_intra_op_parallelism_threads(nthreads)
+    tf.config.threading.set_inter_op_parallelism_threads(nthreads)
+    
     # NMF in tensorflow
     n = matrix.shape[0]
     m = matrix.shape[1]     

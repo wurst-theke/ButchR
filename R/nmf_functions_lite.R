@@ -71,6 +71,9 @@ source_NMFtensor_function <- function(method) {
 #' between columns of the input matrix, values correspond to edge weight,
 #' if NULL will compute own graph.
 #' @param seed Numeric seed to initialize matrices W and H.
+#' @param nthreads Number of CPU threads used to perform the NMF decomposition,
+#' (in case a GPU is not available).
+#' 0 means the system picks an appropriate number.
 #' @param extract_features if TRUE performs feature extraction for all f
 #' actorization ranks > 2.
 #'
@@ -99,6 +102,7 @@ run_NMF_tensor <- function (
     lamb                  = 10,
     graph                 = NULL,
     seed                  = NULL,
+    nthreads              = 0,
     extract_features      = FALSE
     ){
 
@@ -134,6 +138,7 @@ run_NMF_tensor <- function (
   val_single_integer(n_neighbors, "n_neighbors")
   val_single_numeric(alpha, "alpha")
   val_single_numeric(lamb, "lamb")
+  val_single_numeric(nthreads, "nthreads")
   if (!is.null(graph)) graph <- val_graph_GRNMF_SC(graph, X, method)
   val_single_boolean(extract_features, "extract_features")
 
@@ -145,7 +150,7 @@ run_NMF_tensor <- function (
                             iterations            = iterations,
                             convergence_threshold = convergence_threshold,
                             n_neighbors           = n_neighbors,
-                            seed                  = seed),
+                            nthreads              = nthreads),
                        as.integer)
   names(nmf_params$ranks) <- paste0("k", nmf_params$ranks)
 
@@ -166,6 +171,7 @@ run_NMF_tensor <- function (
                             iterations        = nmf_params$iterations,
                             seed              = seed,
                             stop_threshold    = nmf_params$convergence_threshold,
+                            nthreads          = nmf_params$nthreads,
                             n_neighbors       = nmf_params$n_neighbors,
                             alpha             = alpha,
                             lamb              = lamb,
