@@ -15,6 +15,7 @@ run_NMF_tensor(
   alpha = 0.1,
   lamb = 10,
   graph = NULL,
+  seed = NULL,
   extract_features = FALSE
 )
 }
@@ -43,6 +44,8 @@ into account when building the graph G}
 \item{graph}{for method "GRNMF_SC", square matrix representing a graph
 between columns of the input matrix, values correspond to edge weight,
 if NULL will compute own graph.}
+
+\item{seed}{Numeric seed to initialize matrices W and H.}
 
 \item{extract_features}{if TRUE performs feature extraction for all f
 actorization ranks > 2.}
