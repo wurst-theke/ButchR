@@ -19,8 +19,9 @@ Created on Thu Jan  9 11:36:20 2020
 ##---------------------------------------------------------------------------##
 ##                Define Function to run NMF in tensorflow 2                 ##
 ##---------------------------------------------------------------------------##
-def NMF_tensor_py(matrix, rank, n_initializations, iterations, stop_threshold=40, 
-                  n_neighbors = 4, alpha = 0.1, lamb = 10, graph = None, **kwargs):
+def NMF_tensor_py(matrix, rank, n_initializations, iterations, seed, 
+                  stop_threshold=40, n_neighbors = 4, alpha = 0.1, lamb = 10, 
+                  graph = None, **kwargs):
     
     
     # NMF in tensorflow
@@ -100,6 +101,8 @@ def NMF_tensor_py(matrix, rank, n_initializations, iterations, stop_threshold=40
         ##-------------------------------------------------------------------##
         ##                  Initialize W and H matrices                      ##
         ##-------------------------------------------------------------------##
+        if seed is not None:
+          tf.random.set_seed(seed)
         initializer = tf.random_uniform_initializer(minval=0, maxval=1)
         
         H = tf.Variable(initializer(shape=[rank, m]), name="H")

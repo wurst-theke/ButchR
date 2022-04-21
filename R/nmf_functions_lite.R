@@ -70,6 +70,7 @@ source_NMFtensor_function <- function(method) {
 #' @param graph for method "GRNMF_SC", square matrix representing a graph
 #' between columns of the input matrix, values correspond to edge weight,
 #' if NULL will compute own graph.
+#' @param seed Numeric seed to initialize matrices W and H.
 #' @param extract_features if TRUE performs feature extraction for all f
 #' actorization ranks > 2.
 #'
@@ -86,17 +87,20 @@ source_NMFtensor_function <- function(method) {
 #'                              iterations            = 10^4,
 #'                              convergence_threshold = 40)
 #' nmf_exp
-run_NMF_tensor <- function (X,
-                            ranks,
-                            method                = "NMF",
-                            n_initializations     = 10,
-                            iterations            = 10^4,
-                            convergence_threshold = 40,
-                            n_neighbors           = 4,
-                            alpha                 = 0.1,
-                            lamb                  = 10,
-                            graph                 = NULL,
-                            extract_features      = FALSE){
+run_NMF_tensor <- function (
+    X,
+    ranks,
+    method                = "NMF",
+    n_initializations     = 10,
+    iterations            = 10^4,
+    convergence_threshold = 40,
+    n_neighbors           = 4,
+    alpha                 = 0.1,
+    lamb                  = 10,
+    graph                 = NULL,
+    seed                  = NULL,
+    extract_features      = FALSE
+    ){
 
   #----------------------------------------------------------------------------#
   #                                    Setup                                   #
@@ -116,6 +120,13 @@ run_NMF_tensor <- function (X,
     stop("\nmethod : non valid NMF method\n",
          "supported methods: NMF, GRNMF_SC")
   }
+  if (!is.null(seed)) {
+    val_single_integer(seed, "seed")
+    message("Only 1 inititialization is supported while using seeded mode.\n",
+            "Setting n_initializations=1")
+    n_initializations <- 1
+    seed <- as.integer(seed)
+  }
 
   val_single_integer(n_initializations, "n_initializations")
   val_single_integer(iterations, "iterations")
@@ -133,7 +144,8 @@ run_NMF_tensor <- function (X,
                             n_initializations     = n_initializations,
                             iterations            = iterations,
                             convergence_threshold = convergence_threshold,
-                            n_neighbors           = n_neighbors),
+                            n_neighbors           = n_neighbors,
+                            seed                  = seed),
                        as.integer)
   names(nmf_params$ranks) <- paste0("k", nmf_params$ranks)
 
@@ -152,6 +164,7 @@ run_NMF_tensor <- function (X,
                             rank              = k,
                             n_initializations = nmf_params$n_initializations,
                             iterations        = nmf_params$iterations,
+                            seed              = seed,
                             stop_threshold    = nmf_params$convergence_threshold,
                             n_neighbors       = nmf_params$n_neighbors,
                             alpha             = alpha,
