@@ -59,17 +59,18 @@ val_ranks_torun <- function(ranks, ncolmat) {
 #' ButchR:::val_single_integer(X)
 #' }
 val_single_integer <- function(x, id, minval = 0) {
+  y <- paste(x, collapse=",")
   if (!is.numeric(x)) {
-    stop("\n", id, " = ", x, ": expecting single numeric value\n")
+    stop("\n", id, " = ", y, ": expecting single numeric value\n")
   }
   if (!length(x) == 1) {
-    stop("\n", id, " = ", x, ": expecting single numeric value\n")
+    stop("\n", id, " = ", y, ": expecting single numeric value\n")
   }
   if (!x%%1==0) {
-    stop("\n", id, " = ", x, ": should be a positive integer\n")
+    stop("\n", id, " = ", y, ": should be a positive integer\n")
   }
   if (x < minval) {
-    stop("\n", id, " = ", x, ": should be an integer >= ", minval,"\n")
+    stop("\n", id, " = ", y, ": should be an integer >= ", minval,"\n")
   }
   NULL
 }
