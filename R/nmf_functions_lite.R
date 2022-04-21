@@ -126,9 +126,9 @@ run_NMF_tensor <- function (
   }
   if (!is.null(seed)) {
     val_single_integer(seed, "seed")
-    message("Only 1 inititialization is supported while using seeded mode.\n",
-            "Setting n_initializations=1")
-    n_initializations <- 1
+    #message("Only 1 inititialization is supported while using seeded mode.\n",
+    #        "Setting n_initializations=1")
+    #n_initializations <- 1
     seed <- as.integer(seed)
   }
 

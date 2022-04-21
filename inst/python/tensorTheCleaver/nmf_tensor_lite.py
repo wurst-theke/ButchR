@@ -39,13 +39,13 @@ def NMF_tensor_py(matrix, rank, n_initializations, iterations, seed,
     ##                              N inits                                  ##
     ##-----------------------------------------------------------------------##
     # cycle through n initializations and choose best factorization
+    if seed is not None:
+      tf.random.set_seed(seed)
     for init_n in range(n_initializations):
         
         ##-------------------------------------------------------------------##
         ##                  Initialize W and H matrices                      ##
         ##-------------------------------------------------------------------##
-        if seed is not None:
-          tf.random.set_seed(seed)
         initializer = tf.random_uniform_initializer(minval=0, maxval=1)
         
         H = tf.Variable(initializer(shape=[rank, m]), name="H")
