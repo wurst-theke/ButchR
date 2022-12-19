@@ -434,10 +434,10 @@ iNMF_lambda_tuning <- function (matrix_list,
                              stringsAsFactors = FALSE)
   residuals_df <- residuals_df %>%
     dplyr::mutate(diff_iNMF_jNMF = norm_inmf - norm_jnmf) %>%
-    dplyr::mutate(diff_iNMF_sNMF = abs(thr_cons*(norm_jnmf - norm_snmf))) %>%
+    dplyr::mutate(diff_jNMF_sNMF = abs(thr_cons*(norm_jnmf - norm_snmf))) %>%
     #dplyr::mutate(diff_iNMF_sNMF = thr_cons*(norm_jnmf - norm_snmf)) %>%
     dplyr::arrange(-.data$lambda) %>%
-    dplyr::mutate(best_lambda = cumsum(.data$diff_iNMF_jNMF > .data$diff_iNMF_sNMF) == 1) %>%
+    dplyr::mutate(best_lambda = cumsum(.data$diff_iNMF_jNMF > .data$diff_jNMF_sNMF) == 1) %>%
     dplyr::mutate(best_lambda = c(.data$best_lambda[-1], .data$best_lambda[1]))
 
   if (Output_type %in% c("plot", "all") | show_plot) {
